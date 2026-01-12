@@ -2,6 +2,12 @@
 
 import { useState, FormEvent } from "react";
 
+declare global {
+  interface Window {
+    fbq: (action: string, event: string, params?: Record<string, unknown>) => void;
+  }
+}
+
 interface FormData {
   agreement1: string;
   privacyAgreement: boolean;
@@ -38,6 +44,10 @@ export default function Home() {
       });
 
       if (response.ok) {
+        // Meta Pixel Lead 이벤트 트래킹
+        if (typeof window !== "undefined" && window.fbq) {
+          window.fbq("track", "Lead");
+        }
         setSubmitMessage("신청이 완료되었습니다! 감사합니다.");
         handleReset();
       } else {
