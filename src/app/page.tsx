@@ -98,21 +98,21 @@ export default function Home() {
                 <div>
                   <p className="font-medium text-red-500">📌 소개팅 신청 상세안내 (이건 꼭 확인해주셔야 합니다!) ⭐⭐⭐⭐⭐</p>
                   <p className="ml-4">
-                    ➡️ <a href="#" className="text-blue-600 underline">지금 바로 보러가기</a>
+                    ➡️ <a href="https://green-tsunami-b4e.notion.site/X-2e3a0a7cf653806f9df5fce04bd27662?source=copy_link" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">지금 바로 보러가기</a>
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium">📌 소개팅 이벤트 관련 문의</p>
                   <p className="ml-4">
-                    ➡️ <a href="#" className="text-blue-600 underline">@cha_serinn_event</a> 계정으로 DM 주세요!
+                    ➡️ <a href="https://instagram.com/cha_serinn_event" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">@cha_serinn_event</a> 계정으로 DM 주세요!
                   </p>
                 </div>
 
                 <div>
                   <p className="font-medium">📌 내친소 앱 오류 문의</p>
                   <p className="ml-4">
-                    ➡️ <a href="#" className="text-blue-600 underline">내친소 채널톡(링크클릭)</a> 으로 바로 문의주세요!
+                    ➡️ <a href="https://naechinso.channel.io/home" target="_blank" rel="noopener noreferrer" className="text-blue-600 underline">내친소 채널톡(링크클릭)</a> 으로 바로 문의주세요!
                   </p>
                 </div>
               </div>
