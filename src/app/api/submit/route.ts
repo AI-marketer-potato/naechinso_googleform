@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put, list } from "@vercel/blob";
+import { put, list, del } from "@vercel/blob";
 
 interface FormData {
   agreement1: string;
@@ -39,26 +39,32 @@ export async function POST(request: NextRequest) {
       data.gender === "male" ? "남자" : "여자",
     ].map(field => `"${field}"`).join(",") + "\n";
 
-    // 기존 CSV 가져오기 또는 새로 생성
+    // 기존 CSV 가져오기
     let existingContent = CSV_HEADERS;
+    let existingBlobUrl: string | null = null;
 
     try {
       const blobs = await list({ prefix: CSV_FILENAME });
       if (blobs.blobs.length > 0) {
-        const response = await fetch(blobs.blobs[0].url);
+        existingBlobUrl = blobs.blobs[0].url;
+        const response = await fetch(existingBlobUrl);
         existingContent = await response.text();
       }
     } catch {
       // 파일이 없으면 헤더만 있는 새 파일 시작
     }
 
+    // 기존 파일 삭제 (있으면)
+    if (existingBlobUrl) {
+      await del(existingBlobUrl);
+    }
+
     // 새 데이터 추가
     const newContent = existingContent + csvRow;
 
-    // Blob에 저장 (덮어쓰기)
+    // 새 Blob 저장
     await put(CSV_FILENAME, newContent, {
       access: "public",
-      addRandomSuffix: false,
     });
 
     return NextResponse.json({ success: true });
