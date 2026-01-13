@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { put, list, del } from "@vercel/blob";
+import { put, list } from "@vercel/blob";
 
 interface FormData {
   agreement1: string;
@@ -11,8 +11,18 @@ interface FormData {
   gender: string;
 }
 
-const CSV_FILENAME = "submissions.csv";
-const CSV_HEADERS = "타임스탬프,사전공지동의,개인정보동의,SMS동의,성함,전화번호,출생연도,성별\n";
+interface SubmissionData {
+  timestamp: string;
+  agreement1: string;
+  privacyAgreement: string;
+  smsAgreement: string;
+  name: string;
+  phone: string;
+  birthYear: string;
+  gender: string;
+}
+
+const CSV_HEADERS = "타임스탬프,사전공지동의,개인정보동의,SMS동의,성함,전화번호,출생연도,성별";
 
 export async function POST(request: NextRequest) {
   try {
@@ -26,45 +36,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // CSV 행 생성
+    // 제출 데이터 생성
     const timestamp = new Date().toISOString();
-    const csvRow = [
+    const submission: SubmissionData = {
       timestamp,
-      data.agreement1 === "agree" ? "동의" : "비동의",
-      data.privacyAgreement ? "동의" : "비동의",
-      data.smsAgreement === "agree" ? "동의" : "비동의",
-      data.name,
-      data.phone,
-      data.birthYear,
-      data.gender === "male" ? "남자" : "여자",
-    ].map(field => `"${field}"`).join(",") + "\n";
+      agreement1: data.agreement1 === "agree" ? "동의" : "비동의",
+      privacyAgreement: data.privacyAgreement ? "동의" : "비동의",
+      smsAgreement: data.smsAgreement === "agree" ? "동의" : "비동의",
+      name: data.name,
+      phone: data.phone,
+      birthYear: data.birthYear,
+      gender: data.gender === "male" ? "남자" : "여자",
+    };
 
-    // 기존 CSV 가져오기
-    let existingContent = CSV_HEADERS;
-    let existingBlobUrl: string | null = null;
+    // 고유 파일명으로 저장 (timestamp + random)
+    const filename = `submissions/${timestamp.replace(/[:.]/g, "-")}-${Math.random().toString(36).slice(2, 8)}.json`;
 
-    try {
-      const blobs = await list({ prefix: CSV_FILENAME });
-      if (blobs.blobs.length > 0) {
-        existingBlobUrl = blobs.blobs[0].url;
-        const response = await fetch(existingBlobUrl);
-        existingContent = await response.text();
-      }
-    } catch {
-      // 파일이 없으면 헤더만 있는 새 파일 시작
-    }
-
-    // 기존 파일 삭제 (있으면)
-    if (existingBlobUrl) {
-      await del(existingBlobUrl);
-    }
-
-    // 새 데이터 추가
-    const newContent = existingContent + csvRow;
-
-    // 새 Blob 저장
-    await put(CSV_FILENAME, newContent, {
+    await put(filename, JSON.stringify(submission), {
       access: "public",
+      contentType: "application/json",
     });
 
     return NextResponse.json({ success: true });
@@ -80,24 +70,46 @@ export async function POST(request: NextRequest) {
 // CSV 다운로드 API
 export async function GET() {
   try {
-    const blobs = await list({ prefix: CSV_FILENAME });
+    const blobs = await list({ prefix: "submissions/" });
 
     if (blobs.blobs.length === 0) {
-      return new NextResponse(CSV_HEADERS, {
+      return new NextResponse(CSV_HEADERS + "\n", {
         headers: {
           "Content-Type": "text/csv; charset=utf-8",
-          "Content-Disposition": `attachment; filename="${CSV_FILENAME}"`,
+          "Content-Disposition": 'attachment; filename="submissions.csv"',
         },
       });
     }
 
-    const response = await fetch(blobs.blobs[0].url);
-    const csvContent = await response.text();
+    // 모든 JSON 파일 읽어서 합치기
+    const submissions: SubmissionData[] = [];
+
+    for (const blob of blobs.blobs) {
+      try {
+        const response = await fetch(blob.url);
+        const data: SubmissionData = await response.json();
+        submissions.push(data);
+      } catch {
+        // 개별 파일 읽기 실패 시 스킵
+      }
+    }
+
+    // 시간순 정렬
+    submissions.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
+
+    // CSV 생성
+    const csvRows = submissions.map(s =>
+      [s.timestamp, s.agreement1, s.privacyAgreement, s.smsAgreement, s.name, s.phone, s.birthYear, s.gender]
+        .map(field => `"${field}"`)
+        .join(",")
+    );
+
+    const csvContent = CSV_HEADERS + "\n" + csvRows.join("\n");
 
     return new NextResponse(csvContent, {
       headers: {
         "Content-Type": "text/csv; charset=utf-8",
-        "Content-Disposition": `attachment; filename="${CSV_FILENAME}"`,
+        "Content-Disposition": 'attachment; filename="submissions.csv"',
       },
     });
   } catch (error) {
