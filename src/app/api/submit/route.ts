@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { put, list } from "@vercel/blob";
 
 interface FormData {
   agreement1: string;
@@ -9,6 +10,9 @@ interface FormData {
   birthYear: string;
   gender: string;
 }
+
+const CSV_FILENAME = "submissions.csv";
+const CSV_HEADERS = "타임스탬프,사전공지동의,개인정보동의,SMS동의,성함,전화번호,출생연도,성별\n";
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,44 +26,78 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Google Apps Script 웹 앱 URL
-    const GOOGLE_SCRIPT_URL = process.env.GOOGLE_SCRIPT_URL;
+    // CSV 행 생성
+    const timestamp = new Date().toISOString();
+    const csvRow = [
+      timestamp,
+      data.agreement1 === "agree" ? "동의" : "비동의",
+      data.privacyAgreement ? "동의" : "비동의",
+      data.smsAgreement === "agree" ? "동의" : "비동의",
+      data.name,
+      data.phone,
+      data.birthYear,
+      data.gender === "male" ? "남자" : "여자",
+    ].map(field => `"${field}"`).join(",") + "\n";
 
-    if (!GOOGLE_SCRIPT_URL) {
-      console.error("GOOGLE_SCRIPT_URL is not configured");
-      return NextResponse.json(
-        { error: "서버 설정 오류" },
-        { status: 500 }
-      );
+    // 기존 CSV 가져오기 또는 새로 생성
+    let existingContent = CSV_HEADERS;
+
+    try {
+      const blobs = await list({ prefix: CSV_FILENAME });
+      if (blobs.blobs.length > 0) {
+        const response = await fetch(blobs.blobs[0].url);
+        existingContent = await response.text();
+      }
+    } catch {
+      // 파일이 없으면 헤더만 있는 새 파일 시작
     }
 
-    // Google Sheets에 데이터 전송
-    const response = await fetch(GOOGLE_SCRIPT_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        timestamp: new Date().toISOString(),
-        agreement1: data.agreement1 === "agree" ? "동의" : "비동의",
-        privacyAgreement: data.privacyAgreement ? "동의" : "비동의",
-        smsAgreement: data.smsAgreement === "agree" ? "동의" : "비동의",
-        name: data.name,
-        phone: data.phone,
-        birthYear: data.birthYear,
-        gender: data.gender === "male" ? "남자" : "여자",
-      }),
+    // 새 데이터 추가
+    const newContent = existingContent + csvRow;
+
+    // Blob에 저장 (덮어쓰기)
+    await put(CSV_FILENAME, newContent, {
+      access: "public",
+      addRandomSuffix: false,
     });
-
-    if (!response.ok) {
-      throw new Error("Google Sheets 전송 실패");
-    }
 
     return NextResponse.json({ success: true });
   } catch (error) {
     console.error("Submit error:", error);
     return NextResponse.json(
       { error: "제출 중 오류가 발생했습니다." },
+      { status: 500 }
+    );
+  }
+}
+
+// CSV 다운로드 API
+export async function GET() {
+  try {
+    const blobs = await list({ prefix: CSV_FILENAME });
+
+    if (blobs.blobs.length === 0) {
+      return new NextResponse(CSV_HEADERS, {
+        headers: {
+          "Content-Type": "text/csv; charset=utf-8",
+          "Content-Disposition": `attachment; filename="${CSV_FILENAME}"`,
+        },
+      });
+    }
+
+    const response = await fetch(blobs.blobs[0].url);
+    const csvContent = await response.text();
+
+    return new NextResponse(csvContent, {
+      headers: {
+        "Content-Type": "text/csv; charset=utf-8",
+        "Content-Disposition": `attachment; filename="${CSV_FILENAME}"`,
+      },
+    });
+  } catch (error) {
+    console.error("Download error:", error);
+    return NextResponse.json(
+      { error: "다운로드 중 오류가 발생했습니다." },
       { status: 500 }
     );
   }
