@@ -1,0 +1,969 @@
+# 내친소 Phase 2 — 기능 상세 설계서
+
+> 작성일: 2026-03-26
+> 대상 기능: #3 양방향 동시 소개 · #5 카카오톡 소개 카드 · #13 구체적 프로필 반응
+> 참고: [기능 브레인스토밍 v2](./기능_브레인스토밍_v2.md)
+
+---
+
+# 1. 양방향 동시 소개 (#3)
+
+> "내 싱글 친구 A와 B를 골라서 동시에 소개. 양쪽 모두 수락하면 연결"
+> 한국 소개팅 문화에 가장 가까운 기능
+
+---
+
+## 1.1 유저 플로우
+
+### 주선자 플로우
+
+```
+[홈/피드]
+  └→ [양방향 소개] 버튼 (하단 탭 or 플로팅 버튼)
+
+[STEP 1: 첫 번째 친구 선택]
+┌─────────────────────────┐
+│  누구를 소개해줄까?       │
+│                         │
+│  🔍 친구 검색             │
+│                         │
+│  👤 태양 (싱글)     [선택] │
+│  👤 현우 (싱글)     [선택] │
+│  👤 민준 (연애중)    비활성  │
+│  👤 지수 (싱글)     [선택] │
+│                         │
+│  ※ "소개받고 싶어요" ON인  │
+│    친구만 표시              │
+└─────────────────────────┘
+         ↓ 태양 선택
+
+[STEP 2: 두 번째 친구 선택]
+┌─────────────────────────┐
+│  태양에게 누구를 소개할까? │
+│                         │
+│  👤 지수 (싱글)     [선택] │
+│  👤 도윤 (싱글)     [선택] │
+│                         │
+│  ※ 태양 본인 + 이미 소개된 │
+│    조합은 제외              │
+└─────────────────────────┘
+         ↓ 지수 선택
+
+[STEP 3: 소개 메시지 작성]
+┌─────────────────────────┐
+│  태양 👤  ↔  👤 지수      │
+│                         │
+│  한마디 남기기 (선택):     │
+│  ┌─────────────────────┐ │
+│  │ "둘 다 여행 좋아해서  │ │
+│  │  잘 맞을 것 같아!"   │ │
+│  └─────────────────────┘ │
+│                         │
+│  프리셋:                  │
+│  [둘이 잘 어울릴 것 같아!] │
+│  [취향이 비슷해서 추천!]   │
+│  [성격 진짜 잘 맞을 듯]   │
+│                         │
+│  [소개 보내기 →]          │
+└─────────────────────────┘
+         ↓
+
+[STEP 4: 완료]
+┌─────────────────────────┐
+│  ✅ 소개를 보냈어!         │
+│                         │
+│  태양과 지수에게 각각      │
+│  알림이 갈 거야.           │
+│  둘 다 수락하면 대화가     │
+│  시작돼! 결과 알려줄게 😊  │
+│                         │
+│  +5 🌟 썬구리 적립!        │
+│                         │
+│  [확인]                   │
+└─────────────────────────┘
+```
+
+### 소개받는 사람 (A측 — 태양) 플로우
+
+```
+[푸시 알림]
+"민준이가 너한테 소개해주고 싶은 사람이 있대!"
+
+[소개 카드 화면]
+┌─────────────────────────┐
+│  💌 민준이가 소개해줬어     │
+│  "둘 다 여행 좋아해서      │
+│   잘 맞을 것 같아!"        │
+│─────────────────────────│
+│                         │
+│  [상대 프로필 미리보기]     │
+│  지수, 26                │
+│  "여행 다니면서 사진 찍는  │
+│   게 취미예요"             │
+│                         │
+│─────────────────────────│
+│  [궁금해! 😊]   [괜찮아]   │
+└─────────────────────────┘
+```
+
+### 양쪽 수락 후
+
+```
+[양쪽 모두 "궁금해!" 선택 시]
+
+→ 주선자에게 알림:
+  "태양 ↔ 지수가 서로 궁금하대! 🎉"
+  +20 🌟 썬구리 (대화 시작 보상)
+
+→ 태양 & 지수에게:
+  "서로 궁금하다고 했어! 대화를 시작해봐 😊"
+  → 1:1 채팅방 자동 생성
+
+[한쪽만 수락 시]
+→ 거절한 쪽에겐 아무 알림 없음
+→ 수락한 쪽에겐 "아쉽지만 이번엔 매칭이 안 됐어"
+→ 주선자에겐 "이번엔 안 됐지만 다음에 다시 도전해봐!"
+  (누가 거절했는지는 알려주지 않음)
+```
+
+---
+
+## 1.2 DB 스키마
+
+```sql
+-- 양방향 소개 요청
+CREATE TABLE matchmaking_requests (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    matchmaker_id   UUID NOT NULL REFERENCES users(id),     -- 주선자
+    friend_a_id     UUID NOT NULL REFERENCES users(id),     -- 소개받는 사람 A
+    friend_b_id     UUID NOT NULL REFERENCES users(id),     -- 소개받는 사람 B
+    message         TEXT,                                    -- 주선자 한마디
+    status          VARCHAR(20) NOT NULL DEFAULT 'pending',  -- pending | matched | rejected | expired
+    friend_a_status VARCHAR(20) NOT NULL DEFAULT 'pending',  -- pending | accepted | rejected
+    friend_b_status VARCHAR(20) NOT NULL DEFAULT 'pending',  -- pending | accepted | rejected
+    friend_a_responded_at TIMESTAMPTZ,
+    friend_b_responded_at TIMESTAMPTZ,
+    chat_room_id    UUID REFERENCES chat_rooms(id),          -- 매칭 성사 시 생성
+    expires_at      TIMESTAMPTZ NOT NULL,                    -- 응답 기한 (72시간)
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+
+    -- 같은 조합 중복 방지 (A-B 순서 정규화)
+    CONSTRAINT unique_matchmaking_pair UNIQUE (matchmaker_id, friend_a_id, friend_b_id),
+    -- 자기 자신 소개 불가
+    CONSTRAINT no_self_match CHECK (friend_a_id != friend_b_id),
+    CONSTRAINT no_matchmaker_in_match CHECK (matchmaker_id != friend_a_id AND matchmaker_id != friend_b_id)
+);
+
+CREATE INDEX idx_matchmaking_friend_a ON matchmaking_requests(friend_a_id, status);
+CREATE INDEX idx_matchmaking_friend_b ON matchmaking_requests(friend_b_id, status);
+CREATE INDEX idx_matchmaking_matchmaker ON matchmaking_requests(matchmaker_id, created_at DESC);
+CREATE INDEX idx_matchmaking_expires ON matchmaking_requests(expires_at) WHERE status = 'pending';
+
+-- 소개 가능 친구 관계 (캐시 테이블)
+CREATE TABLE matchmaker_friends (
+    user_id         UUID NOT NULL REFERENCES users(id),
+    friend_id       UUID NOT NULL REFERENCES users(id),
+    is_single       BOOLEAN NOT NULL DEFAULT true,
+    open_to_intro   BOOLEAN NOT NULL DEFAULT false,  -- "소개받고 싶어요" 토글
+    updated_at      TIMESTAMPTZ NOT NULL DEFAULT now(),
+    PRIMARY KEY (user_id, friend_id)
+);
+```
+
+---
+
+## 1.3 API 엔드포인트
+
+| Method | Path | 설명 | 인증 |
+|--------|------|------|------|
+| `GET` | `/api/v1/matchmaking/friends` | 소개 가능한 친구 목록 (싱글 + 토글 ON) | Required |
+| `POST` | `/api/v1/matchmaking/requests` | 양방향 소개 생성 | Required |
+| `GET` | `/api/v1/matchmaking/requests` | 내가 보낸/받은 소개 목록 | Required |
+| `GET` | `/api/v1/matchmaking/requests/:id` | 소개 상세 (상태 포함) | Required |
+| `PATCH` | `/api/v1/matchmaking/requests/:id/respond` | 소개 수락/거절 | Required |
+
+### 요청/응답 상세
+
+**POST `/api/v1/matchmaking/requests`**
+
+```json
+// Request
+{
+    "friend_a_id": "uuid-태양",
+    "friend_b_id": "uuid-지수",
+    "message": "둘 다 여행 좋아해서 잘 맞을 것 같아!"
+}
+
+// Response 201
+{
+    "id": "uuid-request",
+    "status": "pending",
+    "friend_a_status": "pending",
+    "friend_b_status": "pending",
+    "expires_at": "2026-03-29T12:00:00Z",
+    "sungguri_earned": 5
+}
+```
+
+**PATCH `/api/v1/matchmaking/requests/:id/respond`**
+
+```json
+// Request
+{
+    "response": "accepted"  // "accepted" | "rejected"
+}
+
+// Response 200 (양쪽 모두 수락 시)
+{
+    "id": "uuid-request",
+    "status": "matched",
+    "chat_room_id": "uuid-chatroom",
+    "message": "서로 궁금하다고 했어! 대화를 시작해봐 😊"
+}
+
+// Response 200 (한쪽만 수락, 아직 대기 중)
+{
+    "id": "uuid-request",
+    "status": "pending",
+    "message": "응답을 보냈어! 상대방 답변을 기다리는 중이야"
+}
+```
+
+---
+
+## 1.4 외부 연동
+
+| 서비스 | 용도 | 비고 |
+|--------|------|------|
+| FCM / APNs | 소개 알림 푸시 | 양쪽에게 동시 발송 |
+| 내부 채팅 서비스 | 매칭 성사 시 채팅방 생성 | 기존 채팅 인프라 활용 |
+
+- 별도 외부 API 연동 불필요 (앱 내부 기능)
+
+---
+
+## 1.5 엣지 케이스
+
+| 상황 | 처리 방법 |
+|------|----------|
+| A 또는 B가 소개 도중 "소개받고 싶어요" 토글 OFF | 소개 생성 시점에 토글 확인. 이미 보낸 소개는 유지하되, 새 소개 차단 |
+| A-B 조합이 이미 존재 (같은 주선자) | DB UNIQUE 제약으로 차단 + "이미 소개한 조합이야" 안내 |
+| A-B 조합이 다른 주선자에 의해 이미 존재 | 허용 — 다른 친구의 시각으로 한 번 더 소개받을 수 있음 |
+| 72시간 내 미응답 | Cron job으로 `expired` 처리. 주선자에게 "시간이 지나서 소개가 만료됐어" 알림 |
+| A가 B를 이미 차단한 상태 | 친구 선택 단계에서 차단 관계 필터링 — 목록에 안 보임 |
+| 소개 직후 A 또는 B가 탈퇴 | `status`를 `cancelled`로 전환. 나머지 한쪽에 "소개가 취소됐어" 알림 |
+| 동시에 A→B, B→A 응답 | DB 트랜잭션으로 race condition 방지. `SELECT ... FOR UPDATE` 사용 |
+| 주선자가 A, B 모두와 친구가 아닌 경우 | 친구 목록 API에서 이미 필터링. 직접 API 호출 시 403 반환 |
+
+---
+
+## 1.6 썬구리 보상 연동
+
+| 시점 | 받는 사람 | 보상 | 조건 |
+|------|----------|------|------|
+| 소개 전송 | 주선자 | +5 | 소개 생성 즉시 |
+| 소개에 메시지 첨부 | 주선자 | +3 (보너스) | `message` 필드가 비어있지 않을 때 |
+| 수락 응답 | 소개받는 사람 (각각) | +10 | "궁금해!" 선택 시 |
+| 양쪽 수락 → 대화 시작 | 주선자 | +20 | `status = matched` 전환 시 |
+| 3메시지 이상 교환 | 주선자 | +20 | 채팅방 메시지 카운트 트리거 |
+| 매칭 성사 (연락처 교환 등) | 주선자 | +50 + 뱃지 | 수동 또는 자동 판별 |
+
+```
+썬구리 적립 타이밍:
+주선자: 전송(+5) → 메시지 보너스(+3) → 대화 시작(+20) → 매칭 성사(+50)
+       = 최대 +78 🌟 / 1건
+소개받는 사람: 수락(+10) × 2명 = 최대 +20 🌟 / 1건
+```
+
+---
+
+## 1.7 구현 난이도 / 예상 기간
+
+| 영역 | 난이도 | 예상 기간 | 상세 |
+|------|--------|----------|------|
+| **프론트엔드** | ★★★☆☆ | 2주 | 3-step 위저드 UI, 친구 선택 리스트, 소개 카드 뷰, 응답 화면 |
+| **백엔드** | ★★★★☆ | 2주 | 상태 머신 관리, 동시성 처리, 만료 cron, 알림 연동 |
+| **총합** | | **3~4주** | 프론트/백엔드 병렬 진행 기준. 채팅 인프라 있다고 가정 |
+
+**주요 리스크**: 상태 머신 복잡도 (`pending` → `matched` / `rejected` / `expired` 전환 로직)와 동시 응답 시 race condition 처리
+
+---
+---
+
+# 2. 카카오톡 소개 카드 (#5)
+
+> "내친소 카드를 카카오톡으로 공유. 비유저가 미리보기 → 앱 설치 → 소개 카드 확인"
+> 바이럴 성장의 핵심 엔진
+
+---
+
+## 2.1 유저 플로우
+
+### 공유하는 사람 (기존 유저) 플로우
+
+```
+[소개 카드 상세 화면]
+  └→ [카카오톡으로 공유] 버튼
+
+[공유 옵션 선택]
+┌─────────────────────────┐
+│  카카오톡으로 공유하기     │
+│                         │
+│  어떤 내용을 공유할까?     │
+│                         │
+│  ○ 내 프로필 카드         │
+│    → 친구에게 나를 알리기  │
+│                         │
+│  ● 소개 카드              │
+│    → 다른 친구에게 소개    │
+│                         │
+│  [카카오톡 보내기 →]       │
+└─────────────────────────┘
+         ↓
+
+[카카오톡 친구 선택 (네이티브)]
+  → 카카오톡 앱으로 전환
+  → 대화 상대 선택
+  → 카드 전송
+         ↓
+
+[전송 완료]
+┌─────────────────────────┐
+│  ✅ 카카오톡으로 보냈어!   │
+│                         │
+│  +15 🌟 썬구리 적립!       │
+│  (첫 카카오 초대 보너스)    │
+│                         │
+│  친구가 앱을 설치하면      │
+│  추가 보상이 있어!         │
+│  [확인]                   │
+└─────────────────────────┘
+```
+
+### 카카오톡에서 받는 사람 (비유저) 플로우
+
+```
+[카카오톡 메시지]
+┌─────────────────────────┐
+│  내친소 💌                │
+│                         │
+│  "민준이가 너한테         │
+│   소개해주고 싶은          │
+│   사람이 있대!"            │
+│                         │
+│  ┌───────────────────┐  │
+│  │ 👤 지수, 26        │  │
+│  │ "여행과 카페를     │  │
+│  │  좋아하는..."      │  │
+│  │                   │  │
+│  │ 💬 민준이의 한마디  │  │
+│  │ "너 진짜 잘 맞을   │  │
+│  │  것 같아서!"       │  │
+│  └───────────────────┘  │
+│                         │
+│  [내친소에서 확인하기 →]   │
+└─────────────────────────┘
+         ↓ 링크 클릭
+
+[딥링크 분기]
+├→ 앱 설치됨: 앱 열기 → 소개 카드 상세
+└→ 앱 미설치:
+   ┌─────────────────────────┐
+   │  [웹 미리보기 페이지]     │
+   │                         │
+   │  민준이가 소개해주고 싶은  │
+   │  사람이 있어!             │
+   │                         │
+   │  👤 지수, 26             │
+   │  "여행과 카페를 좋아하는  │
+   │   긍정적인 사람이에요"    │
+   │                         │
+   │  💬 민준이의 추천사:      │
+   │  "걔 진짜 성격 좋아"     │
+   │                         │
+   │  [사진은 앱에서 확인! →]  │
+   │                         │
+   │  🍎 App Store            │
+   │  🤖 Google Play          │
+   └─────────────────────────┘
+         ↓ 앱 설치
+
+[첫 실행 — 딥링크 연동]
+  → 회원가입 / 로그인
+  → 소개 카드 상세 자동 이동
+  → "민준이가 보낸 소개를 확인해봐!"
+```
+
+---
+
+## 2.2 DB 스키마
+
+```sql
+-- 카카오톡 공유 카드
+CREATE TABLE kakao_share_cards (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    sender_id       UUID NOT NULL REFERENCES users(id),       -- 공유한 사람
+    card_type       VARCHAR(20) NOT NULL,                      -- 'profile' | 'introduction'
+    target_profile_id UUID REFERENCES users(id),               -- 소개 대상 프로필 (introduction 타입일 때)
+    message         TEXT,                                      -- 커스텀 메시지
+    share_token     VARCHAR(64) NOT NULL UNIQUE,               -- 공유 링크 토큰
+    share_url       TEXT NOT NULL,                             -- 카카오 공유 URL
+    deep_link       TEXT NOT NULL,                             -- 앱 딥링크
+    preview_data    JSONB NOT NULL,                            -- OG 미리보기 데이터 캐시
+    view_count      INTEGER NOT NULL DEFAULT 0,                -- 미리보기 조회 수
+    install_count   INTEGER NOT NULL DEFAULT 0,                -- 이 카드를 통한 앱 설치 수
+    is_active       BOOLEAN NOT NULL DEFAULT true,             -- 비활성화 가능
+    expires_at      TIMESTAMPTZ NOT NULL,                      -- 카드 만료 (30일)
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_kakao_share_sender ON kakao_share_cards(sender_id, created_at DESC);
+CREATE INDEX idx_kakao_share_token ON kakao_share_cards(share_token) WHERE is_active = true;
+
+-- 카카오 초대 추적 (어트리뷰션)
+CREATE TABLE kakao_invite_tracking (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    share_card_id   UUID NOT NULL REFERENCES kakao_share_cards(id),
+    invitee_id      UUID REFERENCES users(id),                -- 가입 완료 시 연결
+    kakao_user_key  VARCHAR(128),                             -- 카카오 유저 식별 (해시)
+    status          VARCHAR(20) NOT NULL DEFAULT 'sent',       -- sent | viewed | installed | registered
+    viewed_at       TIMESTAMPTZ,
+    installed_at    TIMESTAMPTZ,
+    registered_at   TIMESTAMPTZ,
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_invite_tracking_card ON kakao_invite_tracking(share_card_id);
+CREATE INDEX idx_invite_tracking_invitee ON kakao_invite_tracking(invitee_id) WHERE invitee_id IS NOT NULL;
+```
+
+---
+
+## 2.3 API 엔드포인트
+
+| Method | Path | 설명 | 인증 |
+|--------|------|------|------|
+| `POST` | `/api/v1/share/kakao` | 카카오 공유 카드 생성 + 공유 URL 반환 | Required |
+| `GET` | `/api/v1/share/kakao/:token` | 공유 카드 미리보기 (웹 랜딩 페이지용) | None |
+| `GET` | `/api/v1/share/kakao/:token/deeplink` | 딥링크 리다이렉트 | None |
+| `POST` | `/api/v1/share/kakao/:token/view` | 미리보기 조회 추적 | None |
+| `GET` | `/api/v1/share/kakao/stats` | 내가 보낸 공유 카드 통계 | Required |
+| `DELETE` | `/api/v1/share/kakao/:id` | 공유 카드 비활성화 | Required |
+
+### 요청/응답 상세
+
+**POST `/api/v1/share/kakao`**
+
+```json
+// Request
+{
+    "card_type": "introduction",
+    "target_profile_id": "uuid-지수",
+    "message": "너 진짜 잘 맞을 것 같아서!"
+}
+
+// Response 201
+{
+    "id": "uuid-card",
+    "share_token": "abc123xyz789",
+    "share_url": "https://naechinso.com/s/abc123xyz789",
+    "kakao_share_data": {
+        "template_id": 12345,
+        "template_args": {
+            "sender_name": "민준",
+            "profile_name": "지수",
+            "profile_age": 26,
+            "profile_intro": "여행과 카페를 좋아하는 긍정적인 사람이에요",
+            "message": "너 진짜 잘 맞을 것 같아서!",
+            "link": "https://naechinso.com/s/abc123xyz789"
+        }
+    },
+    "sungguri_earned": 15
+}
+```
+
+**GET `/api/v1/share/kakao/:token`** (웹 랜딩 페이지)
+
+```json
+// Response 200
+{
+    "sender_name": "민준",
+    "card_type": "introduction",
+    "profile_preview": {
+        "name": "지수",
+        "age": 26,
+        "intro": "여행과 카페를 좋아하는 긍정적인 사람이에요",
+        "recommendation": "걔 진짜 성격 좋아",
+        "photo_blurred": true
+    },
+    "message": "너 진짜 잘 맞을 것 같아서!",
+    "deep_link": "naechinso://share/abc123xyz789",
+    "app_store_url": "https://apps.apple.com/app/naechinso/id...",
+    "play_store_url": "https://play.google.com/store/apps/details?id=..."
+}
+```
+
+---
+
+## 2.4 외부 연동
+
+| 서비스 | 용도 | 연동 방식 | 비고 |
+|--------|------|----------|------|
+| **카카오톡 공유 API** | 메시지 템플릿 전송 | Kakao SDK `ShareClient.share()` | 커스텀 템플릿 등록 필요 |
+| **카카오 디벨로퍼스** | 앱 등록 + 템플릿 관리 | REST API | 메시지 템플릿 사전 등록 |
+| **Firebase Dynamic Links** (또는 자체 딥링크) | Deferred Deep Linking | Firebase SDK | 앱 미설치 → 설치 후 → 원래 카드로 이동 |
+| **OG 메타태그** | 카카오톡 미리보기 카드 | 웹 서버 메타태그 | title, description, image 자동 생성 |
+
+### 카카오 공유 템플릿 구조
+
+```
+┌─────────────────────────────┐
+│  [앱 아이콘] 내친소           │  ← 헤더
+│─────────────────────────────│
+│  "{sender}이(가) 너한테       │  ← 본문
+│   소개해주고 싶은 사람이 있대!" │
+│                             │
+│  ┌─────────────┐            │
+│  │ [프로필 이미지│            │  ← 이미지 (블러 처리)
+│  │  블러 처리]  │            │
+│  └─────────────┘            │
+│                             │
+│  💬 "{message}"              │  ← 주선자 한마디
+│─────────────────────────────│
+│  [내친소에서 확인하기]         │  ← 버튼 (딥링크)
+└─────────────────────────────┘
+```
+
+---
+
+## 2.5 엣지 케이스
+
+| 상황 | 처리 방법 |
+|------|----------|
+| 소개 대상이 "소개받고 싶어요" OFF로 전환 | 공유 카드 자동 비활성화. 링크 클릭 시 "이 소개는 더 이상 유효하지 않아요" 표시 |
+| 소개 대상이 앱 탈퇴 | 공유 카드 비활성화. 웹 미리보기에 "프로필을 확인할 수 없어요" 표시 |
+| 공유 링크 무한 전파 (의도치 않은 바이럴) | `view_count` 모니터링. 100회 초과 시 자동 비활성화 + 카드 주인에게 알림 |
+| 카카오톡 미설치 기기 | 네이티브 공유 시트 폴백 (URL 복사) |
+| 앱 설치 후 딥링크 유실 (Deferred Deep Link 실패) | 가입 후 "받은 소개" 탭에서 연결 시도. `kakao_user_key` 매칭으로 복구 |
+| 하루 카카오 공유 스팸 | 유저당 하루 5건 제한. 초과 시 "내일 다시 공유할 수 있어" 안내 |
+| 카카오 SDK 에러 (네트워크 등) | 로컬에 공유 카드 저장 → 네트워크 복구 시 재시도 큐 |
+| 만료된 카드 링크 클릭 | "이 소개 카드는 만료됐어. 내친소 앱에서 새로운 소개를 찾아봐!" + 앱 다운로드 유도 |
+
+---
+
+## 2.6 썬구리 보상 연동
+
+| 시점 | 받는 사람 | 보상 | 조건 |
+|------|----------|------|------|
+| 카카오톡 공유 전송 | 공유한 사람 | +15 | 공유 완료 콜백 수신 시 |
+| 공유 받은 사람이 앱 설치 | 공유한 사람 | +10 (보너스) | `invite_tracking.status = installed` |
+| 공유 받은 사람이 가입 완료 | 공유한 사람 | +15 (보너스) | `invite_tracking.status = registered` |
+| 가입 완료 | 공유 받은 사람 | +10 | 신규 가입 + 초대 경로 어트리뷰션 성공 시 |
+
+```
+썬구리 적립 타이밍:
+공유한 사람: 공유(+15) → 상대 설치(+10) → 상대 가입(+15) = 최대 +40 🌟 / 1건
+공유 받은 사람: 가입(+10)
+
+※ 첫 카카오 공유: +15 (기본)
+※ 일일 2~5건째 공유: +5 (감소)
+※ 6건째부터: 보상 없음 (스팸 방지)
+```
+
+---
+
+## 2.7 구현 난이도 / 예상 기간
+
+| 영역 | 난이도 | 예상 기간 | 상세 |
+|------|--------|----------|------|
+| **프론트엔드 (앱)** | ★★★☆☆ | 1.5주 | 카카오 SDK 연동, 공유 화면 UI, 딥링크 수신 처리 |
+| **프론트엔드 (웹)** | ★★☆☆☆ | 1주 | 웹 랜딩 페이지 (SSR), OG 메타태그 동적 생성 |
+| **백엔드** | ★★★☆☆ | 1.5주 | 공유 카드 CRUD, 토큰 관리, 어트리뷰션 추적, 딥링크 리다이렉트 |
+| **총합** | | **3~4주** | 프론트/백엔드 병렬 기준. 카카오 개발자 앱 등록/심사 기간 별도 (1~2주) |
+
+**주요 리스크**: 카카오 SDK 버전 호환성, Deferred Deep Link 안정성, 카카오 메시지 템플릿 심사 기간
+
+---
+---
+
+# 3. 구체적 프로필 반응 (#13)
+
+> "친구에게 소개할 때 프로필의 특정 부분을 하이라이트해서 보냄"
+> 피드 즉시 공유(#1)의 업그레이드 버전
+
+---
+
+## 3.1 유저 플로우
+
+### 소개하는 사람 (주선자) 플로우
+
+```
+[피드 카드 상세 보기 — 지수의 프로필]
+┌─────────────────────────────┐
+│  지수, 26                    │
+│                             │
+│  📸 [사진 1] [사진 2] [사진 3] │  ← 스와이프 갤러리
+│                             │
+│  💬 자기소개                  │
+│  "여행 다니면서 사진 찍는 게   │
+│   취미예요. 최근에 제주도..."   │
+│                             │
+│  🎯 이상형                    │
+│  "유머 감각 있고 같이 여행    │
+│   다닐 수 있는 사람"           │
+│                             │
+│  📝 Q&A                      │
+│  Q. 주말에 뭐 해?             │
+│  A. "보통 카페에서 책 읽거나   │
+│      전시회 다녀요"            │
+│                             │
+│  [친구에게 소개 →]             │
+└─────────────────────────────┘
+         ↓ "친구에게 소개" 클릭
+
+[하이라이트 모드 활성화]
+┌─────────────────────────────┐
+│  ✨ 어떤 부분이 눈에 띄었어?   │
+│  탭해서 하이라이트해봐!        │
+│                             │
+│  📸 [사진 1]  [사진 2] ✅ [사진 3] │
+│      탭하면 선택↑             │
+│                             │
+│  💬 자기소개                  │
+│  "여행 다니면서 사진 찍는 게   │  ← 텍스트 블록 탭 → 선택됨
+│   취미예요...." ✅             │
+│                             │
+│  🎯 이상형                    │
+│  "유머 감각 있고..." ○         │
+│                             │
+│  [선택 완료 (2개)]             │
+└─────────────────────────────┘
+         ↓ 사진 2 + 자기소개 선택
+
+[친구 선택 + 메시지]
+┌─────────────────────────────┐
+│  📌 하이라이트 미리보기:       │
+│  ┌────────────────────────┐ │
+│  │ [사진 2: 제주도 여행]    │ │
+│  │ "여행 다니면서 사진..."   │ │
+│  └────────────────────────┘ │
+│                             │
+│  누구에게 보낼까?             │
+│  👤 태양     [선택]           │
+│  👤 현우     [선택]           │
+│                             │
+│  한마디 (선택):               │
+│  ┌────────────────────────┐ │
+│  │ "야 이 사람 여행사진 봐  │ │
+│  │  너 취향이잖아 ㅋㅋ"     │ │
+│  └────────────────────────┘ │
+│                             │
+│  프리셋:                      │
+│  [이 사진 봐!]                │
+│  [여기 답변 너무 좋지 않아?]   │
+│  [너랑 취미 같아서!]          │
+│                             │
+│  [보내기 →]                   │
+└─────────────────────────────┘
+         ↓
+
+[완료]
+  +5 🌟 (소개 기본)
+  +3 🌟 (하이라이트 보너스)
+  = +8 🌟
+```
+
+### 소개받는 사람 (태양) 플로우
+
+```
+[푸시 알림]
+"민준이가 너한테 특별히 보여주고 싶은 프로필이 있대!"
+
+[소개 카드 — 하이라이트 버전]
+┌─────────────────────────────┐
+│  💌 민준이가 소개해줬어        │
+│                             │
+│  📌 민준이가 특별히 찍은 부분:  │
+│  ┌────────────────────────┐ │
+│  │                        │ │
+│  │  [사진 2: 제주도 여행]   │ │  ← 하이라이트 사진 크게
+│  │                        │ │
+│  │  💬 "여행 다니면서 사진  │ │  ← 하이라이트 텍스트
+│  │   찍는 게 취미예요..."  │ │
+│  │                        │ │
+│  └────────────────────────┘ │
+│                             │
+│  민준이의 한마디:             │
+│  "야 이 사람 여행사진 봐      │
+│   너 취향이잖아 ㅋㅋ"         │
+│                             │
+│─────────────────────────────│
+│  [전체 프로필 보기 →]         │
+│                             │
+│  [궁금해! 😊]     [괜찮아]    │
+└─────────────────────────────┘
+
+         ↓ "전체 프로필 보기" 클릭
+
+[전체 프로필 — 하이라이트 유지]
+┌─────────────────────────────┐
+│  지수, 26                    │
+│                             │
+│  📸 [사진 1] [사진 2 ⭐] [사진 3]│
+│                ↑ 하이라이트 표시│
+│                             │
+│  💬 자기소개 ⭐                │  ← 하이라이트 섹션 강조
+│  "여행 다니면서 사진 찍는 게   │
+│   취미예요..."                │
+│  📌 민준: "야 여행사진 봐!"    │  ← 인라인 코멘트
+│                             │
+│  🎯 이상형                    │
+│  "유머 감각 있고..."           │
+│                             │
+│  [궁금해! 😊]     [괜찮아]    │
+└─────────────────────────────┘
+```
+
+---
+
+## 3.2 DB 스키마
+
+```sql
+-- 프로필 하이라이트가 첨부된 소개
+CREATE TABLE profile_highlights (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    introduction_id UUID NOT NULL,                             -- referral(소개) 레코드 FK
+    sender_id       UUID NOT NULL REFERENCES users(id),        -- 주선자
+    target_profile_id UUID NOT NULL REFERENCES users(id),      -- 하이라이트 대상 프로필
+    receiver_id     UUID NOT NULL REFERENCES users(id),        -- 소개받는 사람
+    message         TEXT,                                      -- 주선자 한마디
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+-- 하이라이트 아이템 (사진, 텍스트 등 개별 요소)
+CREATE TABLE highlight_items (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    highlight_id    UUID NOT NULL REFERENCES profile_highlights(id) ON DELETE CASCADE,
+    item_type       VARCHAR(20) NOT NULL,                      -- 'photo' | 'bio' | 'qa_answer' | 'ideal_type' | 'interest_tag'
+    item_ref_id     VARCHAR(128) NOT NULL,                     -- 사진 ID / 섹션 키 등
+    item_index      INTEGER,                                   -- 사진 순번 등
+    display_order   INTEGER NOT NULL DEFAULT 0,                -- 표시 순서
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_highlights_introduction ON profile_highlights(introduction_id);
+CREATE INDEX idx_highlights_receiver ON profile_highlights(receiver_id, created_at DESC);
+CREATE INDEX idx_highlight_items ON highlight_items(highlight_id);
+
+-- 하이라이트 반응 통계 (어떤 요소가 반응 좋은지)
+CREATE TABLE highlight_analytics (
+    id              UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+    highlight_item_id UUID NOT NULL REFERENCES highlight_items(id),
+    profile_id      UUID NOT NULL REFERENCES users(id),        -- 하이라이트된 프로필
+    item_type       VARCHAR(20) NOT NULL,
+    resulted_in_view    BOOLEAN NOT NULL DEFAULT false,         -- "전체 프로필 보기" 클릭
+    resulted_in_accept  BOOLEAN NOT NULL DEFAULT false,         -- "궁금해!" 클릭
+    created_at      TIMESTAMPTZ NOT NULL DEFAULT now()
+);
+
+CREATE INDEX idx_highlight_analytics_profile ON highlight_analytics(profile_id, item_type);
+```
+
+---
+
+## 3.3 API 엔드포인트
+
+| Method | Path | 설명 | 인증 |
+|--------|------|------|------|
+| `GET` | `/api/v1/profiles/:id/highlightable` | 프로필의 하이라이트 가능한 요소 목록 | Required |
+| `POST` | `/api/v1/introductions/highlighted` | 하이라이트 소개 생성 | Required |
+| `GET` | `/api/v1/introductions/:id/highlight` | 소개의 하이라이트 정보 조회 | Required |
+| `POST` | `/api/v1/introductions/:id/highlight/view` | 하이라이트 조회 이벤트 기록 | Required |
+
+### 요청/응답 상세
+
+**GET `/api/v1/profiles/:id/highlightable`**
+
+```json
+// Response 200
+{
+    "profile_id": "uuid-지수",
+    "items": [
+        {
+            "item_type": "photo",
+            "item_ref_id": "photo-001",
+            "item_index": 0,
+            "thumbnail_url": "https://cdn.naechinso.com/photos/photo-001-thumb.jpg",
+            "label": "사진 1"
+        },
+        {
+            "item_type": "photo",
+            "item_ref_id": "photo-002",
+            "item_index": 1,
+            "thumbnail_url": "https://cdn.naechinso.com/photos/photo-002-thumb.jpg",
+            "label": "사진 2 (제주도)"
+        },
+        {
+            "item_type": "bio",
+            "item_ref_id": "bio",
+            "preview": "여행 다니면서 사진 찍는 게 취미예요...",
+            "label": "자기소개"
+        },
+        {
+            "item_type": "ideal_type",
+            "item_ref_id": "ideal_type",
+            "preview": "유머 감각 있고 같이 여행 다닐 수 있는 사람",
+            "label": "이상형"
+        },
+        {
+            "item_type": "qa_answer",
+            "item_ref_id": "qa-weekend",
+            "preview": "보통 카페에서 책 읽거나 전시회 다녀요",
+            "label": "Q. 주말에 뭐 해?"
+        }
+    ]
+}
+```
+
+**POST `/api/v1/introductions/highlighted`**
+
+```json
+// Request
+{
+    "target_profile_id": "uuid-지수",
+    "receiver_id": "uuid-태양",
+    "message": "야 이 사람 여행사진 봐 너 취향이잖아 ㅋㅋ",
+    "highlights": [
+        {
+            "item_type": "photo",
+            "item_ref_id": "photo-002",
+            "item_index": 1
+        },
+        {
+            "item_type": "bio",
+            "item_ref_id": "bio"
+        }
+    ]
+}
+
+// Response 201
+{
+    "introduction_id": "uuid-intro",
+    "highlight_id": "uuid-highlight",
+    "highlights_count": 2,
+    "sungguri_earned": {
+        "base": 5,
+        "highlight_bonus": 3,
+        "total": 8
+    }
+}
+```
+
+---
+
+## 3.4 외부 연동
+
+| 서비스 | 용도 | 비고 |
+|--------|------|------|
+| FCM / APNs | 하이라이트 소개 알림 푸시 | "민준이가 특별히 보여주고 싶은 프로필이 있대!" |
+| CDN (이미지) | 하이라이트된 사진 썸네일 | 기존 이미지 CDN 활용 |
+
+- 추가 외부 API 연동 불필요 (앱 내부 기능)
+
+---
+
+## 3.5 엣지 케이스
+
+| 상황 | 처리 방법 |
+|------|----------|
+| 하이라이트한 사진을 대상자가 삭제 | 소개 카드에서 해당 사진 영역에 "삭제된 사진이에요" 플레이스홀더 표시. 나머지 하이라이트는 유지 |
+| 하이라이트 없이 소개 | 기존 #1(피드 즉시 공유) 플로우로 폴백. 하이라이트 보너스 없음 |
+| 하이라이트 5개 초과 선택 시도 | 최대 3개 제한. 3개 초과 선택 시 "3개까지 선택할 수 있어" 토스트 |
+| 대상자 프로필이 비어있음 (사진 1장, 자기소개 없음) | 하이라이트 가능 항목이 1개 이하면 하이라이트 모드 비활성화 → 일반 소개로 전환 |
+| 받는 사람이 알림을 무시하고 오래 후 확인 | 하이라이트 카드는 만료 없음. 대상 프로필이 변경됐으면 최신 정보 + 하이라이트 표시 유지 |
+| 같은 프로필을 같은 친구에게 다른 하이라이트로 재소개 | 허용 — "이번엔 다른 포인트를 짚어줬네!" 라벨 표시 |
+| 하이라이트 아이템 타입 신규 추가 (향후 기능 확장) | `item_type` VARCHAR로 유연하게 관리. 알 수 없는 타입은 일반 텍스트로 폴백 렌더링 |
+
+---
+
+## 3.6 썬구리 보상 연동
+
+| 시점 | 받는 사람 | 보상 | 조건 |
+|------|----------|------|------|
+| 소개 전송 (기본) | 주선자 | +5 | 소개 생성 시 |
+| 하이라이트 첨부 보너스 | 주선자 | +3 | `highlights` 배열이 1개 이상일 때 |
+| 수락 | 소개받는 사람 | +10 | "궁금해!" 선택 시 |
+
+```
+썬구리 적립:
+주선자: 소개(+5) + 하이라이트 보너스(+3) = +8 🌟 / 1건
+
+※ 하이라이트 보너스는 항목 수와 무관하게 고정 +3
+   (1개든 3개든 동일 — 과도한 게이밍 방지)
+
+※ 이후 대화 시작(+20), 매칭 성사(+50)는
+   기존 피드백 루프(#15) 보상과 동일하게 적용
+```
+
+---
+
+## 3.7 구현 난이도 / 예상 기간
+
+| 영역 | 난이도 | 예상 기간 | 상세 |
+|------|--------|----------|------|
+| **프론트엔드** | ★★★★☆ | 2주 | 하이라이트 선택 인터랙션(탭 → 선택 애니메이션), 하이라이트 카드 렌더링, 프로필 내 인라인 코멘트 UI |
+| **백엔드** | ★★☆☆☆ | 1주 | 하이라이트 데이터 CRUD, 기존 소개 API 확장, 분석 이벤트 수집 |
+| **총합** | | **2~3주** | 프론트엔드 인터랙션 디자인이 핵심 공수. #1(피드 즉시 공유) 완성 후 확장하면 효율적 |
+
+**주요 리스크**: 하이라이트 선택 UX 완성도 (탭 인터랙션이 직관적이어야 함), 사진 삭제 등 프로필 변경 시 하이라이트 정합성 유지
+
+---
+---
+
+# 종합 비교
+
+## 기능별 요약
+
+| 항목 | #3 양방향 동시 소개 | #5 카카오톡 소개 카드 | #13 구체적 프로필 반응 |
+|------|-------------------|--------------------|--------------------|
+| **핵심 가치** | 한국 소개팅 원형 구현 | 앱 외부 바이럴 엔진 | 소개 품질 향상 |
+| **의존 기능** | #16 토글, 채팅 인프라 | #1 소개, 웹 랜딩 | #1 피드 즉시 공유 |
+| **외부 연동** | 없음 | 카카오 SDK + 딥링크 | 없음 |
+| **구현 기간** | 3~4주 | 3~4주 | 2~3주 |
+| **최대 썬구리/건** | 주선자 78 | 공유자 40 | 주선자 8 (+ 후속 보상) |
+| **핵심 리스크** | 상태 머신 복잡도 | 카카오 SDK 호환성 | 프론트 UX 완성도 |
+
+## 추천 구현 순서
+
+```
+1순위: #13 구체적 프로필 반응 (2~3주)
+  → #1의 확장이라 기존 코드 위에 빌드 가능
+  → 소개 품질 향상 → 수락률 ↑
+
+2순위: #3 양방향 동시 소개 (3~4주)
+  → 핵심 차별화 기능
+  → #13과 결합하면 "하이라이트 + 양방향" 시너지
+
+3순위: #5 카카오톡 소개 카드 (3~4주)
+  → 외부 연동 리스크가 있어서 마지막
+  → 앱 내 기능이 안정화된 후 바이럴 트리거
+```
+
+## DB 테이블 전체 맵
+
+```
+users ─────────────────────────────────────────────
+  │
+  ├─ matchmaker_friends (친구 관계 캐시)
+  │
+  ├─ matchmaking_requests (양방향 소개 #3)
+  │     └─ chat_rooms (매칭 성사 시 생성)
+  │
+  ├─ kakao_share_cards (카카오 공유 #5)
+  │     └─ kakao_invite_tracking (어트리뷰션)
+  │
+  └─ profile_highlights (하이라이트 소개 #13)
+        └─ highlight_items (개별 요소)
+        └─ highlight_analytics (반응 분석)
+```
