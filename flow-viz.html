@@ -1,0 +1,647 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>A. 데이팅앱 × 내가 친구를 소개 — 플로우</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, 'Apple SD Gothic Neo', sans-serif;
+    background: #f0f2f5;
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+  h1 {
+    text-align: center;
+    font-size: 18px;
+    font-weight: 700;
+    color: #1a1a2e;
+    margin-bottom: 8px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+    margin-bottom: 40px;
+  }
+
+  /* Flow row */
+  .flow {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 0;
+    flex-wrap: wrap;
+    padding-bottom: 20px;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  /* Arrow */
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding-top: 65px;
+    flex-shrink: 0;
+    width: 36px;
+  }
+  .arrow-line {
+    width: 22px;
+    height: 2px;
+    background: #c0c4d0;
+  }
+  .arrow-label {
+    font-size: 9px;
+    color: #aaa;
+    margin-top: 5px;
+    white-space: nowrap;
+    text-align: center;
+    max-width: 50px;
+  }
+  .arrow::after {
+    content: '▶';
+    font-size: 9px;
+    color: #c0c4d0;
+    margin-top: -12px;
+  }
+
+  /* Phone mockup */
+  .step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex-shrink: 0;
+    width: 130px;
+  }
+  .step-label {
+    font-size: 10px;
+    font-weight: 700;
+    color: #666;
+    margin-bottom: 8px;
+    text-align: center;
+    letter-spacing: 0.3px;
+  }
+  .phone {
+    width: 120px;
+    height: 240px;
+    background: #fff;
+    border-radius: 20px;
+    border: 3px solid #222;
+    overflow: hidden;
+    position: relative;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+  }
+  .phone-notch {
+    width: 50px;
+    height: 8px;
+    background: #222;
+    border-radius: 0 0 8px 8px;
+    margin: 0 auto 0;
+  }
+  .phone-screen {
+    padding: 8px 10px;
+    height: calc(100% - 8px);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* Screen 1: 피드 카드 */
+  .profile-card {
+    background: #f7f7f7;
+    border-radius: 12px;
+    overflow: hidden;
+    flex: 1;
+    position: relative;
+  }
+  .profile-img {
+    width: 100%;
+    height: 85px;
+    background: linear-gradient(135deg, #ffd6e0, #ffb3c6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+  }
+  .profile-info {
+    padding: 8px;
+  }
+  .profile-name {
+    font-size: 13px;
+    font-weight: 700;
+    color: #222;
+  }
+  .profile-age {
+    font-size: 11px;
+    color: #888;
+  }
+  .profile-tag {
+    display: inline-block;
+    background: #fff0f3;
+    color: #ff4d6d;
+    border-radius: 20px;
+    padding: 2px 7px;
+    font-size: 9px;
+    margin-top: 4px;
+  }
+  .share-btn {
+    position: absolute;
+    bottom: 8px;
+    right: 8px;
+    background: #ff4d6d;
+    color: white;
+    border-radius: 20px;
+    padding: 5px 10px;
+    font-size: 9px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    box-shadow: 0 2px 8px rgba(255,77,109,0.4);
+  }
+  .like-dislike {
+    display: flex;
+    justify-content: space-around;
+    padding: 4px 0;
+  }
+  .btn-circle {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  }
+  .btn-no { background: #fff; }
+  .btn-yes { background: #fff; }
+  .btn-share { background: #ff4d6d; color: white; font-size: 10px; }
+
+  /* Screen 2: 친구 선택 */
+  .modal-header {
+    font-size: 12px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    padding: 4px 0 6px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .friend-list {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    margin-top: 4px;
+  }
+  .friend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 4px;
+    border-radius: 8px;
+    background: #fafafa;
+  }
+  .friend-item.selected {
+    background: #fff0f3;
+    border: 1px solid #ffb3c6;
+  }
+  .friend-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+  }
+  .friend-name {
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+  }
+  .check {
+    margin-left: auto;
+    font-size: 12px;
+    color: #ff4d6d;
+  }
+  .confirm-btn {
+    margin-top: auto;
+    background: #ff4d6d;
+    color: white;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* Screen 3: 추천사 작성 */
+  .msg-header {
+    font-size: 11px;
+    font-weight: 700;
+    color: #222;
+    text-align: center;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+  .to-label {
+    font-size: 9px;
+    color: #aaa;
+    margin-top: 4px;
+  }
+  .to-friend {
+    font-size: 11px;
+    font-weight: 700;
+    color: #ff4d6d;
+  }
+  .preset-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-top: 6px;
+  }
+  .preset {
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 4px 8px;
+    font-size: 9px;
+    color: #555;
+    cursor: pointer;
+  }
+  .preset.active {
+    background: #fff0f3;
+    color: #ff4d6d;
+    border: 1px solid #ffb3c6;
+  }
+  .text-input {
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 6px 8px;
+    font-size: 9px;
+    color: #666;
+    margin-top: 6px;
+    background: #fafafa;
+  }
+  .optional-label {
+    font-size: 8px;
+    color: #bbb;
+    margin-top: 2px;
+    text-align: right;
+  }
+  .send-btn {
+    margin-top: auto;
+    background: #ff4d6d;
+    color: white;
+    border-radius: 20px;
+    padding: 7px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  /* Screen 4: 알림 수신 */
+  .notif-box {
+    background: #1a1a2e;
+    border-radius: 12px;
+    padding: 10px;
+    color: white;
+    margin-top: 8px;
+  }
+  .notif-app {
+    font-size: 9px;
+    color: #aaa;
+    margin-bottom: 4px;
+  }
+  .notif-text {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .notif-sub {
+    font-size: 9px;
+    color: #ccc;
+    margin-top: 3px;
+  }
+  .notif-actions {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .notif-btn {
+    flex: 1;
+    padding: 5px;
+    border-radius: 8px;
+    font-size: 9px;
+    font-weight: 700;
+    text-align: center;
+  }
+  .notif-btn.yes { background: #ff4d6d; color: white; }
+  .notif-btn.later { background: rgba(255,255,255,0.15); color: white; }
+
+  /* Screen 5: 연결 성사 */
+  .success-screen {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    gap: 8px;
+  }
+  .success-emoji { font-size: 36px; }
+  .success-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #222;
+    text-align: center;
+  }
+  .success-sub {
+    font-size: 9px;
+    color: #888;
+    text-align: center;
+    line-height: 1.5;
+  }
+  .reward-chip {
+    background: linear-gradient(135deg, #ffd700, #ffb700);
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 10px;
+    font-weight: 800;
+    color: #7a5000;
+    box-shadow: 0 2px 8px rgba(255,183,0,0.4);
+  }
+  .share-result-btn {
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 5px 12px;
+    font-size: 9px;
+    color: #555;
+    font-weight: 600;
+  }
+
+  /* Opt-in note */
+  .opt-in-note {
+    max-width: 760px;
+    margin: 32px auto 0;
+    background: #fff8e1;
+    border-left: 4px solid #ffc107;
+    border-radius: 8px;
+    padding: 14px 18px;
+    font-size: 12px;
+    color: #555;
+    line-height: 1.6;
+  }
+  .opt-in-note strong { color: #e65100; }
+
+  /* Two-sided diagram */
+  .two-sided {
+    max-width: 760px;
+    margin: 24px auto 0;
+    display: flex;
+    gap: 16px;
+  }
+  .side-box {
+    flex: 1;
+    background: white;
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  }
+  .side-title {
+    font-size: 12px;
+    font-weight: 800;
+    color: #222;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .side-steps {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .side-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+  }
+  .step-num {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #ff4d6d;
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .step-num.gray { background: #e0e0e0; color: #888; }
+  .step-text {
+    font-size: 11px;
+    color: #444;
+    line-height: 1.5;
+    padding-top: 2px;
+  }
+  .step-text em {
+    background: #fff0f3;
+    color: #ff4d6d;
+    border-radius: 4px;
+    padding: 0 4px;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 10px;
+  }
+  .vs-divider {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ccc;
+    flex-shrink: 0;
+    padding-top: 30px;
+  }
+</style>
+</head>
+<body>
+
+<h1>A. 데이팅앱 × 내가 친구를 소개</h1>
+<p class="subtitle">피드를 보다가 "이 사람 우리 친구랑 잘 맞겠다" 는 순간을 포착하는 플로우</p>
+
+<!-- Phone flow -->
+<div class="flow">
+
+  <!-- Step 1 -->
+  <div class="step">
+    <div class="step-label">① 피드에서 카드 발견</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="profile-card">
+          <div class="profile-img">🙂</div>
+          <div class="profile-info">
+            <div class="profile-name">지수 · 26</div>
+            <div class="profile-age">서울 · 직장인</div>
+            <div class="profile-tag">#카페투어</div>
+            <div class="profile-tag">#진지한만남</div>
+          </div>
+          <div class="share-btn">👥 친구에게 소개</div>
+        </div>
+        <div class="like-dislike">
+          <div class="btn-circle btn-no">✕</div>
+          <div class="btn-circle btn-share">👥</div>
+          <div class="btn-circle btn-yes">♥</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="arrow-line"></div><div class="arrow-label">버튼 탭</div></div>
+
+  <!-- Step 2 -->
+  <div class="step">
+    <div class="step-label">② 친구 선택</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="modal-header">누구에게 소개할까요?</div>
+        <div class="friend-list">
+          <div class="friend-item">
+            <div class="friend-avatar">👦</div>
+            <div class="friend-name">민준</div>
+          </div>
+          <div class="friend-item selected">
+            <div class="friend-avatar">👨</div>
+            <div class="friend-name">태양</div>
+            <div class="check">✓</div>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar">🧑</div>
+            <div class="friend-name">현우</div>
+          </div>
+          <div class="friend-item">
+            <div class="friend-avatar">👱</div>
+            <div class="friend-name">도윤</div>
+          </div>
+        </div>
+        <div class="confirm-btn" style="margin-top:8px">태양에게 소개 →</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="arrow-line"></div><div class="arrow-label">선택</div></div>
+
+  <!-- Step 3 -->
+  <div class="step">
+    <div class="step-label">③ 한 줄 메시지 (선택)</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="msg-header">한 마디 남길까요?</div>
+        <div class="to-label">받는 사람</div>
+        <div class="to-friend">태양 👤</div>
+        <div class="preset-tags">
+          <div class="preset active">너 스타일이야 ㅋㅋ</div>
+          <div class="preset">취향 저격 아냐?</div>
+          <div class="preset">진지할 것 같아서</div>
+          <div class="preset">보다가 생각났어</div>
+        </div>
+        <div class="text-input">직접 쓰기... (선택)</div>
+        <div class="optional-label">안 써도 전송 가능 ✓</div>
+        <div class="send-btn" style="margin-top:auto">보내기 → 썬구리 +5</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="arrow-line"></div><div class="arrow-label">전송</div></div>
+
+  <!-- Step 4 -->
+  <div class="step">
+    <div class="step-label">④ 태양에게 알림 도착</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div style="font-size:10px;color:#aaa;margin-top:4px;text-align:center">태양의 화면</div>
+        <div class="notif-box">
+          <div class="notif-app">내친소 🔔</div>
+          <div class="notif-text">친구가 소개해줬어요 💌</div>
+          <div class="notif-sub">"너 스타일이야 ㅋㅋ"<br>— 동생 (공통 친구)</div>
+          <div class="notif-actions">
+            <div class="notif-btn yes">볼게!</div>
+            <div class="notif-btn later">나중에</div>
+          </div>
+        </div>
+        <div style="font-size:9px;color:#bbb;text-align:center;margin-top:8px;line-height:1.5">
+          거절해도<br>소개해준 친구에게<br>알림 없음 🔒
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="arrow"><div class="arrow-line"></div><div class="arrow-label">양쪽 수락</div></div>
+
+  <!-- Step 5 -->
+  <div class="step">
+    <div class="step-label">⑤ 연결 성사!</div>
+    <div class="phone">
+      <div class="phone-notch"></div>
+      <div class="phone-screen">
+        <div class="success-screen">
+          <div class="success-emoji">🎉</div>
+          <div class="success-title">연결됐어요!</div>
+          <div class="success-sub">지수 ↔ 태양<br>소개해줘서 고마워요</div>
+          <div class="reward-chip">썬구리 +30 🌟</div>
+          <div style="font-size:9px;color:#aaa;margin-top:4px;text-align:center">주선 성공!</div>
+          <div class="share-result-btn">📢 공유하기</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- Opt-in note -->
+<div class="opt-in-note">
+  ⚠️ <strong>핵심 안전장치: 양쪽 opt-in 구조</strong><br>
+  친구 동의 없이 프로필이 공유되면 신뢰가 무너진다. Hinge Matchmaker가 "creepy"라는 비판을 받은 이유다.
+  내친소는 <strong>소개하는 친구도 수락 / 소개받는 친구도 수락</strong> — 양쪽이 모두 OK해야 연결된다.
+  거절 결과는 상대방에게 알리지 않는다.
+</div>
+
+<!-- Two-sided flow -->
+<div class="two-sided">
+  <div class="side-box">
+    <div class="side-title">👤 소개하는 사람 (주선자)</div>
+    <div class="side-steps">
+      <div class="side-step"><div class="step-num">1</div><div class="step-text">피드 보다가 <em>친구에게 소개</em> 버튼 탭</div></div>
+      <div class="side-step"><div class="step-num">2</div><div class="step-text">친구 목록에서 누구에게 보낼지 선택</div></div>
+      <div class="side-step"><div class="step-num">3</div><div class="step-text">이모지 or 프리셋 메시지 선택 <em>(선택사항)</em></div></div>
+      <div class="side-step"><div class="step-num">4</div><div class="step-text">전송 → <em>썬구리 +5 즉시 지급</em></div></div>
+      <div class="side-step"><div class="step-num gray">5</div><div class="step-text">친구가 수락하면 <em>썬구리 추가 지급</em></div></div>
+      <div class="side-step"><div class="step-num gray">6</div><div class="step-text">연결 성사 시 <em>주선 고수 뱃지 + 보너스</em></div></div>
+    </div>
+  </div>
+
+  <div class="vs-divider">↔</div>
+
+  <div class="side-box">
+    <div class="side-title">💌 소개받는 사람 (태양)</div>
+    <div class="side-steps">
+      <div class="side-step"><div class="step-num">1</div><div class="step-text"><em>"OO이가 소개해줬어요"</em> 알림 수신</div></div>
+      <div class="side-step"><div class="step-num">2</div><div class="step-text">메시지 먼저 확인 → 프로필 열기 결정</div></div>
+      <div class="side-step"><div class="step-num">3</div><div class="step-text"><em>볼게</em> 탭 → 프로필 전체 공개</div></div>
+      <div class="side-step"><div class="step-num">4</div><div class="step-text">관심 있으면 좋아요 → 상대방에게 알림</div></div>
+      <div class="side-step"><div class="step-num gray">5</div><div class="step-text">상대방도 수락 → 채팅 연결</div></div>
+      <div class="side-step"><div class="step-num" style="background:#ddd;color:#aaa">✕</div><div class="step-text">거절해도 <em>소개해준 친구에게 알림 없음</em></div></div>
+    </div>
+  </div>
+</div>
+
+</body>
+</html>
