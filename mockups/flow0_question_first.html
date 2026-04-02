@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>내친소</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: #fff;
+    color: #222;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  /* ── App Shell ── */
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
+  }
+
+  /* ── Step Indicator (top) ── */
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px 8px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .step-dot {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: #eee;
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: #C44AFF; }
+  .step-dot.current { background: linear-gradient(90deg, #FF6B9D, #C44AFF); }
+
+  /* ── Screen (scrollable content) ── */
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 20px 24px;
+    display: none;
+  }
+  .screen.active { display: block; }
+
+  /* ── Bottom Tab Bar ── */
+  .tab-bar {
+    flex-shrink: 0;
+    height: 72px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding-top: 8px;
+    background: #fff;
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+  .tab-item {
+    text-align: center;
+    font-size: 10px;
+    color: #bbb;
+    line-height: 1.3;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
+  .tab-item.active { color: #C44AFF; font-weight: 700; }
+
+  /* ── Common UI ── */
+  .section-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 18px;
+  }
+  .section-title { font-size: 18px; font-weight: 900; }
+  .section-link { font-size: 12px; color: #C44AFF; font-weight: 700; }
+
+  .question-card {
+    background: linear-gradient(135deg, #FFF5F8, #F5EEFF);
+    border-radius: 24px;
+    padding: 28px 24px;
+    text-align: center;
+    border: 2px solid transparent;
+    position: relative;
+  }
+  .question-card.active {
+    border-color: #C44AFF;
+    box-shadow: 0 4px 28px rgba(196,74,255,0.12);
+  }
+  .question-card.gradient {
+    background: linear-gradient(135deg, #E8DEFF, #FFE0EC);
+  }
+  .q-emoji { font-size: 44px; margin-bottom: 12px; }
+  .q-label {
+    font-size: 10px;
+    color: #C44AFF;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+  }
+  .q-text { font-size: 20px; font-weight: 800; line-height: 1.5; }
+  .q-sub { font-size: 12px; color: #aaa; margin-top: 10px; }
+
+  .card-stack {
+    position: relative;
+    margin-bottom: 24px;
+  }
+  .card-stack .behind-1 {
+    position: absolute;
+    top: 8px; left: 8px; right: -8px; bottom: -8px;
+    background: #f0eaff;
+    border-radius: 24px;
+  }
+  .card-stack .behind-2 {
+    position: absolute;
+    top: 16px; left: 16px; right: -16px; bottom: -16px;
+    background: #e8e0f8;
+    border-radius: 24px;
+    z-index: -1;
+  }
+  .card-stack .question-card { position: relative; z-index: 1; }
+
+  .dots {
+    display: flex;
+    justify-content: center;
+    gap: 7px;
+    margin-bottom: 24px;
+  }
+  .dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #e0e0e0;
+  }
+  .dot.on { background: #C44AFF; }
+
+  .list-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+  }
+  .list-emoji { font-size: 26px; flex-shrink: 0; }
+  .list-body { flex: 1; }
+  .list-title { font-size: 14px; font-weight: 600; }
+  .list-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .list-action { font-size: 12px; color: #C44AFF; font-weight: 700; }
+
+  .friend-selector {
+    background: #f8f8fa;
+    border-radius: 18px;
+    padding: 16px;
+    margin-bottom: 16px;
+  }
+  .friend-selector-label { font-size: 13px; color: #888; margin-bottom: 12px; }
+  .friend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #fff;
+    border-radius: 24px;
+    padding: 8px 16px 8px 8px;
+    margin: 4px;
+    font-size: 14px;
+    font-weight: 500;
+    border: 1.5px solid #eee;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+  .friend-chip:active {
+    border-color: #C44AFF;
+    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+  }
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+    font-weight: 700;
+  }
+
+  .selected-friend {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+    padding: 12px 18px;
+    border-radius: 30px;
+    margin-bottom: 18px;
+  }
+  .selected-friend .name { font-size: 16px; font-weight: 800; color: #C44AFF; }
+  .selected-friend .suffix { font-size: 13px; color: #888; }
+
+  .text-input {
+    background: #f8f8fa;
+    border-radius: 18px;
+    padding: 16px;
+    min-height: 80px;
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.6;
+    border: 2px dashed #ddd;
+    margin-bottom: 8px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .text-input.filled {
+    border: 2px solid #C44AFF;
+    background: #fff;
+    color: #222;
+    text-align: left;
+    display: block;
+    min-height: 90px;
+  }
+  .char-count { text-align: right; font-size: 11px; color: #bbb; margin-bottom: 16px; }
+
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: transform 0.1s;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    width: 100%;
+    padding: 14px;
+    background: #f5f5f5;
+    color: #999;
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+  }
+  .btn-ghost.purple { color: #C44AFF; }
+  .btn-outline {
+    display: inline-block;
+    padding: 12px 24px;
+    border: 2px solid #C44AFF;
+    color: #C44AFF;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .btn-skip {
+    text-align: center;
+    font-size: 13px;
+    color: #bbb;
+    margin-top: 12px;
+    cursor: pointer;
+  }
+
+  .hint {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+
+  .divider { border: none; border-top: 1px solid #f0f0f0; margin: 20px 0; }
+  .or-divider {
+    text-align: center;
+    color: #ccc;
+    font-size: 12px;
+    margin: 16px 0;
+    position: relative;
+  }
+  .or-divider::before, .or-divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 35%;
+    height: 1px;
+    background: #eee;
+  }
+  .or-divider::before { left: 0; }
+  .or-divider::after { right: 0; }
+
+  .reward-banner {
+    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    border-radius: 20px;
+    padding: 24px 20px;
+    text-align: center;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .reward-icon { font-size: 44px; margin-bottom: 8px; }
+  .reward-title { font-size: 18px; font-weight: 800; }
+  .reward-badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    padding: 6px 20px;
+    border-radius: 24px;
+    font-size: 18px;
+    font-weight: 900;
+    margin-top: 10px;
+  }
+
+  .mini-card {
+    background: linear-gradient(135deg, #FFF5F8, #F5EEFF);
+    border-radius: 18px;
+    padding: 16px;
+    text-align: center;
+    margin-bottom: 10px;
+    opacity: 0.5;
+  }
+  .mini-card .mc-emoji { font-size: 24px; }
+  .mini-card .mc-text { font-size: 14px; font-weight: 600; margin-top: 6px; }
+
+  .prompt { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+
+  /* subtitle area for screens */
+  .screen-sub {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 20px;
+    line-height: 1.5;
+  }
+
+  /* fade-in for screens */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .screen.active { animation: fadeUp 0.3s ease-out; }
+</style>
+</head>
+<body>
+
+<div class="app">
+
+  <!-- Step indicator -->
+  <div class="step-indicator" id="stepBar">
+    <div class="step-dot current" data-step="0"></div>
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: 오늘의 질문 피드 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen active" id="s0">
+
+    <div class="section-header">
+      <div class="section-title">🎲 오늘의 질문</div>
+      <div class="section-link">전체보기 →</div>
+    </div>
+
+    <div class="card-stack">
+      <div class="behind-1"></div>
+      <div class="behind-2"></div>
+      <div class="question-card active" style="margin-bottom:0;">
+        <div class="q-emoji">🌙</div>
+        <div class="q-label">TODAY'S QUESTION</div>
+        <div class="q-text">새벽 2시에 갑자기<br>전화해도 받아줄 친구는?</div>
+        <div class="q-sub">← 스와이프해서 넘기기 →</div>
+      </div>
+    </div>
+
+    <div class="dots">
+      <div class="dot on"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+
+    <div style="font-size:13px; font-weight:700; color:#888; margin-bottom:12px;">📌 지난 인기 질문</div>
+
+    <div class="list-card" onclick="goTo(1)">
+      <span class="list-emoji">🍻</span>
+      <div class="list-body">
+        <div class="list-title">술 약속에 무조건 데려가고 싶은 친구?</div>
+        <div class="list-sub">답변 2,847개</div>
+      </div>
+      <span class="list-action">답하기</span>
+    </div>
+
+    <div class="list-card">
+      <span class="list-emoji">💪</span>
+      <div class="list-body">
+        <div class="list-title">힘들 때 연락하면 바로 달려올 친구?</div>
+        <div class="list-sub">답변 3,102개</div>
+      </div>
+      <span class="list-action">답하기</span>
+    </div>
+
+    <div class="list-card">
+      <span class="list-emoji">😂</span>
+      <div class="list-body">
+        <div class="list-title">같이 있으면 배 아플 정도로 웃긴 친구?</div>
+        <div class="list-sub">답변 1,953개</div>
+      </div>
+      <span class="list-action">답하기</span>
+    </div>
+
+    <div class="list-card">
+      <span class="list-emoji">🎮</span>
+      <div class="list-body">
+        <div class="list-title">새벽까지 게임 같이 할 수 있는 친구?</div>
+        <div class="list-sub">답변 1,427개</div>
+      </div>
+      <span class="list-action">답하기</span>
+    </div>
+
+    <div style="height:20px;"></div>
+
+    <div class="btn-primary" onclick="goTo(1)">질문에 답하기 ✨</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: 친구 떠올리기 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s1">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
+
+    <div class="question-card active gradient">
+      <div class="q-emoji">🌙</div>
+      <div class="q-label">TODAY'S QUESTION</div>
+      <div class="q-text">새벽 2시에 갑자기<br>전화해도 받아줄 친구는?</div>
+    </div>
+
+    <div style="height:20px;"></div>
+
+    <div class="prompt">떠오르는 친구가 있어? 😏</div>
+
+    <div class="friend-selector">
+      <div class="friend-selector-label">내 친구 중에서 고르기</div>
+      <div>
+        <div class="friend-chip" onclick="goTo(2)">
+          <div class="avatar" style="background:#C44AFF;">민</div>
+          <span>민준</span>
+        </div>
+        <div class="friend-chip">
+          <div class="avatar" style="background:#FF6B9D;">서</div>
+          <span>서연</span>
+        </div>
+        <div class="friend-chip">
+          <div class="avatar" style="background:#6C5CE7;">지</div>
+          <span>지호</span>
+        </div>
+        <div class="friend-chip">
+          <div class="avatar" style="background:#00B894;">현</div>
+          <span>현우</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="or-divider">또는</div>
+
+    <div class="text-input">이름을 직접 입력해도 돼!</div>
+
+    <div style="height:16px;"></div>
+    <div class="btn-ghost purple">🎲 다른 질문 보기</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 3: 추천사 작성 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s2">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
+
+    <div class="question-card gradient" style="border:2px solid #C44AFF; padding:18px;">
+      <div class="q-emoji" style="font-size:32px;">🌙</div>
+      <div class="q-text" style="font-size:16px;">새벽 2시에 갑자기 전화해도<br>받아줄 친구는?</div>
+    </div>
+
+    <div style="height:14px;"></div>
+
+    <div class="selected-friend">
+      <div class="avatar" style="background:#C44AFF; width:36px; height:36px; font-size:15px;">민</div>
+      <span class="name">민준</span>
+      <span class="suffix">을 선택했어!</span>
+    </div>
+
+    <div class="prompt">왜 민준이가 떠올랐어? 😏</div>
+
+    <div class="text-input filled">
+      걔는 진짜 새벽에 전화해도 받아줌 ㅋㅋ 작년에 새벽 3시에 전화했는데 1초만에 받더라
+    </div>
+    <div class="char-count">42 / 100</div>
+
+    <div class="hint">💡 이 답변이 민준이의 추천사가 돼요!</div>
+
+    <div class="btn-primary" onclick="goTo(3)">추천사로 저장! ✨</div>
+    <div class="btn-skip">🎲 다음 질문 넘기기</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 4: 저장 완료 + 연쇄 질문 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s3">
+
+    <div class="reward-banner">
+      <div class="reward-icon">✅</div>
+      <div class="reward-title">민준이 추천사 저장됨!</div>
+      <div class="reward-badge">🌟 +8 썬구리</div>
+    </div>
+
+    <hr class="divider">
+
+    <div style="text-align:center; margin-bottom:20px;">
+      <div class="prompt" style="margin-bottom:4px;">다음 질문도 해볼래? 🎲</div>
+      <div class="screen-sub">한 문제만 더 풀면 보상 2배!</div>
+    </div>
+
+    <div class="question-card active" style="margin-bottom:12px;">
+      <div class="q-emoji" style="font-size:32px;">🎤</div>
+      <div class="q-label">NEXT QUESTION</div>
+      <div class="q-text" style="font-size:18px;">노래방 가면<br>마이크 안 놓는 친구는?</div>
+    </div>
+
+    <div class="mini-card">
+      <div class="mc-emoji">🏃</div>
+      <div class="mc-text">갑자기 여행 가자고 하면 진짜 가는 친구?</div>
+    </div>
+
+    <div class="mini-card" style="opacity:0.3;">
+      <div class="mc-emoji">🍳</div>
+      <div class="mc-text">요리 해준다고 하면 진짜 맛있게 해줄 친구?</div>
+    </div>
+
+    <div style="height:20px;"></div>
+
+    <div style="text-align:center;">
+      <div class="btn-outline" onclick="goTo(1)">계속 넘기기 →</div>
+    </div>
+    <div class="btn-skip" onclick="goTo(0)">오늘은 여기까지!</div>
+
+  </div>
+
+  <!-- ── Bottom Tab Bar ── -->
+  <div class="tab-bar">
+    <div class="tab-item"><div class="tab-icon">🏠</div>홈</div>
+    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
+    <div class="tab-item active"><div class="tab-icon">🎲</div>플레이</div>
+    <div class="tab-item"><div class="tab-icon">💌</div>채팅</div>
+    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+  </div>
+
+</div>
+
+<script>
+function goTo(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + step).classList.add('active');
+
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.className = 'step-dot';
+    if (i < step) d.classList.add('done');
+    if (i === step) d.classList.add('current');
+  });
+
+  // scroll to top on screen change
+  document.getElementById('s' + step).scrollTop = 0;
+}
+</script>
+
+</body>
+</html>
