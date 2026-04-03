@@ -1,0 +1,774 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>E. 친구 대신 피드 탐색 — Flow Mockup</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: #f0f0f0;
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+    padding: 40px 20px 60px;
+    min-height: 100vh;
+  }
+
+  .page-title {
+    text-align: center;
+    margin-bottom: 48px;
+  }
+  .page-title h1 {
+    font-size: 28px;
+    font-weight: 800;
+    color: #1a1a1a;
+    margin-bottom: 8px;
+  }
+  .page-title p {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.5;
+  }
+
+  /* Layout */
+  .flow-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 48px;
+  }
+  .flow-row:last-child { margin-bottom: 0; }
+
+  .step-wrapper {
+    display: flex;
+    align-items: center;
+  }
+
+  /* Arrow between phones */
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+    padding: 0 6px;
+    min-width: 90px;
+    flex-shrink: 0;
+  }
+  .arrow-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #FF6B6B;
+    white-space: nowrap;
+  }
+  .arrow-line {
+    display: flex;
+    align-items: center;
+    color: #ccc;
+    font-size: 22px;
+    letter-spacing: -4px;
+  }
+  .arrow-line::after {
+    content: '\25B6';
+    font-size: 14px;
+    color: #FF6B6B;
+    margin-left: 2px;
+  }
+
+  /* Phone frame */
+  .phone-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+  }
+  .step-number {
+    font-size: 14px;
+    font-weight: 700;
+    color: #FF6B6B;
+    background: #fff;
+    border: 2px solid #FF6B6B;
+    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .step-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+  }
+
+  .phone {
+    width: 280px;
+    height: 500px;
+    background: #1a1a1a;
+    border-radius: 36px;
+    padding: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+    position: relative;
+  }
+  .phone-notch {
+    position: absolute;
+    top: 12px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 24px;
+    background: #1a1a1a;
+    border-radius: 0 0 16px 16px;
+    z-index: 10;
+  }
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #fff;
+    border-radius: 26px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 36px;
+    background: #fff;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a1a1a;
+    flex-shrink: 0;
+  }
+  .status-bar .time { font-size: 12px; font-weight: 700; }
+  .status-icons { display: flex; gap: 4px; font-size: 10px; }
+
+  /* Screen content area */
+  .screen-body {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  /* Common screen elements */
+  .screen-header {
+    padding: 12px 16px 10px;
+    font-size: 17px;
+    font-weight: 700;
+    color: #1a1a1a;
+    flex-shrink: 0;
+  }
+  .screen-header.with-back::before {
+    content: '\2039';
+    font-size: 24px;
+    margin-right: 8px;
+    color: #FF6B6B;
+    font-weight: 400;
+    vertical-align: middle;
+  }
+
+  .btn-pink {
+    background: #FF6B6B;
+    color: #fff;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    text-align: center;
+    width: 100%;
+  }
+  .btn-gray {
+    background: #e8e8e8;
+    color: #666;
+    border: none;
+    border-radius: 12px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .btn-outline {
+    background: transparent;
+    color: #FF6B6B;
+    border: 1.5px solid #FF6B6B;
+    border-radius: 12px;
+    padding: 10px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    text-align: center;
+  }
+  .text-link {
+    font-size: 12px;
+    color: #999;
+    text-decoration: underline;
+    text-align: center;
+    cursor: pointer;
+  }
+
+  /* ---- Screen 1: Main Feed ---- */
+  .s1-tab-bar {
+    display: flex;
+    border-bottom: 2px solid #f0f0f0;
+    flex-shrink: 0;
+  }
+  .s1-tab {
+    flex: 1;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 13px;
+    font-weight: 600;
+    color: #bbb;
+  }
+  .s1-tab.active {
+    color: #FF6B6B;
+    border-bottom: 2px solid #FF6B6B;
+    margin-bottom: -2px;
+  }
+  .s1-feed-card {
+    margin: 12px 14px;
+    background: #fafafa;
+    border-radius: 14px;
+    overflow: hidden;
+  }
+  .s1-card-img {
+    height: 120px;
+    background: linear-gradient(135deg, #fce4ec, #f8bbd0);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+  }
+  .s1-card-info {
+    padding: 10px 12px;
+  }
+  .s1-card-name {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+  }
+  .s1-card-sub {
+    font-size: 11px;
+    color: #999;
+    margin-top: 2px;
+  }
+  .s1-fab {
+    position: absolute;
+    bottom: 16px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #4ECDC4;
+    color: #fff;
+    border: none;
+    border-radius: 24px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 700;
+    box-shadow: 0 4px 14px rgba(78, 205, 196, 0.4);
+    white-space: nowrap;
+    cursor: pointer;
+    z-index: 5;
+  }
+
+  /* ---- Screen 2: Friend List ---- */
+  .s2-friend {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    border-bottom: 1px solid #f3f3f3;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .s2-friend:hover { background: #fef5f5; }
+  .s2-friend.selected { background: #fff0f0; }
+  .s2-avatar {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .s2-avatar.male { background: #e3f2fd; }
+  .s2-avatar.female { background: #fce4ec; }
+  .s2-info { flex: 1; }
+  .s2-name { font-size: 14px; font-weight: 700; color: #333; }
+  .s2-detail { font-size: 11px; color: #999; margin-top: 2px; }
+  .s2-badge {
+    background: #4ECDC4;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 10px;
+    white-space: nowrap;
+  }
+  .s2-note {
+    padding: 14px 16px 8px;
+    font-size: 11px;
+    color: #aaa;
+    text-align: center;
+  }
+
+  /* ---- Screen 3: Preferences ---- */
+  .s3-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 16px 12px;
+  }
+  .s3-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e3f2fd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+  .s3-avatar-name {
+    font-size: 15px;
+    font-weight: 700;
+    color: #333;
+  }
+  .s3-condition {
+    margin: 0 16px 8px;
+    background: #f9f9f9;
+    border-radius: 12px;
+    padding: 11px 14px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .s3-cond-label {
+    font-size: 12px;
+    color: #999;
+    font-weight: 500;
+  }
+  .s3-cond-value {
+    font-size: 13px;
+    font-weight: 700;
+    color: #333;
+  }
+  .s3-cta {
+    padding: 16px 16px 8px;
+    flex-shrink: 0;
+  }
+
+  /* ---- Screen 4: Proxy Feed ---- */
+  .s4-banner {
+    background: #4ECDC4;
+    color: #fff;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex-shrink: 0;
+  }
+  .s4-card {
+    margin: 10px 14px;
+    background: #fafafa;
+    border-radius: 14px;
+    overflow: hidden;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  .s4-rec-tag {
+    padding: 10px 14px 6px;
+    font-size: 11px;
+    color: #FF6B6B;
+    font-weight: 600;
+  }
+  .s4-profile-img {
+    height: 110px;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 44px;
+    margin: 0 12px;
+    border-radius: 12px;
+  }
+  .s4-profile-name {
+    padding: 10px 14px 4px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #333;
+  }
+  .s4-profile-detail {
+    padding: 0 14px 12px;
+    font-size: 11px;
+    color: #999;
+  }
+  .s4-actions {
+    display: flex;
+    gap: 8px;
+    padding: 0 14px 12px;
+  }
+  .s4-actions .btn-pink { flex: 1; padding: 10px 0; font-size: 13px; }
+  .s4-actions .btn-gray { flex: 0.6; padding: 10px 0; font-size: 13px; }
+  .s4-back {
+    text-align: center;
+    padding: 10px;
+    font-size: 12px;
+    color: #aaa;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  /* ---- Screen 5: Complete ---- */
+  .s5-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 16px;
+    text-align: center;
+    gap: 10px;
+  }
+  .s5-check {
+    font-size: 44px;
+    margin-bottom: 4px;
+  }
+  .s5-title {
+    font-size: 16px;
+    font-weight: 800;
+    color: #1a1a1a;
+    line-height: 1.4;
+  }
+  .s5-reward {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #fff8e1;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #f9a825;
+  }
+  .s5-push {
+    background: #f5f5f5;
+    border-radius: 12px;
+    padding: 10px 14px;
+    width: 100%;
+    text-align: left;
+    margin-top: 4px;
+  }
+  .s5-push-label {
+    font-size: 10px;
+    color: #aaa;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .s5-push-text {
+    font-size: 12px;
+    color: #333;
+    font-weight: 600;
+    line-height: 1.4;
+  }
+  .s5-stats {
+    font-size: 11px;
+    color: #999;
+    margin-top: 4px;
+    line-height: 1.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .flow-row { flex-wrap: wrap; gap: 24px; }
+    .arrow { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-title">
+  <h1>E. 친구 대신 피드 탐색</h1>
+  <p>친구의 조건에 맞는 사람을 내가 대신 찾아서 소개해주는 플로우</p>
+</div>
+
+<div class="flow-container">
+
+  <!-- Row 1: Screens 1-3 -->
+  <div class="flow-row">
+
+    <!-- Step 1 -->
+    <div class="step-wrapper">
+      <div class="phone-step">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="step-number">1</span>
+          <span class="step-label">대신 찾아주기 시작</span>
+        </div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <span class="status-icons">
+                <span>&#9679;&#9679;&#9679;&#9679;</span>
+                <span>&#128267;</span>
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="s1-tab-bar">
+                <div class="s1-tab active">추천</div>
+                <div class="s1-tab">탐색</div>
+                <div class="s1-tab">내 소개</div>
+              </div>
+              <div class="s1-feed-card">
+                <div class="s1-card-img">&#128105;</div>
+                <div class="s1-card-info">
+                  <div class="s1-card-name">서연, 26</div>
+                  <div class="s1-card-sub">"밝고 에너지 넘쳐요" — 지은 소개</div>
+                </div>
+              </div>
+              <div class="s1-feed-card" style="opacity:0.5; margin-top:0;">
+                <div class="s1-card-img" style="height:60px; font-size:24px;">&#128104;</div>
+                <div class="s1-card-info">
+                  <div class="s1-card-name">도윤, 27</div>
+                </div>
+              </div>
+            </div>
+            <button class="s1-fab">&#128269; 대신 찾아주기</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">
+      <span class="arrow-label">친구 선택</span>
+      <span class="arrow-line">---</span>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="step-wrapper">
+      <div class="phone-step">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="step-number">2</span>
+          <span class="step-label">친구 선택</span>
+        </div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <span class="status-icons">
+                <span>&#9679;&#9679;&#9679;&#9679;</span>
+                <span>&#128267;</span>
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="screen-header with-back">누구를 위해 찾아줄까?</div>
+
+              <div class="s2-friend selected">
+                <div class="s2-avatar male">&#128100;</div>
+                <div class="s2-info">
+                  <div class="s2-name">태양 <span style="font-weight:400;color:#999;font-size:12px;">(25, 남)</span></div>
+                  <div class="s2-detail">최근 활동 2시간 전</div>
+                </div>
+                <span class="s2-badge">소개 ON</span>
+              </div>
+
+              <div class="s2-friend">
+                <div class="s2-avatar female">&#128100;</div>
+                <div class="s2-info">
+                  <div class="s2-name">지수 <span style="font-weight:400;color:#999;font-size:12px;">(27, 여)</span></div>
+                  <div class="s2-detail">최근 활동 5시간 전</div>
+                </div>
+                <span class="s2-badge">소개 ON</span>
+              </div>
+
+              <div class="s2-friend">
+                <div class="s2-avatar male">&#128100;</div>
+                <div class="s2-info">
+                  <div class="s2-name">현우 <span style="font-weight:400;color:#999;font-size:12px;">(24, 남)</span></div>
+                  <div class="s2-detail">최근 활동 1일 전</div>
+                </div>
+                <span class="s2-badge">소개 ON</span>
+              </div>
+
+              <div class="s2-note">※ "소개받고 싶어요" ON인 친구만 표시됩니다</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">
+      <span class="arrow-label">태양 선택</span>
+      <span class="arrow-line">---</span>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="step-wrapper">
+      <div class="phone-step">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="step-number">3</span>
+          <span class="step-label">선호 조건 확인</span>
+        </div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <span class="status-icons">
+                <span>&#9679;&#9679;&#9679;&#9679;</span>
+                <span>&#128267;</span>
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="screen-header with-back">태양의 선호 조건</div>
+
+              <div class="s3-profile-header">
+                <div class="s3-avatar">&#128100;</div>
+                <div class="s3-avatar-name">태양이 원하는 사람</div>
+              </div>
+
+              <div class="s3-condition">
+                <span class="s3-cond-label">나이</span>
+                <span class="s3-cond-value">23~28세</span>
+              </div>
+              <div class="s3-condition">
+                <span class="s3-cond-label">지역</span>
+                <span class="s3-cond-value">서울</span>
+              </div>
+              <div class="s3-condition">
+                <span class="s3-cond-label">키</span>
+                <span class="s3-cond-value">160cm 이상</span>
+              </div>
+              <div class="s3-condition">
+                <span class="s3-cond-label">관심사</span>
+                <span class="s3-cond-value">운동, 음악</span>
+              </div>
+
+              <div class="s3-cta">
+                <button class="btn-pink">이 조건으로 탐색 &#8594;</button>
+                <div style="margin-top:10px;">
+                  <span class="text-link">조건 수정하기</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /row1 -->
+
+  <!-- Row 2: Screens 4-5 -->
+  <div class="flow-row">
+
+    <div class="arrow" style="visibility:hidden; min-width:40px;"></div>
+
+    <!-- Step 4 -->
+    <div class="step-wrapper">
+      <div class="phone-step">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="step-number">4</span>
+          <span class="step-label">대리 피드 탐색</span>
+        </div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <span class="status-icons">
+                <span>&#9679;&#9679;&#9679;&#9679;</span>
+                <span>&#128267;</span>
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="s4-banner">&#128269; 태양을 위해 탐색 중</div>
+
+              <div class="s4-card">
+                <div class="s4-rec-tag">"성격 진짜 좋아" — 도윤이 소개</div>
+                <div class="s4-profile-img">&#128105;</div>
+                <div class="s4-profile-name">하은, 25</div>
+                <div class="s4-profile-detail">서울 / 163cm / 운동, 요리</div>
+                <div class="s4-actions">
+                  <button class="btn-pink" style="font-size:13px;">태양에게 소개</button>
+                  <button class="btn-gray" style="font-size:13px;">패스</button>
+                </div>
+              </div>
+
+              <div class="s4-back">&#8592; 내 피드로 돌아가기</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow">
+      <span class="arrow-label">소개 전송</span>
+      <span class="arrow-line">---</span>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="step-wrapper">
+      <div class="phone-step">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="step-number">5</span>
+          <span class="step-label">전송 완료 + 알림</span>
+        </div>
+        <div class="phone">
+          <div class="phone-notch"></div>
+          <div class="phone-screen">
+            <div class="status-bar">
+              <span class="time">9:41</span>
+              <span class="status-icons">
+                <span>&#9679;&#9679;&#9679;&#9679;</span>
+                <span>&#128267;</span>
+              </span>
+            </div>
+            <div class="screen-body">
+              <div class="s5-body">
+                <div class="s5-check">&#10003;</div>
+                <div class="s5-title">태양에게<br>하은을 소개했어요!</div>
+                <div class="s5-reward">&#127775; 썬구리 +5</div>
+
+                <div class="s5-push">
+                  <div class="s5-push-label">&#128244; 태양에게 알림</div>
+                  <div class="s5-push-text">민준이가 너한테 어울릴<br>사람을 찾았어!</div>
+                </div>
+
+                <div class="s5-stats">오늘 태양을 위해 3명 탐색, 1명 소개</div>
+
+                <button class="btn-pink" style="margin-top:8px;font-size:13px;">계속 탐색하기</button>
+                <span class="text-link" style="margin-top:4px;">내 피드로 돌아가기</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="arrow" style="visibility:hidden; min-width:40px;"></div>
+
+  </div><!-- /row2 -->
+
+</div><!-- /flow-container -->
+
+</body>
+</html>

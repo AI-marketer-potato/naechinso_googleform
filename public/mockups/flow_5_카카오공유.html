@@ -1,0 +1,1020 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내친소 - C. 카카오톡으로 소개 카드 보내기</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  :root {
+    --primary: #FF6B6B;
+    --primary-dark: #E55A5A;
+    --kakao: #FEE500;
+    --kakao-dark: #3C1E1E;
+    --bg: #f0f0f0;
+    --text: #2D3436;
+    --text-light: #636E72;
+    --text-muted: #B2BEC3;
+    --phone-w: 280px;
+    --phone-h: 500px;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    padding: 40px 20px;
+    min-height: 100vh;
+  }
+
+  h1.page-title {
+    text-align: center;
+    font-size: 32px;
+    font-weight: 800;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+
+  .page-subtitle {
+    text-align: center;
+    color: var(--text-light);
+    font-size: 15px;
+    margin-bottom: 48px;
+  }
+
+  /* Flow layout */
+  .flow-container {
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  .flow-row {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 0;
+    margin-bottom: 40px;
+  }
+
+  .flow-step {
+    display: flex;
+    align-items: center;
+  }
+
+  .step-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+  }
+
+  .step-label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--primary);
+    color: white;
+    font-size: 13px;
+    font-weight: 700;
+    padding: 4px 14px;
+    border-radius: 14px;
+    margin-bottom: 10px;
+  }
+
+  .step-label.kakao-label {
+    background: var(--kakao);
+    color: #3A1D1D;
+  }
+
+  /* Arrow */
+  .flow-arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-width: 60px;
+    padding: 0 4px;
+    margin-top: 60px;
+  }
+
+  .arrow-label {
+    font-size: 11px;
+    color: var(--text-light);
+    white-space: nowrap;
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+
+  .arrow-icon {
+    font-size: 24px;
+    color: var(--primary);
+  }
+
+  /* iPhone frame */
+  .phone-frame {
+    width: var(--phone-w);
+    height: var(--phone-h);
+    background: #1a1a1a;
+    border-radius: 36px;
+    padding: 8px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+    position: relative;
+  }
+
+  .phone-screen {
+    width: 100%;
+    height: 100%;
+    background: #ffffff;
+    border-radius: 28px;
+    overflow: hidden;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .phone-notch {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 120px;
+    height: 26px;
+    background: #1a1a1a;
+    border-radius: 0 0 18px 18px;
+    z-index: 10;
+  }
+
+  .phone-caption {
+    margin-top: 10px;
+    font-size: 12px;
+    color: var(--text-light);
+    text-align: center;
+    max-width: 260px;
+    line-height: 1.4;
+  }
+
+  /* Status bar */
+  .status-bar {
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    padding: 0 20px 4px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #1a1a1a;
+    flex-shrink: 0;
+  }
+
+  .status-bar-light {
+    color: white;
+  }
+
+  /* App header */
+  .app-header {
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--primary);
+    flex-shrink: 0;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  /* Screen 1: Feed */
+  .feed-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 16px;
+    background: #fafafa;
+  }
+
+  .profile-card {
+    width: 100%;
+    background: white;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .profile-photo {
+    flex: 1;
+    background: linear-gradient(135deg, #ffd1d1, #ffb3b3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 64px;
+    position: relative;
+  }
+
+  .profile-info-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 16px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.5));
+    color: white;
+  }
+
+  .profile-name {
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  .profile-age {
+    font-size: 16px;
+    font-weight: 400;
+    opacity: 0.9;
+  }
+
+  .feed-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding: 14px;
+    background: white;
+  }
+
+  .feed-btn {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    border: 2px solid #eee;
+    background: white;
+  }
+
+  .feed-btn.pass { border-color: #ddd; }
+  .feed-btn.intro {
+    border-color: var(--primary);
+    background: var(--primary);
+    color: white;
+    box-shadow: 0 4px 12px rgba(255,107,107,0.4);
+    transform: scale(1.05);
+  }
+  .feed-btn.like { border-color: #FF6B6B; }
+
+  .feed-btn-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    text-align: center;
+    margin-top: 4px;
+  }
+
+  .feed-btn-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  /* Tap indicator */
+  .tap-indicator {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid var(--primary);
+    background: rgba(255,107,107,0.15);
+    animation: tapPulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes tapPulse {
+    0%, 100% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.3); opacity: 0.5; }
+  }
+
+  /* Screen 2: Bottom sheet */
+  .dimmed-bg {
+    flex: 1;
+    background: rgba(0,0,0,0.4);
+  }
+
+  .bottom-sheet {
+    background: white;
+    border-radius: 20px 20px 0 0;
+    padding: 20px 16px;
+    flex-shrink: 0;
+  }
+
+  .bottom-sheet-handle {
+    width: 36px;
+    height: 4px;
+    background: #ddd;
+    border-radius: 2px;
+    margin: 0 auto 16px;
+  }
+
+  .bottom-sheet-title {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    text-align: center;
+  }
+
+  .share-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 12px;
+    border-radius: 12px;
+    margin-bottom: 8px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .share-option:hover {
+    background: #f5f5f5;
+  }
+
+  .share-option.selected {
+    background: #FFF9DB;
+    border: 2px solid var(--kakao);
+  }
+
+  .share-option-icon {
+    font-size: 24px;
+    width: 36px;
+    text-align: center;
+  }
+
+  .share-option-sub {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 2px;
+  }
+
+  /* Screen 3: KakaoTalk */
+  .kakao-header {
+    height: 44px;
+    background: var(--kakao);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 700;
+    color: #3A1D1D;
+    flex-shrink: 0;
+  }
+
+  .kakao-chat {
+    flex: 1;
+    background: #B2C7D9;
+    padding: 16px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .chat-bubble-row {
+    display: flex;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .chat-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    flex-shrink: 0;
+  }
+
+  .chat-bubble-wrap {
+    display: flex;
+    flex-direction: column;
+    max-width: 200px;
+  }
+
+  .chat-name {
+    font-size: 11px;
+    color: rgba(0,0,0,0.5);
+    margin-bottom: 3px;
+  }
+
+  .chat-bubble {
+    background: white;
+    border-radius: 12px;
+    padding: 8px 10px;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #333;
+  }
+
+  /* Share card in kakao */
+  .kakao-share-card {
+    background: white;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 210px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+
+  .kakao-card-header {
+    padding: 8px 10px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    border-bottom: 1px solid #f0f0f0;
+  }
+
+  .kakao-card-body {
+    padding: 12px 10px;
+    text-align: center;
+  }
+
+  .blur-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+    margin: 0 auto 8px;
+    filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    overflow: hidden;
+  }
+
+  .blur-avatar-inner {
+    filter: blur(2px);
+    font-size: 28px;
+  }
+
+  .kakao-card-msg {
+    font-size: 13px;
+    font-weight: 600;
+    color: #333;
+    line-height: 1.5;
+    margin-bottom: 6px;
+  }
+
+  .kakao-card-info {
+    font-size: 11px;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  .kakao-card-quote {
+    font-size: 11px;
+    color: var(--primary);
+    font-style: italic;
+    margin-bottom: 0;
+  }
+
+  .kakao-card-cta {
+    display: block;
+    text-align: center;
+    padding: 10px;
+    background: var(--primary);
+    color: white;
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  /* Screen 4: Landing page */
+  .web-header {
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--primary);
+    border-bottom: 1px solid #eee;
+    flex-shrink: 0;
+  }
+
+  .landing-content {
+    flex: 1;
+    padding: 20px 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    overflow-y: auto;
+  }
+
+  .landing-subtitle {
+    font-size: 14px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+    line-height: 1.5;
+  }
+
+  .blur-photo-large {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #e8e8e8, #c8c8c8);
+    margin-bottom: 16px;
+    filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .blur-photo-inner {
+    font-size: 48px;
+    filter: blur(3px);
+  }
+
+  .landing-info {
+    font-size: 14px;
+    color: var(--text);
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+
+  .landing-info-tags {
+    display: flex;
+    gap: 6px;
+    margin-bottom: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .info-tag {
+    padding: 4px 10px;
+    background: #f5f5f5;
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--text-light);
+  }
+
+  .landing-quote {
+    background: #FFF5F5;
+    padding: 12px 16px;
+    border-radius: 12px;
+    font-size: 13px;
+    color: var(--text);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
+  }
+
+  .landing-quote::before {
+    content: '"';
+    font-size: 28px;
+    color: var(--primary);
+    position: absolute;
+    top: 4px;
+    left: 8px;
+    font-weight: 700;
+    opacity: 0.5;
+  }
+
+  .landing-quote-text {
+    padding-left: 12px;
+  }
+
+  .cta-button {
+    width: 100%;
+    padding: 14px;
+    background: var(--primary);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 12px;
+    cursor: pointer;
+  }
+
+  .cta-secondary {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+
+  .cta-secondary a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+
+  /* Screen 5: App after install */
+  .intro-received {
+    flex: 1;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background: #fafafa;
+  }
+
+  .intro-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #FFF5F5;
+    border: 1px solid #FFD4D4;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--primary);
+    margin-bottom: 12px;
+  }
+
+  .intro-quote {
+    font-size: 15px;
+    color: var(--text);
+    font-style: italic;
+    margin-bottom: 16px;
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 8px;
+  }
+
+  .intro-photo {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #ffd1d1, #ffb3b3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 56px;
+    margin-bottom: 12px;
+    border: 3px solid var(--primary);
+  }
+
+  .intro-name {
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 2px;
+  }
+
+  .intro-detail {
+    font-size: 13px;
+    color: var(--text-light);
+    margin-bottom: 16px;
+  }
+
+  .intro-actions {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    padding: 0 8px;
+    margin-bottom: 12px;
+  }
+
+  .intro-btn {
+    flex: 1;
+    padding: 12px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    text-align: center;
+    border: none;
+    cursor: pointer;
+  }
+
+  .intro-btn.accept {
+    background: var(--primary);
+    color: white;
+  }
+
+  .intro-btn.later {
+    background: #f0f0f0;
+    color: var(--text-light);
+  }
+
+  .bonus-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: linear-gradient(135deg, #FFF9DB, #FFF3BF);
+    border: 1px solid #FFE066;
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #B8860B;
+  }
+
+  /* Safari address bar */
+  .safari-bar {
+    height: 36px;
+    background: #f8f8f8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-bottom: 1px solid #e0e0e0;
+    flex-shrink: 0;
+  }
+
+  .safari-url {
+    background: #e8e8e8;
+    padding: 4px 16px;
+    border-radius: 8px;
+    font-size: 11px;
+    color: var(--text-muted);
+  }
+
+  /* Kakao status bar */
+  .status-bar-kakao {
+    background: var(--kakao);
+  }
+
+  /* Responsive */
+  @media (max-width: 1100px) {
+    .flow-row { flex-wrap: wrap; gap: 20px; }
+    .flow-arrow {
+      min-width: 40px;
+    }
+  }
+
+  @media (max-width: 700px) {
+    .flow-row {
+      flex-direction: column;
+      align-items: center;
+    }
+    .flow-arrow {
+      transform: rotate(90deg);
+      margin: 10px 0;
+    }
+    :root {
+      --phone-w: 260px;
+      --phone-h: 470px;
+    }
+  }
+</style>
+</head>
+<body>
+
+<h1 class="page-title">C. 카카오톡으로 소개 카드 보내기</h1>
+<p class="page-subtitle">앱 밖의 친구에게 소개 &rarr; 앱 설치 유도 &rarr; 자연 바이럴</p>
+
+<div class="flow-container">
+
+  <!-- Row 1: Steps 1-3 -->
+  <div class="flow-row">
+
+    <!-- Step 1 -->
+    <div class="flow-step">
+      <div class="step-content">
+        <div class="step-label">① 피드에서 공유 시작</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="status-bar">
+              <span>9:41</span>
+              <span>&#9679;&#9679;&#9679;</span>
+            </div>
+            <div class="app-header">내친소</div>
+            <div class="feed-content">
+              <div class="profile-card">
+                <div class="profile-photo">
+                  &#128105;
+                  <div class="profile-info-overlay">
+                    <span class="profile-name">지수</span>
+                    <span class="profile-age">, 26</span>
+                  </div>
+                </div>
+                <div class="feed-buttons">
+                  <div class="feed-btn-wrap">
+                    <div class="feed-btn pass">&#10060;</div>
+                    <div class="feed-btn-label">패스</div>
+                  </div>
+                  <div class="feed-btn-wrap" style="position: relative;">
+                    <div class="feed-btn intro">&#128101;</div>
+                    <div class="feed-btn-label" style="color: var(--primary); font-weight: 600;">소개</div>
+                    <div class="tap-indicator" style="top: 6px; left: 6px;"></div>
+                  </div>
+                  <div class="feed-btn-wrap">
+                    <div class="feed-btn like">&#10084;&#65039;</div>
+                    <div class="feed-btn-label">좋아요</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">프로필 카드에서 소개 버튼 탭</div>
+      </div>
+    </div>
+
+    <!-- Arrow 1→2 -->
+    <div class="flow-arrow">
+      <div class="arrow-label">공유 대상 선택</div>
+      <div class="arrow-icon">&rarr;</div>
+    </div>
+
+    <!-- Step 2 -->
+    <div class="flow-step">
+      <div class="step-content">
+        <div class="step-label">② 공유 방법 선택</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="status-bar">
+              <span>9:41</span>
+              <span>&#9679;&#9679;&#9679;</span>
+            </div>
+            <div class="app-header">내친소</div>
+            <div class="dimmed-bg"></div>
+            <div class="bottom-sheet">
+              <div class="bottom-sheet-handle"></div>
+              <div class="bottom-sheet-title">어떻게 소개할까요?</div>
+
+              <div class="share-option">
+                <div class="share-option-icon">&#128241;</div>
+                <div>
+                  <div>내친소 친구에게</div>
+                  <div class="share-option-sub">앱 내 소개</div>
+                </div>
+              </div>
+
+              <div class="share-option selected">
+                <div class="share-option-icon">&#128172;</div>
+                <div>
+                  <div style="font-weight: 700;">카카오톡으로 보내기</div>
+                  <div class="share-option-sub">앱 밖 친구에게 공유</div>
+                </div>
+              </div>
+
+              <div class="share-option">
+                <div class="share-option-icon">&#128279;</div>
+                <div>
+                  <div>링크 복사</div>
+                  <div class="share-option-sub">어디서든 공유</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">카카오톡으로 보내기 선택</div>
+      </div>
+    </div>
+
+    <!-- Arrow 2→3 -->
+    <div class="flow-arrow">
+      <div class="arrow-label">카카오톡 선택</div>
+      <div class="arrow-icon">&rarr;</div>
+    </div>
+
+    <!-- Step 3 -->
+    <div class="flow-step">
+      <div class="step-content">
+        <div class="step-label kakao-label">③ 카카오톡 공유 카드</div>
+        <div class="phone-frame">
+          <div class="phone-screen" style="background: #B2C7D9;">
+            <div class="phone-notch"></div>
+            <div class="status-bar status-bar-kakao" style="background: var(--kakao);">
+              <span>9:42</span>
+              <span>&#9679;&#9679;&#9679;</span>
+            </div>
+            <div class="kakao-header">
+              <span>&#9664;&nbsp;&nbsp;</span>
+              <span>이서연</span>
+            </div>
+            <div class="kakao-chat">
+              <!-- Some context bubbles -->
+              <div class="chat-bubble-row" style="justify-content: flex-end;">
+                <div class="chat-bubble" style="background: var(--kakao); border-radius: 12px;">
+                  <span style="font-size: 13px;">서연아 너한테 소개시켜줄 사람 있어!</span>
+                </div>
+              </div>
+
+              <!-- Share card -->
+              <div class="chat-bubble-row" style="justify-content: flex-end;">
+                <div class="kakao-share-card">
+                  <div class="kakao-card-header">
+                    내친소 &#128140;
+                  </div>
+                  <div class="kakao-card-body">
+                    <div class="blur-avatar">
+                      <span class="blur-avatar-inner">&#128105;</span>
+                    </div>
+                    <div class="kakao-card-msg">민준이가 너한테<br>소개해주고 싶은<br>사람이 있대!</div>
+                    <div class="kakao-card-info">지수 &middot; 26 &middot; 서울</div>
+                    <div class="kakao-card-quote">"걔 진짜 좋은 사람이야"</div>
+                  </div>
+                  <div class="kakao-card-cta">
+                    내친소에서 확인하기 &rarr;
+                  </div>
+                </div>
+              </div>
+
+              <div class="chat-bubble-row">
+                <div class="chat-avatar">&#128103;</div>
+                <div class="chat-bubble-wrap">
+                  <div class="chat-name">이서연</div>
+                  <div class="chat-bubble">오 뭔데뭔데?? &#128064;</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">비유저가 보는 화면 -- 궁금증 유발</div>
+      </div>
+    </div>
+
+  </div><!-- /flow-row 1 -->
+
+  <!-- Row 2: Steps 4-5 centered -->
+  <div class="flow-row">
+
+    <!-- Step 4 -->
+    <div class="flow-step">
+      <div class="step-content">
+        <div class="step-label">④ 비유저 랜딩 (웹)</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="status-bar">
+              <span>9:43</span>
+              <span>&#9679;&#9679;&#9679;</span>
+            </div>
+            <div class="safari-bar">
+              <div class="safari-url">naechinso.com/invite/...</div>
+            </div>
+            <div class="web-header">내친소</div>
+            <div class="landing-content">
+              <div class="landing-subtitle">민준님이 소개해주고 싶은<br>사람이 있어요</div>
+              <div class="blur-photo-large">
+                <span class="blur-photo-inner">&#128105;</span>
+              </div>
+              <div class="landing-info-tags">
+                <span class="info-tag">26세</span>
+                <span class="info-tag">서울</span>
+                <span class="info-tag">직장인</span>
+              </div>
+              <div class="landing-quote">
+                <div class="landing-quote-text">걔 진짜 좋은 사람이야,<br>네 스타일일 것 같아</div>
+              </div>
+              <button class="cta-button">앱 설치하고 확인하기</button>
+              <div class="cta-secondary">이미 내친소 회원이라면 &rarr; <a href="#">앱에서 열기</a></div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">추천사가 훅 -- 궁금해서 설치</div>
+      </div>
+    </div>
+
+    <!-- Arrow 4→5 -->
+    <div class="flow-arrow">
+      <div class="arrow-label">설치 완료</div>
+      <div class="arrow-icon">&rarr;</div>
+    </div>
+
+    <!-- Step 5 -->
+    <div class="flow-step">
+      <div class="step-content">
+        <div class="step-label">⑤ 앱 설치 후 소개 확인</div>
+        <div class="phone-frame">
+          <div class="phone-screen">
+            <div class="phone-notch"></div>
+            <div class="status-bar">
+              <span>9:45</span>
+              <span>&#9679;&#9679;&#9679;</span>
+            </div>
+            <div class="app-header">내친소</div>
+            <div class="intro-received">
+              <div class="intro-badge">&#128140; 민준이가 소개해줬어요</div>
+              <div class="intro-quote">"걔 진짜 좋은 사람이야"</div>
+              <div class="intro-photo">&#128522;</div>
+              <div class="intro-name">지수, 26</div>
+              <div class="intro-detail">서울</div>
+              <div class="intro-actions">
+                <button class="intro-btn accept">볼게! &#128522;</button>
+                <button class="intro-btn later">나중에</button>
+              </div>
+              <div class="bonus-badge">&#127775; 썬구리 +10 (신규 가입 보너스)</div>
+            </div>
+          </div>
+        </div>
+        <div class="phone-caption">블러 해제 + 보너스 지급으로 첫 경험 완성</div>
+      </div>
+    </div>
+
+  </div><!-- /flow-row 2 -->
+
+</div><!-- /flow-container -->
+
+</body>
+</html>
