@@ -1,0 +1,2099 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내친소 — 세렌디피티 추천사 목업</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Noto Sans KR', sans-serif; background: #f0f0f5; color: #222; }
+
+  .page-header {
+    text-align: center;
+    padding: 40px 20px 20px;
+    background: linear-gradient(135deg, #FF6B9D 0%, #C44AFF 50%, #6C5CE7 100%);
+    color: white;
+  }
+  .page-header h1 { font-size: 28px; font-weight: 900; }
+  .page-header p { font-size: 14px; opacity: 0.85; margin-top: 6px; }
+
+  /* ── Section ── */
+  .section {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+  }
+  .section-title {
+    font-size: 22px;
+    font-weight: 900;
+    margin-bottom: 8px;
+    color: #222;
+  }
+  .section-subtitle {
+    font-size: 14px;
+    color: #888;
+    margin-bottom: 24px;
+  }
+
+  /* ── Phone Frame ── */
+  .flow-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    overflow-x: auto;
+    padding-bottom: 20px;
+  }
+  .flow-step { display: flex; align-items: center; gap: 16px; flex-shrink: 0; }
+  .arrow { font-size: 28px; color: #C44AFF; font-weight: bold; flex-shrink: 0; }
+
+  .phone {
+    width: 280px;
+    min-height: 520px;
+    background: #fff;
+    border-radius: 32px;
+    border: 3px solid #222;
+    overflow: hidden;
+    flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.10);
+    position: relative;
+  }
+  .phone-status {
+    height: 36px;
+    background: #222;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+  .phone-notch {
+    width: 100px;
+    height: 24px;
+    background: #222;
+    border-radius: 0 0 16px 16px;
+    position: absolute;
+    top: 0;
+  }
+  .phone-time { color: #fff; font-size: 12px; font-weight: 600; }
+  .phone-body { padding: 16px; min-height: 440px; position: relative; }
+  .phone-nav {
+    height: 52px;
+    border-top: 1px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    font-size: 11px;
+    color: #aaa;
+    background: #fafafa;
+  }
+  .phone-nav .active { color: #C44AFF; font-weight: 700; }
+  .nav-item { text-align: center; line-height: 1.3; }
+  .nav-icon { font-size: 18px; }
+
+  .step-label {
+    text-align: center;
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+    font-weight: 500;
+  }
+
+  /* ── UI Components ── */
+  .screen-title { font-size: 18px; font-weight: 900; margin-bottom: 4px; }
+  .screen-desc { font-size: 12px; color: #888; margin-bottom: 16px; }
+
+  /* Play tab entry */
+  .play-section-label {
+    font-size: 14px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 12px;
+  }
+  .play-card {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #f0f0f0;
+    border-radius: 16px;
+    padding: 14px;
+    margin-bottom: 10px;
+    gap: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+  }
+  .play-card-icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    flex-shrink: 0;
+  }
+  .play-card-text { flex: 1; }
+  .play-card-title { font-size: 14px; font-weight: 700; }
+  .play-card-desc { font-size: 11px; color: #999; margin-top: 2px; }
+  .play-card-badge {
+    font-size: 11px;
+    font-weight: 700;
+    padding: 4px 12px;
+    border-radius: 20px;
+    flex-shrink: 0;
+  }
+
+  .gradient-pink { background: linear-gradient(135deg, #FFE0EC, #FFB8D4); }
+  .gradient-purple { background: linear-gradient(135deg, #E8DEFF, #D0B8FF); }
+  .gradient-blue { background: linear-gradient(135deg, #D4EEFF, #B8D8FF); }
+  .gradient-green { background: linear-gradient(135deg, #D4FFE8, #B8FFD0); }
+  .gradient-orange { background: linear-gradient(135deg, #FFE8D4, #FFD0B8); }
+
+  .badge-pink { background: #FF6B9D; color: white; }
+  .badge-purple { background: #C44AFF; color: white; }
+  .badge-new { background: #FF4757; color: white; font-size: 10px; padding: 2px 8px; border-radius: 10px; }
+
+  /* Friend selector */
+  .friend-chip {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: #f5f5f5;
+    border-radius: 20px;
+    padding: 6px 12px 6px 6px;
+    margin: 4px;
+    font-size: 12px;
+  }
+  .friend-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+    font-weight: 700;
+  }
+  .friend-chip.selected {
+    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+    border: 2px solid #C44AFF;
+  }
+
+  /* Question card */
+  .question-card {
+    background: linear-gradient(135deg, #FFF5F8, #F5EEFF);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 14px;
+    position: relative;
+    border: 2px solid transparent;
+  }
+  .question-card.active {
+    border-color: #C44AFF;
+    box-shadow: 0 4px 20px rgba(196,74,255,0.15);
+  }
+  .question-emoji { font-size: 36px; margin-bottom: 8px; }
+  .question-label {
+    font-size: 10px;
+    color: #C44AFF;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .question-text { font-size: 16px; font-weight: 700; line-height: 1.5; }
+  .question-sub { font-size: 11px; color: #aaa; margin-top: 6px; }
+
+  .shuffle-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    background: #f0f0f5;
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: #888;
+    margin-top: 8px;
+    cursor: pointer;
+  }
+
+  /* Answer input */
+  .answer-area {
+    background: #f8f8fa;
+    border-radius: 16px;
+    padding: 14px;
+    min-height: 80px;
+    font-size: 13px;
+    color: #555;
+    line-height: 1.6;
+    border: 2px dashed #ddd;
+    margin-bottom: 12px;
+  }
+  .answer-area.filled {
+    border: 2px solid #C44AFF;
+    background: #fff;
+    color: #222;
+  }
+  .char-count { text-align: right; font-size: 10px; color: #bbb; }
+
+  /* Preset chips */
+  .preset-row { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+  .preset-chip {
+    background: #f5f0ff;
+    color: #7c3aed;
+    font-size: 11px;
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+  .preset-chip.selected { background: #C44AFF; color: white; }
+
+  /* CTA buttons */
+  .btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    color: white;
+    border: none;
+    border-radius: 14px;
+    font-size: 15px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+  }
+  .btn-secondary {
+    width: 100%;
+    padding: 12px;
+    background: #f5f5f5;
+    color: #666;
+    border: none;
+    border-radius: 14px;
+    font-size: 13px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  .btn-outline {
+    display: inline-block;
+    padding: 8px 16px;
+    border: 2px solid #C44AFF;
+    color: #C44AFF;
+    border-radius: 12px;
+    font-size: 12px;
+    font-weight: 700;
+  }
+  .btn-skip {
+    text-align: center;
+    font-size: 12px;
+    color: #bbb;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+
+  /* Progress */
+  .progress-bar {
+    height: 4px;
+    background: #f0f0f0;
+    border-radius: 2px;
+    margin-bottom: 16px;
+  }
+  .progress-fill {
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, #FF6B9D, #C44AFF);
+  }
+  .progress-label {
+    font-size: 11px;
+    color: #aaa;
+    text-align: right;
+    margin-bottom: 4px;
+  }
+
+  /* Card stack animation hint */
+  .card-stack {
+    position: relative;
+    margin-bottom: 16px;
+  }
+  .card-stack .behind-1 {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: -6px;
+    bottom: -6px;
+    background: #f0eaff;
+    border-radius: 20px;
+    z-index: 0;
+  }
+  .card-stack .behind-2 {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    right: -12px;
+    bottom: -12px;
+    background: #e8e0f8;
+    border-radius: 20px;
+    z-index: -1;
+  }
+  .card-stack .question-card { position: relative; z-index: 1; }
+
+  /* Result card */
+  .result-card {
+    background: linear-gradient(135deg, #FFF5F8 0%, #F0E6FF 50%, #E6F0FF 100%);
+    border-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    border: 2px solid #E8DEFF;
+  }
+  .result-quote {
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 1.7;
+    color: #333;
+    margin: 12px 0;
+    font-style: italic;
+  }
+  .result-author {
+    font-size: 12px;
+    color: #C44AFF;
+    font-weight: 700;
+  }
+  .result-tag {
+    display: inline-block;
+    background: rgba(196,74,255,0.1);
+    color: #C44AFF;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 10px;
+    border-radius: 10px;
+    margin: 2px;
+  }
+
+  /* Share options */
+  .share-option {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    border-radius: 14px;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .share-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+  }
+
+  /* Toast / Reward */
+  .reward-toast {
+    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    border-radius: 16px;
+    padding: 16px;
+    text-align: center;
+    color: white;
+  }
+  .reward-emoji { font-size: 40px; margin-bottom: 6px; }
+  .reward-text { font-size: 15px; font-weight: 700; }
+  .reward-sub { font-size: 12px; opacity: 0.8; margin-top: 4px; }
+  .reward-points {
+    display: inline-block;
+    background: rgba(255,255,255,0.25);
+    padding: 4px 16px;
+    border-radius: 20px;
+    font-size: 18px;
+    font-weight: 900;
+    margin-top: 10px;
+  }
+
+  /* Mad-libs style */
+  .madlib-sentence {
+    font-size: 15px;
+    line-height: 2.2;
+    font-weight: 500;
+  }
+  .madlib-blank {
+    display: inline-block;
+    min-width: 80px;
+    border-bottom: 2px dashed #C44AFF;
+    color: #C44AFF;
+    font-weight: 700;
+    padding: 0 4px;
+    text-align: center;
+  }
+  .madlib-blank.filled {
+    border-bottom: 2px solid #C44AFF;
+    background: rgba(196,74,255,0.08);
+    border-radius: 4px;
+  }
+
+  /* Emoji vote */
+  .emoji-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin: 12px 0;
+  }
+  .emoji-option {
+    text-align: center;
+    padding: 10px 4px;
+    background: #f8f8fa;
+    border-radius: 14px;
+    cursor: pointer;
+  }
+  .emoji-option.selected {
+    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+    border: 2px solid #C44AFF;
+  }
+  .emoji-option .em { font-size: 24px; }
+  .emoji-option .label { font-size: 10px; color: #888; margin-top: 4px; }
+
+  /* Notification card */
+  .notif-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.08);
+    margin-bottom: 10px;
+  }
+  .notif-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+  .notif-text { font-size: 12px; line-height: 1.5; }
+  .notif-text strong { color: #C44AFF; }
+  .notif-time { font-size: 10px; color: #bbb; margin-top: 2px; }
+
+  /* Daily challenge */
+  .daily-banner {
+    background: linear-gradient(135deg, #6C5CE7, #C44AFF);
+    border-radius: 16px;
+    padding: 16px;
+    color: white;
+    margin-bottom: 14px;
+  }
+  .daily-label { font-size: 10px; font-weight: 700; letter-spacing: 1px; opacity: 0.7; }
+  .daily-title { font-size: 16px; font-weight: 900; margin-top: 4px; }
+  .daily-timer { font-size: 11px; opacity: 0.7; margin-top: 6px; }
+
+  /* Divider */
+  .divider { border: none; border-top: 1px solid #eee; margin: 16px 0; }
+
+  /* Section annotation */
+  .annotation {
+    background: #FFFDE7;
+    border-left: 4px solid #FFC107;
+    padding: 12px 16px;
+    border-radius: 0 12px 12px 0;
+    font-size: 12px;
+    color: #666;
+    margin: 20px 0;
+    line-height: 1.6;
+  }
+  .annotation strong { color: #333; }
+
+  /* Flow section */
+  .flow-section {
+    margin-bottom: 60px;
+    padding-bottom: 40px;
+    border-bottom: 2px dashed #ddd;
+  }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>🎲 세렌디피티 추천사</h1>
+  <p>킬링타임으로 친구를 자랑하는 새로운 방식</p>
+</div>
+
+<!-- ============================================== -->
+<!-- 🆕 FLOW 0: 질문이 먼저 → 친구가 떠오르는 구조 -->
+<!-- ============================================== -->
+<div class="section flow-section" id="flow-0">
+  <div class="section-title">Flow 0. 🧠 질문이 먼저 → 친구가 떠오르게</div>
+  <div class="section-subtitle">특정 친구가 없어도 시작! 질문을 보면 자연스럽게 친구가 연상되는 구조</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> 기존 방식은 "민준이를 자랑하자" → 질문 순서였다면, 이 플로우는 <strong>질문이 먼저</strong> 나오고 → "아 이거 민준이인데?" 하고 자연스럽게 떠오르게 함. 소개할 사람이 없어도 킬링타임으로 질문만 넘기다가 추천사가 만들어지는 구조.
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 오늘의 질문 피드 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:43</span></div>
+          <div class="phone-body" style="background:#fafafa; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div style="font-size:14px; font-weight:900;">🎲 오늘의 질문</div>
+              <div style="font-size:11px; color:#C44AFF; font-weight:700;">전체보기 →</div>
+            </div>
+
+            <div class="card-stack" style="margin-bottom:20px;">
+              <div class="behind-1"></div>
+              <div class="behind-2"></div>
+              <div class="question-card active" style="margin-bottom:0;">
+                <div class="question-emoji">🌙</div>
+                <div class="question-label">TODAY'S QUESTION</div>
+                <div class="question-text">새벽 2시에 갑자기<br>전화해도 받아줄 친구는?</div>
+                <div class="question-sub">← 스와이프해서 넘기기 →</div>
+              </div>
+            </div>
+
+            <div style="display:flex; justify-content:center; gap:6px; margin-bottom:16px;">
+              <div style="width:8px; height:8px; border-radius:50%; background:#C44AFF;"></div>
+              <div style="width:8px; height:8px; border-radius:50%; background:#ddd;"></div>
+              <div style="width:8px; height:8px; border-radius:50%; background:#ddd;"></div>
+              <div style="width:8px; height:8px; border-radius:50%; background:#ddd;"></div>
+              <div style="width:8px; height:8px; border-radius:50%; background:#ddd;"></div>
+            </div>
+
+            <div style="font-size:12px; font-weight:700; color:#888; margin-bottom:10px;">📌 지난 인기 질문</div>
+            <div style="background:#fff; border-radius:14px; padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:10px; border:1px solid #f0f0f0;">
+              <span style="font-size:22px;">🍻</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600;">술 약속에 무조건 데려가고 싶은 친구?</div>
+                <div style="font-size:10px; color:#aaa;">답변 2,847개</div>
+              </div>
+              <span style="font-size:11px; color:#C44AFF; font-weight:700;">답하기</span>
+            </div>
+            <div style="background:#fff; border-radius:14px; padding:12px; margin-bottom:8px; display:flex; align-items:center; gap:10px; border:1px solid #f0f0f0;">
+              <span style="font-size:22px;">💪</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600;">힘들 때 연락하면 바로 달려올 친구?</div>
+                <div style="font-size:10px; color:#aaa;">답변 3,102개</div>
+              </div>
+              <span style="font-size:11px; color:#C44AFF; font-weight:700;">답하기</span>
+            </div>
+            <div style="background:#fff; border-radius:14px; padding:12px; display:flex; align-items:center; gap:10px; border:1px solid #f0f0f0;">
+              <span style="font-size:22px;">😂</span>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600;">같이 있으면 배 아플 정도로 웃긴 친구?</div>
+                <div style="font-size:10px; color:#aaa;">답변 1,953개</div>
+              </div>
+              <span style="font-size:11px; color:#C44AFF; font-weight:700;">답하기</span>
+            </div>
+          </div>
+          <div class="phone-nav">
+            <div class="nav-item"><div class="nav-icon">🏠</div>홈</div>
+            <div class="nav-item"><div class="nav-icon">💬</div>라운지</div>
+            <div class="nav-item active"><div class="nav-icon">🎲</div>플레이</div>
+            <div class="nav-item"><div class="nav-icon">💌</div>채팅</div>
+            <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+          </div>
+        </div>
+        <div class="step-label">오늘의 질문 피드 (진입점)</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 질문 탭 → 답변하면 친구 연상 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:43</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:8px;">← 뒤로</div>
+
+            <div class="question-card active" style="background: linear-gradient(135deg, #E8DEFF, #FFE0EC);">
+              <div class="question-emoji">🌙</div>
+              <div class="question-label">TODAY'S QUESTION</div>
+              <div class="question-text">새벽 2시에 갑자기<br>전화해도 받아줄 친구는?</div>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">떠오르는 친구가 있어?</div>
+
+            <div style="background:#f8f8fa; border-radius:14px; padding:14px; margin-bottom:12px;">
+              <div style="font-size:12px; color:#888; margin-bottom:8px;">내 친구 중에서 고르기</div>
+              <div>
+                <div class="friend-chip" style="cursor:pointer;">
+                  <div class="friend-avatar" style="background:#C44AFF;">민</div>
+                  <span>민준</span>
+                </div>
+                <div class="friend-chip" style="cursor:pointer;">
+                  <div class="friend-avatar" style="background:#FF6B9D;">서</div>
+                  <span>서연</span>
+                </div>
+                <div class="friend-chip" style="cursor:pointer;">
+                  <div class="friend-avatar" style="background:#6C5CE7;">지</div>
+                  <span>지호</span>
+                </div>
+                <div class="friend-chip" style="cursor:pointer;">
+                  <div class="friend-avatar" style="background:#00B894;">현</div>
+                  <span>현우</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="text-align:center; color:#bbb; font-size:12px; margin-bottom:12px;">— 또는 —</div>
+
+            <div class="answer-area" style="text-align:center; color:#aaa; font-size:13px;">
+              이름을 직접 입력해도 돼!
+            </div>
+
+            <div style="margin-top:14px;">
+              <div class="btn-secondary" style="color:#C44AFF;">🎲 다른 질문 보기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">질문 보고 → 친구 떠올리기</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 3: 친구 선택 후 → 바로 한 줄 답변 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:44</span></div>
+          <div class="phone-body">
+            <div class="question-card" style="background: linear-gradient(135deg, #E8DEFF, #FFE0EC); border: 2px solid #C44AFF;">
+              <div class="question-emoji">🌙</div>
+              <div class="question-text" style="font-size:14px;">새벽 2시에 갑자기 전화해도 받아줄 친구는?</div>
+            </div>
+
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:14px; background:linear-gradient(135deg, #FFE0EC, #E8DEFF); padding:10px 14px; border-radius:30px;">
+              <div class="friend-avatar" style="background:#C44AFF; width:32px; height:32px; font-size:14px;">민</div>
+              <span style="font-size:14px; font-weight:700; color:#C44AFF;">민준</span>
+              <span style="font-size:12px; color:#888;">을 선택했어!</span>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">왜 민준이가 떠올랐어? 😏</div>
+
+            <div class="answer-area filled" style="min-height:70px;">
+              걔는 진짜 새벽에 전화해도 받아줌 ㅋㅋ 작년에 새벽 3시에 전화했는데 1초만에 받더라
+            </div>
+            <div class="char-count">42 / 100</div>
+
+            <div style="font-size:11px; color:#888; margin:8px 0;">💡 이 답변이 민준이의 추천사가 돼요!</div>
+
+            <div style="margin-top:12px;">
+              <div class="btn-primary">추천사로 저장! ✨</div>
+              <div class="btn-skip">🎲 다음 질문 넘기기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">이유 작성 → 바로 추천사 변환</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 4: 연쇄 질문 (중독성) -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:44</span></div>
+          <div class="phone-body">
+            <div style="text-align:center; margin-bottom:12px;">
+              <span style="font-size:32px;">✅</span>
+              <div style="font-size:14px; font-weight:700; color:#333;">민준이 추천사 저장됨!</div>
+              <div style="font-size:12px; color:#C44AFF; font-weight:600;">🌟 +8 썬구리</div>
+            </div>
+
+            <hr class="divider">
+
+            <div style="font-size:13px; font-weight:700; text-align:center; margin-bottom:12px;">다음 질문도 해볼래? 🎲</div>
+
+            <div class="question-card active" style="margin-bottom:10px;">
+              <div class="question-emoji">🎤</div>
+              <div class="question-label">NEXT QUESTION</div>
+              <div class="question-text">노래방 가면<br>마이크 안 놓는 친구는?</div>
+            </div>
+
+            <div class="question-card" style="opacity:0.5; margin-bottom:10px; padding:14px;">
+              <div style="font-size:18px;">🏃</div>
+              <div style="font-size:13px; font-weight:600; margin-top:4px;">갑자기 여행 가자고 하면 진짜 가는 친구?</div>
+            </div>
+
+            <div class="question-card" style="opacity:0.3; padding:14px;">
+              <div style="font-size:18px;">🍳</div>
+              <div style="font-size:13px; font-weight:600; margin-top:4px;">요리 해준다고 하면 진짜 맛있게 해줄 친구?</div>
+            </div>
+
+            <div style="text-align:center; margin-top:14px;">
+              <div class="btn-outline">계속 넘기기 →</div>
+            </div>
+            <div class="btn-skip">오늘은 여기까지!</div>
+          </div>
+        </div>
+        <div class="step-label">연쇄 질문 → 중독성 루프</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 🆕 FLOW 0-B: "이 사람 누구?" 밸런스게임형 -->
+<!-- ============================================== -->
+<div class="section flow-section" id="flow-0b">
+  <div class="section-title">Flow 0-B. ⚖️ 밸런스게임 + 친구 태그</div>
+  <div class="section-subtitle">밸런스게임을 하다가 자연스럽게 "아 이거 걔인데?" → 추천사 완성</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> 밸런스게임/이상형월드컵 같은 포맷. "A vs B" 질문을 넘기다가 → 특정 친구가 떠오르면 태그 → 그 답변들이 모여서 추천사가 됨. 게임 하는 느낌이라 부담 제로.
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 밸런스게임 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:45</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:4px;">← 뒤로</div>
+            <div class="screen-title">⚖️ 친구 밸런스게임</div>
+            <div class="screen-desc" style="margin-bottom:14px;">골라봐! 떠오르는 친구가 있을걸? 😏</div>
+
+            <div class="progress-label">3 / 10</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:30%;"></div></div>
+
+            <div style="text-align:center; font-size:14px; font-weight:700; color:#888; margin-bottom:14px;">내 친구 중에 더 가까운 쪽은?</div>
+
+            <div style="display:flex; gap:10px; margin-bottom:14px;">
+              <div style="flex:1; background:linear-gradient(135deg, #FFE0EC, #FFF5F8); border-radius:20px; padding:20px 12px; text-align:center; border:3px solid #FF6B9D; cursor:pointer;">
+                <div style="font-size:32px; margin-bottom:6px;">🎉</div>
+                <div style="font-size:14px; font-weight:700;">파티 분위기 메이커</div>
+                <div style="font-size:11px; color:#888; margin-top:4px;">어디든 분위기를 살려줌</div>
+              </div>
+              <div style="display:flex; align-items:center; font-size:16px; font-weight:900; color:#C44AFF;">VS</div>
+              <div style="flex:1; background:linear-gradient(135deg, #E8DEFF, #F5EEFF); border-radius:20px; padding:20px 12px; text-align:center; border:3px solid transparent; cursor:pointer;">
+                <div style="font-size:32px; margin-bottom:6px;">☕</div>
+                <div style="font-size:14px; font-weight:700;">조용한 카페 메이트</div>
+                <div style="font-size:11px; color:#888; margin-top:4px;">같이 있으면 편안해짐</div>
+              </div>
+            </div>
+
+            <div style="background:#FFF5F8; border-radius:14px; padding:12px; text-align:center;">
+              <div style="font-size:12px; color:#888; margin-bottom:6px;">🎉 파티 분위기 메이커 선택!</div>
+              <div style="font-size:13px; font-weight:700;">혹시 떠오르는 친구 있어?</div>
+              <div style="margin-top:8px;">
+                <div class="friend-chip selected" style="display:inline-flex;">
+                  <div class="friend-avatar" style="background:#FF6B9D; width:24px; height:24px; font-size:12px;">서</div>
+                  <span style="font-weight:600; font-size:12px;">서연</span> ✓
+                </div>
+                <div class="friend-chip" style="display:inline-flex;">
+                  <div class="friend-avatar" style="background:#C44AFF; width:24px; height:24px; font-size:12px;">민</div>
+                  <span style="font-size:12px;">민준</span>
+                </div>
+                <div class="friend-chip" style="display:inline-flex; border:1px dashed #aaa;">
+                  <span style="font-size:12px; color:#aaa;">건너뛰기</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <div class="btn-primary">다음 질문 →</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">밸런스게임 — 선택 후 친구 태그</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 몇 개 더 하다가 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:46</span></div>
+          <div class="phone-body">
+            <div class="progress-label">7 / 10</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:70%;"></div></div>
+
+            <div style="text-align:center; font-size:14px; font-weight:700; color:#888; margin-bottom:14px;">연애 스타일이 더 가까운 쪽은?</div>
+
+            <div style="display:flex; gap:10px; margin-bottom:14px;">
+              <div style="flex:1; background:linear-gradient(135deg, #D4EEFF, #E8F4FF); border-radius:20px; padding:20px 12px; text-align:center; border:3px solid transparent; cursor:pointer;">
+                <div style="font-size:32px; margin-bottom:6px;">💘</div>
+                <div style="font-size:14px; font-weight:700;">적극적 대시파</div>
+                <div style="font-size:11px; color:#888; margin-top:4px;">좋으면 바로 표현</div>
+              </div>
+              <div style="display:flex; align-items:center; font-size:16px; font-weight:900; color:#C44AFF;">VS</div>
+              <div style="flex:1; background:linear-gradient(135deg, #FFE8D4, #FFF5EB); border-radius:20px; padding:20px 12px; text-align:center; border:3px solid #FF9F43; cursor:pointer;">
+                <div style="font-size:32px; margin-bottom:6px;">🐢</div>
+                <div style="font-size:14px; font-weight:700;">천천히 알아가는 파</div>
+                <div style="font-size:11px; color:#888; margin-top:4px;">신중하게 다가감</div>
+              </div>
+            </div>
+
+            <div style="background:#FFF5EB; border-radius:14px; padding:10px; text-align:center;">
+              <div style="font-size:12px; color:#888;">🐢 천천히 알아가는 파 선택!</div>
+              <div style="margin-top:6px;">
+                <div class="friend-chip selected" style="display:inline-flex;">
+                  <div class="friend-avatar" style="background:#00B894; width:24px; height:24px; font-size:12px;">현</div>
+                  <span style="font-weight:600; font-size:12px;">현우</span> ✓
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top:10px; background:#f5f0ff; border-radius:12px; padding:10px; text-align:center;">
+              <div style="font-size:11px; color:#C44AFF; font-weight:700;">📊 지금까지 결과</div>
+              <div style="font-size:11px; color:#888; margin-top:4px;">
+                <strong>서연</strong> — 3번 태그 | <strong>현우</strong> — 2번 태그 | <strong>민준</strong> — 1번 태그
+              </div>
+            </div>
+
+            <div style="margin-top:14px;">
+              <div class="btn-primary">다음 질문 →</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">진행 중 — 태그 누적 집계</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 3: 결과 → 추천사 자동 생성 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:47</span></div>
+          <div class="phone-body">
+            <div style="text-align:center; margin-bottom:12px;">
+              <span style="font-size:36px;">🏆</span>
+              <div class="screen-title">게임 결과!</div>
+              <div class="screen-desc">너의 답변에서 추천사가 만들어졌어</div>
+            </div>
+
+            <div style="background:linear-gradient(135deg, #FFE0EC, #E8DEFF); border-radius:16px; padding:16px; margin-bottom:12px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+                <div class="friend-avatar" style="background:#FF6B9D; width:36px; height:36px; font-size:16px;">서</div>
+                <div>
+                  <div style="font-size:14px; font-weight:900;">서연</div>
+                  <div style="font-size:11px; color:#888;">3번 태그됨 · 자동 추천사 생성!</div>
+                </div>
+              </div>
+              <div style="background:rgba(255,255,255,0.7); border-radius:12px; padding:12px;">
+                <div style="font-size:12px; color:#444; line-height:1.7;">
+                  <span class="result-tag">🎉 분위기 메이커</span>
+                  <span class="result-tag">🧠 센스쟁이</span>
+                  <span class="result-tag">💬 대화의 신</span>
+                  <div style="margin-top:8px; font-style:italic;">"파티 분위기 메이커에 센스까지 넘치는 친구. 같이 있으면 지루할 틈이 없어!"</div>
+                </div>
+              </div>
+              <div style="margin-top:10px; display:flex; gap:8px;">
+                <div class="btn-primary" style="flex:1; padding:10px; font-size:12px;">추천사 저장 ✨</div>
+                <div class="btn-secondary" style="flex:1; padding:10px; font-size:12px; margin-top:0;">✏️ 수정하기</div>
+              </div>
+            </div>
+
+            <div style="background:#f8f8fa; border-radius:16px; padding:14px; margin-bottom:10px;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
+                <div class="friend-avatar" style="background:#00B894; width:30px; height:30px; font-size:13px;">현</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700;">현우</div>
+                  <div style="font-size:10px; color:#888;">2번 태그</div>
+                </div>
+              </div>
+              <div style="font-size:12px; color:#666;">
+                <span class="result-tag">🐢 신중파</span>
+                <span class="result-tag">☕ 편안함</span>
+              </div>
+              <div style="font-size:11px; color:#C44AFF; margin-top:6px; font-weight:600;">→ 1개만 더 답하면 추천사 완성!</div>
+            </div>
+
+            <div class="reward-toast" style="padding:12px;">
+              <div style="font-size:14px; font-weight:700;">🌟 +12 썬구리 획득!</div>
+              <div style="font-size:11px; opacity:0.8;">밸런스게임 완료 보너스</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">결과 — 태그 기반 추천사 자동 생성</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================== -->
+<!-- 🆕 FLOW 0-C: TMI 릴레이 (익명 + 친구 연상) -->
+<!-- ============================================== -->
+<div class="section flow-section" id="flow-0c">
+  <div class="section-title">Flow 0-C. 💬 TMI 릴레이</div>
+  <div class="section-subtitle">다른 사람들의 TMI를 구경하다가 → "아 나도 얘 얘기 해야겠다" → 자연 유입</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> 인스타 스토리나 에브리타임 같은 피드형. 다른 사람들이 쓴 TMI/에피소드를 구경하다가 → 공감하면서 → "나도 우리 친구 얘기 써야지" 하고 자연스럽게 참여하게 됨.
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: TMI 피드 구경 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:48</span></div>
+          <div class="phone-body" style="background:#fafafa; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div class="screen-title" style="font-size:16px;">💬 친구 TMI 피드</div>
+              <div style="font-size:11px; color:#aaa;">🔥 실시간</div>
+            </div>
+
+            <!-- TMI 카드 1 -->
+            <div style="background:#fff; border-radius:16px; padding:14px; margin-bottom:10px; border:1px solid #f0f0f0;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#FF6B9D,#C44AFF); display:flex; align-items:center; justify-content:center; font-size:12px; color:white;">익</div>
+                <div style="font-size:11px; color:#888;">익명 · 3분 전</div>
+                <div style="margin-left:auto;">
+                  <span class="result-tag" style="font-size:9px;">🌙 새벽감성</span>
+                </div>
+              </div>
+              <div style="font-size:13px; line-height:1.6; color:#333;">
+                우리 친구는 새벽에 "나 힘들어"라고 카톡하면 10분 안에 우리 집 앞에 와있는 타입임 ㅋㅋㅋ 진짜 미친거 아님?
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; margin-top:10px; padding-top:8px; border-top:1px solid #f5f5f5;">
+                <span style="font-size:12px; color:#888;">❤️ 247</span>
+                <span style="font-size:12px; color:#888;">💬 23</span>
+                <span style="font-size:12px; color:#C44AFF; font-weight:600; margin-left:auto;">나도 써볼래!</span>
+              </div>
+            </div>
+
+            <!-- TMI 카드 2 -->
+            <div style="background:#fff; border-radius:16px; padding:14px; margin-bottom:10px; border:1px solid #f0f0f0;">
+              <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+                <div style="width:28px; height:28px; border-radius:50%; background:linear-gradient(135deg,#6C5CE7,#a29bfe); display:flex; align-items:center; justify-content:center; font-size:12px; color:white;">익</div>
+                <div style="font-size:11px; color:#888;">익명 · 12분 전</div>
+                <span class="result-tag" style="font-size:9px;">🍳 집밥요정</span>
+              </div>
+              <div style="font-size:13px; line-height:1.6; color:#333;">
+                자취하는 내 친구가 매주 일요일마다 반찬 만들어서 가져다줌... 본인은 귀찮다면서 항상 2인분 해옴 🥹
+              </div>
+              <div style="display:flex; align-items:center; gap:12px; margin-top:10px; padding-top:8px; border-top:1px solid #f5f5f5;">
+                <span style="font-size:12px; color:#888;">❤️ 892</span>
+                <span style="font-size:12px; color:#888;">💬 67</span>
+                <span style="font-size:12px; color:#C44AFF; font-weight:600; margin-left:auto;">나도 써볼래!</span>
+              </div>
+            </div>
+
+            <!-- TMI 카드 3 (프롬프트) -->
+            <div style="background:linear-gradient(135deg, #FFF5F8, #F5EEFF); border-radius:16px; padding:16px; text-align:center; border:2px dashed #C44AFF;">
+              <div style="font-size:24px; margin-bottom:6px;">✍️</div>
+              <div style="font-size:14px; font-weight:700; color:#C44AFF;">너도 친구 TMI 써볼래?</div>
+              <div style="font-size:11px; color:#888; margin-top:4px;">익명으로 올리고, 추천사로도 저장돼!</div>
+              <div style="margin-top:10px;">
+                <div class="btn-primary" style="padding:10px; font-size:13px;">TMI 쓰러 가기 →</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-nav">
+            <div class="nav-item"><div class="nav-icon">🏠</div>홈</div>
+            <div class="nav-item"><div class="nav-icon">💬</div>라운지</div>
+            <div class="nav-item active"><div class="nav-icon">🎲</div>플레이</div>
+            <div class="nav-item"><div class="nav-icon">💌</div>채팅</div>
+            <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+          </div>
+        </div>
+        <div class="step-label">TMI 피드 구경 (킬링타임)</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: TMI 작성 → 추천사 변환 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:49</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:4px;">← 뒤로</div>
+            <div class="screen-title">✍️ 친구 TMI 쓰기</div>
+            <div class="screen-desc" style="margin-bottom:14px;">편하게 써! 익명으로 올라가니까 😉</div>
+
+            <div style="font-size:12px; font-weight:700; color:#888; margin-bottom:6px;">어떤 TMI?</div>
+            <div class="preset-row" style="margin-bottom:14px;">
+              <div class="preset-chip selected">🌙 새벽감성</div>
+              <div class="preset-chip">🍳 집밥요정</div>
+              <div class="preset-chip">😂 웃긴에피</div>
+              <div class="preset-chip">💪 의리甲</div>
+              <div class="preset-chip">🎵 감성충만</div>
+              <div class="preset-chip">🤦 황당모먼트</div>
+            </div>
+
+            <div class="answer-area filled" style="min-height:100px; font-size:13px; line-height:1.7;">
+              걔는 진짜 새벽 감성 끝판왕임. 새벽 3시에 갑자기 "한강 갈래?" 하면 진짜 택시타고 옴 ㅋㅋ 그리고 편의점에서 삼각김밥이랑 맥주 사와서 한강에서 해뜨는거 봄. 근데 다음날 회사는 어떻게 간거지
+            </div>
+            <div class="char-count">89 / 200</div>
+
+            <hr class="divider">
+
+            <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px;">
+              <div style="font-size:12px; font-weight:700; color:#888;">이 TMI의 주인공:</div>
+              <div class="friend-chip selected" style="margin:0;">
+                <div class="friend-avatar" style="background:#C44AFF; width:24px; height:24px; font-size:11px;">민</div>
+                <span style="font-size:12px; font-weight:600;">민준</span>
+              </div>
+            </div>
+
+            <div style="background:#f5f0ff; border-radius:12px; padding:10px; margin-bottom:14px;">
+              <div style="font-size:11px; color:#C44AFF;">✨ 이 TMI가 민준이의 추천사로도 저장돼요!</div>
+              <div style="font-size:10px; color:#888; margin-top:2px;">피드에는 익명으로, 프로필에는 네 이름으로</div>
+            </div>
+
+            <div class="btn-primary">올리기 + 추천사 저장 ✨</div>
+          </div>
+        </div>
+        <div class="step-label">TMI 작성 → 자동 추천사 변환</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ================================================ -->
+<!-- 🆕 FLOW 0-D: 이상형 기반 역질문 → 추천사 유도 -->
+<!-- ================================================ -->
+<div class="section flow-section" id="flow-0d">
+  <div class="section-title">Flow 0-D. 💘 이상형 역질문 → "야 너 친구 중에 그런 애 있어?"</div>
+  <div class="section-subtitle">친구가 프로필에 적어둔 이상형을 기반으로 질문 → 주선자가 떠오르는 친구를 추천</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> 소개받고 싶은 사람이 적어둔 이상형("유머 있는 사람", "같이 운동할 수 있는 사람")을 질문으로 변환해서 주선자에게 던짐. "너 친구 중에 진짜 웃긴 애 있어?" → "아 걔!" → 추천사 작성 + 바로 매칭 연결. <strong>이상형과 추천사가 직접 연결되어 매칭 품질이 올라감.</strong>
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 이상형 기반 질문 피드 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:50</span></div>
+          <div class="phone-body" style="background:#fafafa; padding:14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div style="font-size:15px; font-weight:900;">💘 주선 미션</div>
+              <div style="font-size:11px; color:#C44AFF; font-weight:700;">새로고침 ↻</div>
+            </div>
+
+            <div style="font-size:12px; color:#888; margin-bottom:12px;">이런 사람을 찾고 있대! 너 친구 중에 있어?</div>
+
+            <!-- 이상형 질문 카드 1 -->
+            <div style="background:#fff; border-radius:18px; padding:16px; margin-bottom:10px; border:2px solid #FFE0EC; position:relative;">
+              <div style="position:absolute; top:-8px; left:14px; background:#FF6B9D; color:white; font-size:9px; font-weight:700; padding:2px 10px; border-radius:10px;">LIVE</div>
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:10px; margin-top:4px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#ddd,#eee); display:flex; align-items:center; justify-content:center; font-size:14px;">🔒</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700;">익명의 누군가</div>
+                  <div style="font-size:10px; color:#888;">27세 · 강남 · 마케터</div>
+                </div>
+              </div>
+              <div style="background:linear-gradient(135deg, #FFF5F8, #FFF0F5); border-radius:14px; padding:14px; margin-bottom:10px;">
+                <div style="font-size:11px; color:#FF6B9D; font-weight:700; margin-bottom:4px;">💘 이 사람의 이상형</div>
+                <div style="font-size:15px; font-weight:700; line-height:1.5;">"같이 있으면 편하고,<br>유머 감각 있는 사람"</div>
+              </div>
+              <div style="font-size:13px; font-weight:700; color:#C44AFF; text-align:center;">
+                🤔 너 친구 중에 이런 사람 있어?
+              </div>
+              <div style="display:flex; gap:8px; margin-top:10px;">
+                <div style="flex:1; text-align:center; padding:10px; background:linear-gradient(135deg,#FF6B9D,#C44AFF); color:white; border-radius:12px; font-size:13px; font-weight:700; cursor:pointer;">있어! 👋</div>
+                <div style="flex:1; text-align:center; padding:10px; background:#f5f5f5; color:#888; border-radius:12px; font-size:13px; cursor:pointer;">넘기기 →</div>
+              </div>
+            </div>
+
+            <!-- 이상형 질문 카드 2 (스택 느낌) -->
+            <div style="background:#fff; border-radius:18px; padding:16px; border:1px solid #f0f0f0; opacity:0.6;">
+              <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+                <div style="width:36px; height:36px; border-radius:50%; background:linear-gradient(135deg,#ddd,#eee); display:flex; align-items:center; justify-content:center; font-size:14px;">🔒</div>
+                <div>
+                  <div style="font-size:13px; font-weight:700;">익명의 누군가</div>
+                  <div style="font-size:10px; color:#888;">25세 · 홍대 · 디자이너</div>
+                </div>
+              </div>
+              <div style="background:#f8f8fa; border-radius:14px; padding:12px;">
+                <div style="font-size:11px; color:#6C5CE7; font-weight:700; margin-bottom:4px;">💘 이 사람의 이상형</div>
+                <div style="font-size:14px; font-weight:700;">"같이 운동하고, 건강한 라이프스타일..."</div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-nav">
+            <div class="nav-item"><div class="nav-icon">🏠</div>홈</div>
+            <div class="nav-item"><div class="nav-icon">💬</div>라운지</div>
+            <div class="nav-item active"><div class="nav-icon">🎲</div>플레이</div>
+            <div class="nav-item"><div class="nav-icon">💌</div>채팅</div>
+            <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+          </div>
+        </div>
+        <div class="step-label">이상형 기반 주선 미션 피드</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: "있어!" → 친구 선택 + 이상형 맞춤 질문 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:50</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:8px;">← 뒤로</div>
+
+            <div style="background:linear-gradient(135deg, #FFF5F8, #FFF0F5); border-radius:16px; padding:14px; margin-bottom:14px; text-align:center;">
+              <div style="font-size:11px; color:#FF6B9D; font-weight:700;">💘 찾는 이상형</div>
+              <div style="font-size:15px; font-weight:700; margin-top:4px;">"같이 있으면 편하고,<br>유머 감각 있는 사람"</div>
+            </div>
+
+            <div style="font-size:14px; font-weight:700; margin-bottom:10px;">누가 떠올랐어? 😏</div>
+
+            <div style="background:#f8f8fa; border-radius:14px; padding:12px; margin-bottom:14px;">
+              <div class="friend-chip selected">
+                <div class="friend-avatar" style="background:#C44AFF;">민</div>
+                <span style="font-weight:600;">민준</span> ✓
+              </div>
+              <div class="friend-chip">
+                <div class="friend-avatar" style="background:#FF6B9D;">서</div>
+                <span>서연</span>
+              </div>
+              <div class="friend-chip">
+                <div class="friend-avatar" style="background:#6C5CE7;">지</div>
+                <span>지호</span>
+              </div>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">민준이가 이 이상형에 맞는 이유는? 💬</div>
+            <div style="font-size:11px; color:#888; margin-bottom:8px;">이상형 키워드에 맞춰서 질문할게!</div>
+
+            <div class="question-card active" style="padding:16px;">
+              <div style="font-size:11px; color:#C44AFF; font-weight:700; margin-bottom:6px;">키워드: 편한 사람 ☕</div>
+              <div style="font-size:15px; font-weight:700; line-height:1.5;">민준이랑 있으면<br>진짜 편해?<br>어떤 순간에 느껴?</div>
+            </div>
+
+            <div class="answer-area filled" style="min-height:60px;">
+              걔는 진짜 어색한 순간이 없음. 처음 만난 사람이랑도 1시간 만에 10년 친구처럼 됨 ㅋㅋ
+            </div>
+            <div class="char-count">38 / 100</div>
+
+            <div style="margin-top:12px;">
+              <div class="btn-primary">다음 키워드 →</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">이상형 키워드별 맞춤 질문</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 3: 두 번째 키워드 질문 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:51</span></div>
+          <div class="phone-body">
+            <div class="progress-label">2 / 2 키워드</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
+
+            <div class="question-card active" style="padding:16px; background:linear-gradient(135deg, #FFE0EC, #E8DEFF);">
+              <div style="font-size:11px; color:#FF6B9D; font-weight:700; margin-bottom:6px;">키워드: 유머 감각 😂</div>
+              <div style="font-size:15px; font-weight:700; line-height:1.5;">민준이가 진짜 웃겼던<br>에피소드 하나만 알려줘!</div>
+            </div>
+
+            <div class="answer-area filled" style="min-height:60px;">
+              회사 야유회에서 갑자기 개인기 한다고 나갔는데 너무 진지해서 오히려 더 웃겼음 부장님까지 빵 터짐
+            </div>
+            <div class="char-count">49 / 100</div>
+
+            <hr class="divider">
+
+            <div style="background:#f5f0ff; border-radius:14px; padding:12px; margin-bottom:12px;">
+              <div style="font-size:12px; font-weight:700; color:#C44AFF; margin-bottom:6px;">✨ 이상형 매칭 미리보기</div>
+              <div style="display:flex; gap:6px; flex-wrap:wrap;">
+                <span class="result-tag" style="background:#FFE0EC; color:#FF6B9D;">☕ 편한 사람 ✓</span>
+                <span class="result-tag" style="background:#E8DEFF; color:#6C5CE7;">😂 유머 감각 ✓</span>
+              </div>
+              <div style="font-size:11px; color:#888; margin-top:6px;">이상형 키워드 <strong>2/2 일치!</strong></div>
+            </div>
+
+            <div class="btn-primary">추천사 완성 + 소개 연결 💘</div>
+          </div>
+        </div>
+        <div class="step-label">키워드 완료 → 매칭 연결</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 4: 완성 → 소개 제안 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:51</span></div>
+          <div class="phone-body">
+            <div style="text-align:center; margin-bottom:14px;">
+              <span style="font-size:36px;">💘</span>
+              <div class="screen-title">이상형 매칭 추천사 완성!</div>
+            </div>
+
+            <div class="result-card" style="margin-bottom:14px;">
+              <div style="display:flex; gap:6px; justify-content:center; margin-bottom:8px;">
+                <span class="result-tag" style="background:#FFE0EC; color:#FF6B9D;">☕ 편한 사람</span>
+                <span class="result-tag" style="background:#E8DEFF; color:#6C5CE7;">😂 유머 감각</span>
+              </div>
+              <div class="result-quote">
+                "어색한 순간이 없어서 누구랑이든 금방 친해지는 타입. 회사 야유회에서 진지하게 개인기 한다고 나갔다가 부장님까지 빵 터뜨린 레전드 ㅋㅋ"
+              </div>
+              <div class="result-author">— 나, 민준이의 친구</div>
+            </div>
+
+            <div style="background:linear-gradient(135deg, #FFF0F5, #FFE0EC); border-radius:16px; padding:16px; margin-bottom:12px;">
+              <div style="font-size:13px; font-weight:700; color:#FF6B9D; margin-bottom:8px;">💘 바로 소개 연결할까?</div>
+              <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px;">
+                <div style="width:40px; height:40px; border-radius:50%; background:#eee; display:flex; align-items:center; justify-content:center; font-size:16px;">🔒</div>
+                <div>
+                  <div style="font-size:12px; font-weight:700;">익명 (27세·강남·마케터)</div>
+                  <div style="font-size:10px; color:#888;">이상형: 편하고 유머 있는 사람</div>
+                </div>
+              </div>
+              <div style="display:flex; align-items:center; justify-content:center; font-size:20px; color:#FF6B9D; margin:4px 0;">💕</div>
+              <div style="display:flex; align-items:center; gap:10px;">
+                <div class="friend-avatar" style="background:#C44AFF; width:40px; height:40px; font-size:16px;">민</div>
+                <div>
+                  <div style="font-size:12px; font-weight:700;">민준 (28세·서초·개발자)</div>
+                  <div style="font-size:10px; color:#888;">이상형 키워드 2/2 매칭!</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="btn-primary" style="background: linear-gradient(135deg, #FF6B9D, #FF4757);">민준이한테 소개해줄게! 💌</div>
+            <div class="btn-secondary">추천사만 저장할게</div>
+
+            <div class="reward-toast" style="padding:10px; margin-top:12px;">
+              <div style="font-size:13px; font-weight:700;">🌟 +20 썬구리 (이상형 매칭 보너스!)</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">추천사 + 소개 동시 완성!</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW A: 플레이 탭 진입 + 친구 선택 (기존) -->
+<!-- ============================================ -->
+<div class="section flow-section" id="flow-a">
+  <div class="section-title">Flow A. 👤 친구 먼저 선택 → 자랑하기 진입</div>
+  <div class="section-subtitle">특정 친구를 이미 알고 있을 때 — 위피 플레이 탭처럼 자연스럽게 진입 (기존 플로우)</div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 플레이 탭 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:43</span></div>
+          <div class="phone-body" style="background: #fafafa; padding: 14px;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:14px;">
+              <div style="font-size:13px; color:#888;">서울 송파구 ∨</div>
+              <div style="display:flex; gap:8px;">
+                <span style="font-size:11px; color:#aaa;">추천</span>
+                <span style="font-size:14px; font-weight:900; color:#222; border-bottom:3px solid #C44AFF; padding-bottom:2px;">플레이</span>
+              </div>
+            </div>
+
+            <div class="play-section-label">🎮 대화부터 시작해요</div>
+            <div class="play-card">
+              <div class="play-card-icon gradient-blue">💬</div>
+              <div class="play-card-text">
+                <div class="play-card-title">두근두근 랜덤 보이스톡</div>
+                <div class="play-card-desc">매번 새로운 친구와의 통화</div>
+              </div>
+              <div class="play-card-badge badge-pink">보러가기</div>
+            </div>
+
+            <div class="play-section-label" style="margin-top:16px;">✨ 친구 자랑하기 <span class="badge-new">NEW</span></div>
+            <div class="play-card" style="border: 2px solid #C44AFF; background: linear-gradient(135deg, #FFF5F8, #F5EEFF);">
+              <div class="play-card-icon gradient-purple">🎲</div>
+              <div class="play-card-text">
+                <div class="play-card-title">랜덤 질문으로 추천사 쓰기</div>
+                <div class="play-card-desc">재미있는 질문에 답하면 추천사 완성!</div>
+              </div>
+              <div class="play-card-badge badge-purple">시작하기</div>
+            </div>
+            <div class="play-card">
+              <div class="play-card-icon gradient-orange">🃏</div>
+              <div class="play-card-text">
+                <div class="play-card-title">빈칸 채우기 추천사</div>
+                <div class="play-card-desc">빈칸만 채우면 센스있는 추천사 완성</div>
+              </div>
+              <div class="play-card-badge badge-purple">시작하기</div>
+            </div>
+
+            <div class="play-section-label" style="margin-top:16px;">🏆 내 매력 알아보기</div>
+            <div class="play-card">
+              <div class="play-card-icon gradient-green">📊</div>
+              <div class="play-card-text">
+                <div class="play-card-title">프로필 평가받기</div>
+                <div class="play-card-desc">내 인기도는 몇 점?</div>
+              </div>
+              <div class="play-card-badge badge-pink">평가받기</div>
+            </div>
+          </div>
+          <div class="phone-nav">
+            <div class="nav-item"><div class="nav-icon">🏠</div>홈</div>
+            <div class="nav-item"><div class="nav-icon">💬</div>라운지</div>
+            <div class="nav-item active"><div class="nav-icon">🎮</div>플레이</div>
+            <div class="nav-item"><div class="nav-icon">💌</div>채팅</div>
+            <div class="nav-item"><div class="nav-icon">👤</div>프로필</div>
+          </div>
+        </div>
+        <div class="step-label">플레이 탭 — 진입점</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 친구 선택 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:43</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:4px;">← 뒤로</div>
+            <div class="screen-title">누구를 자랑할까? 🤔</div>
+            <div class="screen-desc">추천사를 써줄 친구를 선택해주세요</div>
+
+            <div class="daily-banner">
+              <div class="daily-label">📅 오늘의 미션</div>
+              <div class="daily-title">친구 1명에게 추천사 써주기</div>
+              <div class="daily-timer">⏰ 17시간 32분 남음 · 🌟 +15 썬구리</div>
+            </div>
+
+            <div style="font-size:12px; font-weight:700; color:#888; margin-bottom:8px;">내 친구 목록</div>
+
+            <div class="friend-chip selected">
+              <div class="friend-avatar" style="background:#C44AFF;">민</div>
+              <span style="font-weight:600;">민준</span> ✓
+            </div>
+            <div class="friend-chip">
+              <div class="friend-avatar" style="background:#FF6B9D;">서</div>
+              <span>서연</span>
+            </div>
+            <div class="friend-chip">
+              <div class="friend-avatar" style="background:#6C5CE7;">지</div>
+              <span>지호</span>
+            </div>
+            <div class="friend-chip">
+              <div class="friend-avatar" style="background:#00B894;">현</div>
+              <span>현우</span>
+            </div>
+            <div class="friend-chip">
+              <div class="friend-avatar" style="background:#FDCB6E;">수</div>
+              <span>수빈</span>
+            </div>
+
+            <hr class="divider">
+            <div style="font-size:11px; color:#bbb; margin-bottom:8px;">💡 추천사가 아직 없는 친구</div>
+            <div class="friend-chip" style="border: 1px dashed #C44AFF;">
+              <div class="friend-avatar" style="background:#ddd; color:#999;">예</div>
+              <span style="color:#C44AFF; font-weight:600;">예진</span> <span style="font-size:10px; color:#C44AFF;">추천사 0개</span>
+            </div>
+
+            <div style="margin-top: 20px;">
+              <div class="btn-primary">민준이 자랑하러 가기 →</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">친구 선택 (데일리 미션 연동)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW B: 랜덤 질문 카드 뽑기 (메인 플로우) -->
+<!-- ============================================ -->
+<div class="section flow-section" id="flow-b">
+  <div class="section-title">Flow B. 🎲 랜덤 질문 카드 뽑기</div>
+  <div class="section-subtitle">카드를 넘기며 질문에 답하면 자연스럽게 추천사가 완성되는 핵심 플로우</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> "추천사를 써주세요" 대신, 재미있는 질문 카드를 넘기면서 답하다 보면 자연스럽게 추천사가 완성됨. 마치 MBTI 테스트나 밸런스게임처럼 가볍게 참여할 수 있는 구조.
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 첫 번째 질문 카드 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:44</span></div>
+          <div class="phone-body">
+            <div class="progress-label">1 / 4</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:25%;"></div></div>
+
+            <div class="card-stack">
+              <div class="behind-1"></div>
+              <div class="behind-2"></div>
+              <div class="question-card active">
+                <div class="question-emoji">🎯</div>
+                <div class="question-label">QUESTION 1</div>
+                <div class="question-text">민준이를 처음 만나면<br>제일 먼저 느끼는 건?</div>
+                <div class="question-sub">한 줄로 표현해봐!</div>
+              </div>
+            </div>
+
+            <div class="preset-row">
+              <div class="preset-chip">😊 편안해지는 분위기</div>
+              <div class="preset-chip selected">😎 첫인상이 강렬함</div>
+              <div class="preset-chip">🤗 누구랑이든 친해짐</div>
+              <div class="preset-chip">🤣 웃음이 빵 터짐</div>
+            </div>
+
+            <div class="answer-area filled">
+              첫인상이 강렬해서 한번 보면 잊기 힘들어
+            </div>
+            <div class="char-count">21 / 50</div>
+
+            <div style="margin-top:12px;">
+              <div class="btn-primary">다음 질문 →</div>
+              <div class="btn-skip">이 질문 건너뛰기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">질문 1 — 첫인상</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 두 번째 질문 카드 (이모지 투표형) -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:44</span></div>
+          <div class="phone-body">
+            <div class="progress-label">2 / 4</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:50%;"></div></div>
+
+            <div class="card-stack">
+              <div class="behind-1"></div>
+              <div class="question-card active">
+                <div class="question-emoji">✨</div>
+                <div class="question-label">QUESTION 2</div>
+                <div class="question-text">민준이의<br>숨겨진 매력 포인트는?</div>
+                <div class="question-sub">최대 2개 선택해봐!</div>
+              </div>
+            </div>
+
+            <div class="emoji-grid">
+              <div class="emoji-option selected">
+                <div class="em">🧠</div>
+                <div class="label">센스쟁이</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">💪</div>
+                <div class="label">의리파</div>
+              </div>
+              <div class="emoji-option selected">
+                <div class="em">🎵</div>
+                <div class="label">감성충만</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">🍳</div>
+                <div class="label">요리고수</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">📚</div>
+                <div class="label">박학다식</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">🏃</div>
+                <div class="label">행동파</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">🎤</div>
+                <div class="label">분위기메이커</div>
+              </div>
+              <div class="emoji-option">
+                <div class="em">🐶</div>
+                <div class="label">동물 러버</div>
+              </div>
+            </div>
+
+            <div style="margin-top:8px;">
+              <div class="btn-primary">다음 질문 →</div>
+              <div class="btn-skip">이 질문 건너뛰기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">질문 2 — 이모지 선택형</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 3: 세 번째 질문 (자유 서술) -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:45</span></div>
+          <div class="phone-body">
+            <div class="progress-label">3 / 4</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:75%;"></div></div>
+
+            <div class="question-card active">
+              <div class="question-emoji">💬</div>
+              <div class="question-label">QUESTION 3</div>
+              <div class="question-text">민준이랑 있었던<br>가장 기억에 남는 순간은?</div>
+              <div class="question-sub">TMI 대환영! 구체적일수록 좋아</div>
+            </div>
+
+            <div class="answer-area filled" style="min-height: 100px;">
+              작년 여름에 갑자기 한강 가자고 해서 새벽에 치킨 시켜놓고 얘기하다가 해 뜨는 거 봤는데 진짜 최고였음 ㅋㅋ
+            </div>
+            <div class="char-count">58 / 100</div>
+
+            <div class="shuffle-btn">🔀 질문 바꾸기</div>
+            <div style="font-size:10px; color:#bbb; text-align:center; margin-top:4px;">다른 질문이 궁금하면 셔플!</div>
+
+            <div style="margin-top:16px;">
+              <div class="btn-primary">마지막 질문 →</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">질문 3 — 에피소드 서술</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 4: 마지막 질문 (한줄 어필) -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:45</span></div>
+          <div class="phone-body">
+            <div class="progress-label">4 / 4</div>
+            <div class="progress-bar"><div class="progress-fill" style="width:100%;"></div></div>
+
+            <div class="question-card active" style="background: linear-gradient(135deg, #FFE0EC, #D4B8FF);">
+              <div class="question-emoji">🔥</div>
+              <div class="question-label">FINAL QUESTION</div>
+              <div class="question-text">소개팅 상대에게<br>민준이를 한 마디로 어필하면?</div>
+              <div class="question-sub">이게 추천사의 한 줄 요약이 돼!</div>
+            </div>
+
+            <div class="answer-area filled" style="text-align:center; font-size:16px; font-weight:700; color:#C44AFF;">
+              "같이 있으면 시간이 금방 가는 사람"
+            </div>
+
+            <div class="preset-row" style="justify-content:center;">
+              <div class="preset-chip">내가 소개팅 나감</div>
+              <div class="preset-chip">손절 불가 인간</div>
+              <div class="preset-chip selected">같이 있으면 행복</div>
+              <div class="preset-chip">숨은 보석</div>
+            </div>
+
+            <div style="margin-top:16px;">
+              <div class="btn-primary">✨ 추천사 완성하기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">질문 4 — 한 줄 어필 (최종)</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW C: 빈칸 채우기 (Mad-libs) -->
+<!-- ============================================ -->
+<div class="section flow-section" id="flow-c">
+  <div class="section-title">Flow C. 🃏 빈칸 채우기 추천사</div>
+  <div class="section-subtitle">빈칸만 채우면 센스있는 추천사가 자동 완성 — 글쓰기 부담 제로</div>
+
+  <div class="annotation">
+    <strong>💡 핵심 아이디어:</strong> 글쓰기가 어려운 사람도 빈칸만 탭하면 완성! 랜덤 문장 템플릿이 돌아가면서 매번 다른 추천사가 만들어지는 재미.
+  </div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 템플릿 랜덤 등장 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:46</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:4px;">← 뒤로</div>
+            <div class="screen-title">🃏 빈칸 채우기</div>
+            <div class="screen-desc">빈칸을 탭해서 채워봐!</div>
+
+            <div style="background: linear-gradient(135deg, #FFF5F8, #F5EEFF); border-radius:20px; padding:20px; margin-bottom:16px;">
+              <div class="madlib-sentence">
+                <span style="color:#C44AFF; font-weight:700;">민준</span>이는
+                <span class="madlib-blank filled">센스쟁이</span>
+                같은 사람인데,
+                특히 <span class="madlib-blank">______</span>
+                할 때 진짜 빛나.
+                같이 <span class="madlib-blank">______</span>
+                하면 시간 가는 줄 몰라.
+                한마디로
+                <span class="madlib-blank">______</span>!
+              </div>
+            </div>
+
+            <div style="font-size:12px; font-weight:700; color:#888; margin-bottom:8px;">빈칸을 탭하면 선택지가 나와요 👇</div>
+
+            <div style="background:#f8f8fa; border-radius:14px; padding:14px;">
+              <div style="font-size:11px; color:#C44AFF; font-weight:700; margin-bottom:8px;">✨ "특히 ___ 할 때 진짜 빛나"</div>
+              <div class="preset-row">
+                <div class="preset-chip">이야기 들어줄</div>
+                <div class="preset-chip selected">진지하게 고민 상담해줄</div>
+                <div class="preset-chip">술 마시고 노래할</div>
+                <div class="preset-chip">요리할</div>
+                <div class="preset-chip" style="border:1px dashed #C44AFF; background:white; color:#C44AFF;">✏️ 직접 쓰기</div>
+              </div>
+            </div>
+
+            <div class="shuffle-btn" style="margin-top:12px;">🔀 다른 문장 템플릿으로 바꾸기</div>
+          </div>
+        </div>
+        <div class="step-label">빈칸 채우기 — 탭으로 선택</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 완성 상태 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:46</span></div>
+          <div class="phone-body">
+            <div class="screen-title">🃏 거의 다 됐어!</div>
+            <div class="screen-desc">완성된 문장을 확인해봐</div>
+
+            <div style="background: linear-gradient(135deg, #FFF5F8, #F5EEFF); border-radius:20px; padding:20px; margin-bottom:16px;">
+              <div class="madlib-sentence">
+                <span style="color:#C44AFF; font-weight:700;">민준</span>이는
+                <span class="madlib-blank filled">센스쟁이</span>
+                같은 사람인데,
+                특히 <span class="madlib-blank filled">진지하게 고민 상담해줄</span>
+                때 진짜 빛나.
+                같이 <span class="madlib-blank filled">한강에서 치맥</span>
+                하면 시간 가는 줄 몰라.
+                한마디로
+                <span class="madlib-blank filled">인생친구</span>!
+              </div>
+            </div>
+
+            <div style="text-align:center; margin: 16px 0;">
+              <span style="font-size:32px;">✅</span>
+              <div style="font-size:14px; font-weight:700; color:#333; margin-top:4px;">완성!</div>
+            </div>
+
+            <div class="btn-primary">추천사로 저장하기 ✨</div>
+            <div class="btn-secondary">🔀 다시 만들기</div>
+          </div>
+        </div>
+        <div class="step-label">빈칸 전부 채움 — 완성</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW D: 결과 카드 + 공유 -->
+<!-- ============================================ -->
+<div class="section flow-section" id="flow-d">
+  <div class="section-title">Flow D. 결과 카드 생성 + 공유</div>
+  <div class="section-subtitle">완성된 추천사가 예쁜 카드로 조합 → 프로필에 붙고 → 외부 공유 가능</div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 완성된 추천사 카드 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:47</span></div>
+          <div class="phone-body">
+            <div style="text-align:center; margin-bottom:12px;">
+              <span style="font-size:36px;">🎉</span>
+              <div class="screen-title">추천사 완성!</div>
+              <div class="screen-desc">민준이의 프로필에 바로 붙어요</div>
+            </div>
+
+            <div class="result-card">
+              <div style="display:flex; align-items:center; justify-content:center; gap:8px; margin-bottom:10px;">
+                <div class="friend-avatar" style="background:#6C5CE7; width:32px; height:32px; font-size:14px;">지</div>
+                <div style="font-size:12px;"><strong>지호</strong>가 쓴 추천사</div>
+              </div>
+              <div class="result-quote">
+                "첫인상이 강렬해서 한번 보면 잊기 힘들어. 같이 있으면 시간이 금방 가는 사람. 작년 여름 한강에서 새벽에 치킨 먹으면서 해 뜨는 거 본 건 아직도 최고의 기억 ㅋㅋ"
+              </div>
+              <div style="margin: 8px 0;">
+                <span class="result-tag">🧠 센스쟁이</span>
+                <span class="result-tag">🎵 감성충만</span>
+              </div>
+              <div class="result-author">— 지호, 민준이의 친구</div>
+            </div>
+
+            <div class="reward-toast" style="margin-top:16px;">
+              <div class="reward-emoji">🌟</div>
+              <div class="reward-text">썬구리 획득!</div>
+              <div class="reward-points">+15</div>
+              <div class="reward-sub">오늘의 미션 완료 보너스 포함</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">추천사 카드 완성 + 보상</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 공유 옵션 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:47</span></div>
+          <div class="phone-body">
+            <div class="screen-title">공유하기 💌</div>
+            <div class="screen-desc">민준이한테 알려줄까?</div>
+
+            <div class="share-option" style="background: #FFF9DB;">
+              <div class="share-icon" style="background:#FEE500;">💬</div>
+              <div>
+                <div style="font-weight:700; font-size:13px;">카카오톡으로 보내기</div>
+                <div style="font-size:11px; color:#888;">"나 너 추천사 써줬어 ㅋㅋ" 메시지와 함께</div>
+              </div>
+            </div>
+
+            <div class="share-option" style="background: #F5EEFF;">
+              <div class="share-icon" style="background:#C44AFF; color:white;">📲</div>
+              <div>
+                <div style="font-weight:700; font-size:13px;">앱 내 알림 보내기</div>
+                <div style="font-size:11px; color:#888;">민준이에게 "추천사 도착!" 알림</div>
+              </div>
+            </div>
+
+            <div class="share-option" style="background: #F0FFF4;">
+              <div class="share-icon" style="background:#00B894; color:white;">🔗</div>
+              <div>
+                <div style="font-weight:700; font-size:13px;">링크 복사</div>
+                <div style="font-size:11px; color:#888;">어디든 공유 가능한 링크</div>
+              </div>
+            </div>
+
+            <div class="share-option" style="background: #FFF0F5;">
+              <div class="share-icon" style="background:#FF6B9D; color:white;">📸</div>
+              <div>
+                <div style="font-weight:700; font-size:13px;">이미지로 저장</div>
+                <div style="font-size:11px; color:#888;">인스타 스토리에 올리기 좋은 사이즈</div>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div style="text-align:center;">
+              <div class="btn-outline">🎲 다른 친구도 자랑하기</div>
+            </div>
+            <div class="btn-skip">나중에 할게</div>
+          </div>
+        </div>
+        <div class="step-label">공유 옵션 (카톡/앱/링크/이미지)</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 3: 프로필에 붙은 모습 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:48</span></div>
+          <div class="phone-body" style="background:#fafafa;">
+            <div style="text-align:center; margin-bottom:12px;">
+              <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg,#C44AFF,#FF6B9D); margin:0 auto 8px; display:flex; align-items:center; justify-content:center; font-size:28px; color:white; font-weight:900;">민</div>
+              <div style="font-size:16px; font-weight:900;">민준, 27</div>
+              <div style="font-size:12px; color:#888;">서울 강남 · 마케터</div>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; margin-bottom:8px;">
+              📝 추천사 <span style="color:#C44AFF;">3개</span>
+            </div>
+
+            <div class="result-card" style="margin-bottom:8px; text-align:left; padding:14px;">
+              <div style="display:flex; gap:6px; margin-bottom:6px;">
+                <span class="result-tag">🧠 센스쟁이</span>
+                <span class="result-tag">🎵 감성충만</span>
+              </div>
+              <div style="font-size:13px; line-height:1.6; color:#444;">
+                "같이 있으면 시간이 금방 가는 사람. 한강에서 새벽에 해 뜨는 거 같이 본 건 최고였어 ㅋㅋ"
+              </div>
+              <div style="font-size:11px; color:#aaa; margin-top:6px;">— 지호</div>
+            </div>
+
+            <div style="background:#fff; border-radius:16px; padding:14px; border:1px solid #f0f0f0; margin-bottom:8px;">
+              <div style="display:flex; gap:6px; margin-bottom:6px;">
+                <span class="result-tag">💪 의리파</span>
+              </div>
+              <div style="font-size:13px; line-height:1.6; color:#444;">
+                "이 친구 진심으로 추천. 약속 한번 잡으면 절대 안 빠지는 스타일"
+              </div>
+              <div style="font-size:11px; color:#aaa; margin-top:6px;">— 서연</div>
+            </div>
+
+            <div style="background:#fff; border-radius:16px; padding:14px; border:1px dashed #C44AFF; text-align:center;">
+              <div style="font-size:24px;">🎲</div>
+              <div style="font-size:12px; color:#C44AFF; font-weight:700; margin-top:4px;">친구야, 나도 추천사 써줘!</div>
+              <div style="font-size:10px; color:#aaa;">탭하면 추천사 작성 요청 보내기</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">프로필에 추천사 스택 노출</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW E: 수신자 경험 (알림 + 리액션) -->
+<!-- ============================================ -->
+<div class="section flow-section" id="flow-e">
+  <div class="section-title">Flow E. 수신 경험 — 알림 + 리액션</div>
+  <div class="section-subtitle">추천사를 받은 친구가 보는 화면 + 답장으로 다시 추천사 릴레이</div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 알림 수신 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">10:12</span></div>
+          <div class="phone-body" style="background:#fafafa;">
+            <div class="screen-title">알림 📬</div>
+            <div class="screen-desc" style="margin-bottom:16px;">새로운 소식</div>
+
+            <div class="notif-card" style="border: 2px solid #C44AFF;">
+              <div class="notif-icon gradient-purple">🎲</div>
+              <div>
+                <div class="notif-text"><strong>지호</strong>가 너에 대한 추천사를 썼어!</div>
+                <div class="notif-text" style="color:#C44AFF; font-weight:600;">탭해서 확인해봐 →</div>
+                <div class="notif-time">방금 전</div>
+              </div>
+            </div>
+
+            <div class="notif-card">
+              <div class="notif-icon gradient-pink">💌</div>
+              <div>
+                <div class="notif-text"><strong>새로운 소개</strong>가 도착했어요</div>
+                <div class="notif-time">2시간 전</div>
+              </div>
+            </div>
+
+            <div class="notif-card">
+              <div class="notif-icon gradient-green">🌟</div>
+              <div>
+                <div class="notif-text">이번 주 <strong>썬구리 리포트</strong> 확인하기</div>
+                <div class="notif-time">어제</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">알림 수신 — "추천사 도착!"</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 추천사 확인 + 리액션 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">10:12</span></div>
+          <div class="phone-body">
+            <div style="font-size:13px; color:#aaa; margin-bottom:4px;">← 뒤로</div>
+            <div style="text-align:center; margin-bottom:12px;">
+              <span style="font-size:36px;">🎁</span>
+              <div class="screen-title">지호가 보낸 추천사</div>
+            </div>
+
+            <div class="result-card" style="margin-bottom:16px;">
+              <div style="display:flex; gap:6px; justify-content:center; margin-bottom:8px;">
+                <span class="result-tag">🧠 센스쟁이</span>
+                <span class="result-tag">🎵 감성충만</span>
+              </div>
+              <div class="result-quote">
+                "첫인상이 강렬해서 한번 보면 잊기 힘들어. 같이 있으면 시간이 금방 가는 사람."
+              </div>
+              <div class="result-author">— 지호</div>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; text-align:center; margin-bottom:10px;">리액션 보내기</div>
+            <div style="display:flex; justify-content:center; gap:12px; margin-bottom:16px;">
+              <div style="text-align:center;">
+                <div style="width:48px;height:48px;border-radius:50%;background:#FFF0F5;display:flex;align-items:center;justify-content:center;font-size:22px;">😭</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">감동이야</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:48px;height:48px;border-radius:50%;background:#FFF9DB;display:flex;align-items:center;justify-content:center;font-size:22px;">🤣</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">웃기다ㅋ</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:48px;height:48px;border-radius:50%;background:#F0FFF4;display:flex;align-items:center;justify-content:center;font-size:22px;border:2px solid #00B894;">🥰</div>
+                <div style="font-size:10px;color:#00B894;font-weight:700;margin-top:4px;">고마워!</div>
+              </div>
+              <div style="text-align:center;">
+                <div style="width:48px;height:48px;border-radius:50%;background:#F5EEFF;display:flex;align-items:center;justify-content:center;font-size:22px;">🙈</div>
+                <div style="font-size:10px;color:#888;margin-top:4px;">부끄러</div>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div style="text-align:center;">
+              <div class="btn-primary" style="background: linear-gradient(135deg, #6C5CE7, #C44AFF);">🎲 나도 지호 추천사 써주기</div>
+              <div style="font-size:10px; color:#aaa; margin-top:6px;">추천사 릴레이! +10 보너스 썬구리</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">추천사 확인 + 리액션 + 릴레이</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================ -->
+<!-- FLOW F: 킬링타임 요소들 -->
+<!-- ============================================ -->
+<div class="section" id="flow-f">
+  <div class="section-title">Flow F. 킬링타임 & 리텐션 요소</div>
+  <div class="section-subtitle">매일 들어와서 즐기게 만드는 장치들</div>
+
+  <div class="flow-row">
+    <!-- Screen 1: 데일리 미션 + 스트릭 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:43</span></div>
+          <div class="phone-body">
+            <div class="screen-title">오늘의 미션 🎯</div>
+            <div class="screen-desc">매일 새로운 미션으로 썬구리 모으기</div>
+
+            <div class="daily-banner">
+              <div class="daily-label">🔥 3일 연속 달성 중!</div>
+              <div class="daily-title">친구 1명에게 추천사 써주기</div>
+              <div class="daily-timer">⏰ 17시간 32분 남음</div>
+              <div style="margin-top:8px; display:flex; gap:4px;">
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px;">✅</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px;">✅</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.3); display:flex; align-items:center; justify-content:center; font-size:14px;">✅</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:12px;">4</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:12px;">5</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:12px;">6</div>
+                <div style="width:28px; height:28px; border-radius:50%; background:rgba(255,255,255,0.15); display:flex; align-items:center; justify-content:center; font-size:12px;">7</div>
+              </div>
+              <div style="font-size:10px; opacity:0.7; margin-top:4px;">7일 연속 달성 시 🌟 +50 보너스!</div>
+            </div>
+
+            <div style="font-size:13px; font-weight:700; margin-bottom:10px;">📋 다른 미션</div>
+
+            <div class="play-card" style="opacity: 0.5;">
+              <div style="font-size:20px;">✅</div>
+              <div class="play-card-text">
+                <div class="play-card-title" style="text-decoration:line-through;">프로필 사진 업데이트</div>
+                <div class="play-card-desc">완료! +5 🌟</div>
+              </div>
+            </div>
+
+            <div class="play-card">
+              <div style="font-size:20px;">🎲</div>
+              <div class="play-card-text">
+                <div class="play-card-title">랜덤 추천사 써주기</div>
+                <div class="play-card-desc">아무 친구나 랜덤으로! +8 🌟</div>
+              </div>
+              <div class="play-card-badge badge-purple">도전</div>
+            </div>
+
+            <div class="play-card">
+              <div style="font-size:20px;">📝</div>
+              <div class="play-card-text">
+                <div class="play-card-title">빈칸 추천사 3개 완성</div>
+                <div class="play-card-desc">빈칸 채우기로 빠르게! +12 🌟</div>
+              </div>
+              <div class="play-card-badge badge-pink">도전</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">데일리 미션 + 스트릭</div>
+      </div>
+    </div>
+
+    <div class="arrow">→</div>
+
+    <!-- Screen 2: 주간 랭킹 -->
+    <div class="flow-step">
+      <div>
+        <div class="phone">
+          <div class="phone-status"><span class="phone-time">9:48</span></div>
+          <div class="phone-body">
+            <div class="screen-title">이번 주 베스트 주선자 🏆</div>
+            <div class="screen-desc" style="margin-bottom:16px;">추천사를 많이 쓴 친구들</div>
+
+            <div style="background: linear-gradient(135deg, #FFE0EC, #E8DEFF); border-radius:16px; padding:16px; text-align:center; margin-bottom:14px;">
+              <div style="font-size:12px; color:#C44AFF; font-weight:700;">👑 이번 주 1위</div>
+              <div style="font-size:32px; margin:6px 0;">🥇</div>
+              <div style="font-size:16px; font-weight:900;">서연</div>
+              <div style="font-size:12px; color:#888;">추천사 12개 · 매칭 성사 2건</div>
+              <div style="font-size:11px; color:#C44AFF; font-weight:700; margin-top:4px;">🌟 180 썬구리 획득</div>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <div style="flex:1; background:#fff; border-radius:14px; padding:12px; text-align:center; border:1px solid #f0f0f0;">
+                <div>🥈</div>
+                <div style="font-size:13px; font-weight:700;">민준</div>
+                <div style="font-size:11px; color:#888;">추천사 8개</div>
+              </div>
+              <div style="flex:1; background:#fff; border-radius:14px; padding:12px; text-align:center; border:1px solid #f0f0f0;">
+                <div>🥉</div>
+                <div style="font-size:13px; font-weight:700;">지호</div>
+                <div style="font-size:11px; color:#888;">추천사 6개</div>
+              </div>
+            </div>
+
+            <hr class="divider">
+
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 0;">
+              <div style="font-size:13px; color:#888; width:24px; text-align:center;">4</div>
+              <div class="friend-avatar" style="background:#00B894; width:32px; height:32px; font-size:13px;">현</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:600;">현우</div>
+                <div style="font-size:11px; color:#888;">추천사 4개</div>
+              </div>
+              <div style="font-size:11px; color:#aaa;">🌟 45</div>
+            </div>
+            <div style="display:flex; align-items:center; gap:10px; padding:8px 0; background:#FFF5F8; border-radius:10px; padding:8px;">
+              <div style="font-size:13px; color:#C44AFF; width:24px; text-align:center; font-weight:700;">5</div>
+              <div class="friend-avatar" style="background:#C44AFF; width:32px; height:32px; font-size:13px;">나</div>
+              <div style="flex:1;">
+                <div style="font-size:13px; font-weight:700; color:#C44AFF;">나 (5위)</div>
+                <div style="font-size:11px; color:#888;">추천사 3개</div>
+              </div>
+              <div style="font-size:11px; color:#C44AFF; font-weight:700;">🌟 32</div>
+            </div>
+          </div>
+        </div>
+        <div class="step-label">주간 주선자 랭킹</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div style="text-align:center; padding:40px 20px; color:#aaa; font-size:12px;">
+  내친소 — 세렌디피티 추천사 목업 v1.0<br>
+  킬링타임으로 친구를 자랑하는 새로운 경험
+</div>
+
+</body>
+</html>
