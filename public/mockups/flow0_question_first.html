@@ -6,11 +6,11 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="default">
 <title>내친소</title>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
-    font-family: 'Noto Sans KR', sans-serif;
+    font-family: 'Pretendard Variable', sans-serif;
     background: #fff;
     color: #222;
     height: 100%;
@@ -44,8 +44,8 @@
     background: #eee;
     transition: background 0.3s;
   }
-  .step-dot.done { background: #C44AFF; }
-  .step-dot.current { background: linear-gradient(90deg, #FF6B9D, #C44AFF); }
+  .step-dot.done { background: #F27935; }
+  .step-dot.current { background: linear-gradient(90deg, #FFB347, #F27935); }
 
   /* ── Screen (scrollable content) ── */
   .screen {
@@ -79,7 +79,7 @@
     padding: 0 4px;
   }
   .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
-  .tab-item.active { color: #C44AFF; font-weight: 700; }
+  .tab-item.active { color: #F27935; font-weight: 700; }
 
   /* ── Common UI ── */
   .section-header {
@@ -89,10 +89,10 @@
     margin-bottom: 18px;
   }
   .section-title { font-size: 18px; font-weight: 900; }
-  .section-link { font-size: 12px; color: #C44AFF; font-weight: 700; }
+  .section-link { font-size: 12px; color: #F27935; font-weight: 700; }
 
   .question-card {
-    background: linear-gradient(135deg, #FFF5F8, #F5EEFF);
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
     border-radius: 24px;
     padding: 28px 24px;
     text-align: center;
@@ -100,16 +100,16 @@
     position: relative;
   }
   .question-card.active {
-    border-color: #C44AFF;
-    box-shadow: 0 4px 28px rgba(196,74,255,0.12);
+    border-color: #F27935;
+    box-shadow: 0 4px 28px rgba(242,121,53,0.12);
   }
   .question-card.gradient {
-    background: linear-gradient(135deg, #E8DEFF, #FFE0EC);
+    background: linear-gradient(135deg, #FFE8D0, #FFF0E6);
   }
   .q-emoji { font-size: 44px; margin-bottom: 12px; }
   .q-label {
     font-size: 10px;
-    color: #C44AFF;
+    color: #F27935;
     font-weight: 700;
     letter-spacing: 1.5px;
     text-transform: uppercase;
@@ -125,13 +125,13 @@
   .card-stack .behind-1 {
     position: absolute;
     top: 8px; left: 8px; right: -8px; bottom: -8px;
-    background: #f0eaff;
+    background: #FFE8D0;
     border-radius: 24px;
   }
   .card-stack .behind-2 {
     position: absolute;
     top: 16px; left: 16px; right: -16px; bottom: -16px;
-    background: #e8e0f8;
+    background: #FFDDB8;
     border-radius: 24px;
     z-index: -1;
   }
@@ -148,7 +148,7 @@
     border-radius: 50%;
     background: #e0e0e0;
   }
-  .dot.on { background: #C44AFF; }
+  .dot.on { background: #F27935; }
 
   .list-card {
     background: #fff;
@@ -165,7 +165,7 @@
   .list-body { flex: 1; }
   .list-title { font-size: 14px; font-weight: 600; }
   .list-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
-  .list-action { font-size: 12px; color: #C44AFF; font-weight: 700; }
+  .list-action { font-size: 12px; color: #F27935; font-weight: 700; }
 
   .friend-selector {
     background: #f8f8fa;
@@ -189,8 +189,8 @@
     transition: all 0.2s;
   }
   .friend-chip:active {
-    border-color: #C44AFF;
-    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+    border-color: #F27935;
+    background: linear-gradient(135deg, #FFE8D0, #FFF0E6);
   }
   .avatar {
     width: 32px; height: 32px;
@@ -207,12 +207,12 @@
     display: flex;
     align-items: center;
     gap: 10px;
-    background: linear-gradient(135deg, #FFE0EC, #E8DEFF);
+    background: linear-gradient(135deg, #FFE8D0, #FFF0E6);
     padding: 12px 18px;
     border-radius: 30px;
     margin-bottom: 18px;
   }
-  .selected-friend .name { font-size: 16px; font-weight: 800; color: #C44AFF; }
+  .selected-friend .name { font-size: 16px; font-weight: 800; color: #F27935; }
   .selected-friend .suffix { font-size: 13px; color: #888; }
 
   .text-input {
@@ -231,7 +231,7 @@
     justify-content: center;
   }
   .text-input.filled {
-    border: 2px solid #C44AFF;
+    border: 2px solid #F27935;
     background: #fff;
     color: #222;
     text-align: left;
@@ -243,7 +243,7 @@
   .btn-primary {
     width: 100%;
     padding: 16px;
-    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    background: linear-gradient(135deg, #FFB347, #F27935);
     color: white;
     border: none;
     border-radius: 16px;
@@ -267,12 +267,12 @@
     text-align: center;
     cursor: pointer;
   }
-  .btn-ghost.purple { color: #C44AFF; }
+  .btn-ghost.accent { color: #F27935; }
   .btn-outline {
     display: inline-block;
     padding: 12px 24px;
-    border: 2px solid #C44AFF;
-    color: #C44AFF;
+    border: 2px solid #F27935;
+    color: #F27935;
     border-radius: 14px;
     font-size: 14px;
     font-weight: 700;
@@ -313,7 +313,7 @@
   .or-divider::after { right: 0; }
 
   .reward-banner {
-    background: linear-gradient(135deg, #FF6B9D, #C44AFF);
+    background: linear-gradient(135deg, #FFB347, #F27935);
     border-radius: 20px;
     padding: 24px 20px;
     text-align: center;
@@ -333,7 +333,7 @@
   }
 
   .mini-card {
-    background: linear-gradient(135deg, #FFF5F8, #F5EEFF);
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
     border-radius: 18px;
     padding: 16px;
     text-align: center;
@@ -467,15 +467,15 @@
       <div class="friend-selector-label">내 친구 중에서 고르기</div>
       <div>
         <div class="friend-chip" onclick="goTo(2)">
-          <div class="avatar" style="background:#C44AFF;">민</div>
+          <div class="avatar" style="background:#F27935;">민</div>
           <span>민준</span>
         </div>
         <div class="friend-chip">
-          <div class="avatar" style="background:#FF6B9D;">서</div>
+          <div class="avatar" style="background:#FFB347;">서</div>
           <span>서연</span>
         </div>
         <div class="friend-chip">
-          <div class="avatar" style="background:#6C5CE7;">지</div>
+          <div class="avatar" style="background:#E8652B;">지</div>
           <span>지호</span>
         </div>
         <div class="friend-chip">
@@ -490,7 +490,7 @@
     <div class="text-input">이름을 직접 입력해도 돼!</div>
 
     <div style="height:16px;"></div>
-    <div class="btn-ghost purple">🎲 다른 질문 보기</div>
+    <div class="btn-ghost accent">🎲 다른 질문 보기</div>
 
   </div>
 
@@ -501,7 +501,7 @@
 
     <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
 
-    <div class="question-card gradient" style="border:2px solid #C44AFF; padding:18px;">
+    <div class="question-card gradient" style="border:2px solid #F27935; padding:18px;">
       <div class="q-emoji" style="font-size:32px;">🌙</div>
       <div class="q-text" style="font-size:16px;">새벽 2시에 갑자기 전화해도<br>받아줄 친구는?</div>
     </div>
@@ -509,7 +509,7 @@
     <div style="height:14px;"></div>
 
     <div class="selected-friend">
-      <div class="avatar" style="background:#C44AFF; width:36px; height:36px; font-size:15px;">민</div>
+      <div class="avatar" style="background:#F27935; width:36px; height:36px; font-size:15px;">민</div>
       <span class="name">민준</span>
       <span class="suffix">을 선택했어!</span>
     </div>
