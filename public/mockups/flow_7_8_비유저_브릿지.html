@@ -2,354 +2,387 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>내친소 - F. 비유저 주선 참여 / G. 소개팅 브릿지 채팅</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>내친소</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    background: #f0f0f0;
-    font-family: -apple-system, 'Apple SD Gothic Neo', 'Noto Sans KR', sans-serif;
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: 'Pretendard Variable', sans-serif;
+    background: #fff;
     color: #222;
-    padding: 40px 20px 60px;
+    height: 100%;
+    overflow: hidden;
   }
 
-  h1 {
-    text-align: center;
-    font-size: 28px;
+  /* ── App Shell ── */
+  .app {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
+  }
+
+  /* ── Step Indicator ── */
+  .step-indicator {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px 4px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .step-dot {
+    flex: 1;
+    height: 3px;
+    border-radius: 2px;
+    background: #eee;
+    transition: background 0.3s;
+  }
+  .step-dot.done { background: #F27935; }
+  .step-dot.current { background: linear-gradient(90deg, #FFB347, #F27935); }
+
+  /* ── Section Label (between Flow F/G) ── */
+  .section-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 20px 8px;
+    background: #fff;
+    flex-shrink: 0;
+  }
+  .section-label .label-tag {
+    font-size: 10px;
     font-weight: 800;
-    margin-bottom: 6px;
-    color: #222;
-  }
-  .page-sub {
-    text-align: center;
-    font-size: 14px;
-    color: #888;
-    margin-bottom: 48px;
-  }
-
-  /* ── Section ── */
-  .flow-section {
-    max-width: 1260px;
-    margin: 0 auto 56px;
-  }
-  .flow-header {
-    margin-bottom: 28px;
-    padding-left: 4px;
-  }
-  .flow-label {
-    display: inline-block;
-    background: #FF6B6B;
-    color: #fff;
-    font-size: 13px;
-    font-weight: 700;
-    padding: 3px 10px;
+    color: #F27935;
+    background: #FFF0E6;
+    padding: 2px 8px;
     border-radius: 6px;
-    margin-bottom: 8px;
+    letter-spacing: 0.5px;
   }
-  .flow-title {
-    font-size: 22px;
-    font-weight: 800;
-    color: #222;
-  }
-  .flow-subtitle {
-    font-size: 13px;
-    color: #888;
-    margin-top: 4px;
+  .section-label .label-text {
+    font-size: 11px;
+    color: #bbb;
+    font-weight: 500;
   }
 
-  /* ── Phone row ── */
-  .phone-row {
+  /* ── Screen ── */
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 20px 24px;
+    display: none;
+  }
+  .screen.active { display: block; }
+  .screen.no-padding { padding: 0; }
+  .screen.flex-col.active { display: flex; flex-direction: column; }
+
+  /* ── Bottom Tab Bar ── */
+  .tab-bar {
+    flex-shrink: 0;
+    height: 72px;
+    border-top: 1px solid #f0f0f0;
     display: flex;
     align-items: flex-start;
-    justify-content: center;
-    gap: 12px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-  }
-
-  .step-unit {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-  }
-  .step-unit:last-child .arrow { display: none; }
-
-  .arrow {
-    font-size: 28px;
-    color: #FF6B6B;
-    margin-left: 12px;
-    font-weight: 700;
-    user-select: none;
-  }
-
-  /* ── Step label ── */
-  .step-wrapper {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .step-num {
-    width: 32px; height: 32px;
-    background: #FF6B6B;
-    color: #fff;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-  .step-label {
-    font-size: 12px;
-    font-weight: 700;
-    color: #555;
-    margin-bottom: 6px;
-    text-align: center;
-  }
-
-  /* ── Phone frame ── */
-  .phone {
-    width: 260px;
-    height: 460px;
-    background: #1a1a1a;
-    border-radius: 32px;
-    padding: 10px;
-    position: relative;
-    box-shadow: 0 8px 32px rgba(0,0,0,.18);
-  }
-  .phone-inner {
-    width: 100%;
-    height: 100%;
+    justify-content: space-around;
+    padding-top: 8px;
     background: #fff;
-    border-radius: 24px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+    padding-bottom: env(safe-area-inset-bottom, 12px);
   }
-  .notch {
-    width: 96px;
-    height: 22px;
-    background: #1a1a1a;
-    border-radius: 0 0 14px 14px;
-    position: absolute;
-    top: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 10;
-  }
-
-  /* ── Common inner pieces ── */
-  .status-bar {
-    height: 32px;
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    padding: 0 18px 2px;
-    font-size: 11px;
-    font-weight: 600;
-    color: #222;
-    flex-shrink: 0;
-  }
-  .status-bar .time { margin-left: 4px; }
-  .status-bar .icons { font-size: 10px; }
-
-  .app-header {
-    padding: 8px 16px 8px;
-    font-size: 15px;
-    font-weight: 700;
-    color: #222;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    flex-shrink: 0;
-  }
-  .app-header .back { font-size: 18px; color: #888; cursor: default; }
-
-  .screen-body {
-    flex: 1;
-    overflow: hidden;
-    padding: 0 16px 14px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .btn-pink {
-    display: block;
-    width: 100%;
-    background: #FF6B6B;
-    color: #fff;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 0;
-    font-size: 13px;
-    font-weight: 700;
+  .tab-item {
     text-align: center;
-    cursor: default;
-  }
-  .btn-outline {
-    display: block;
-    width: 100%;
-    background: #fff;
-    color: #FF6B6B;
-    border: 1.5px solid #FF6B6B;
-    border-radius: 12px;
-    padding: 9px 0;
-    font-size: 13px;
-    font-weight: 700;
-    text-align: center;
-    cursor: default;
-  }
-  .btn-gray {
-    display: block;
-    width: 100%;
-    background: #f2f2f2;
-    color: #555;
-    border: none;
-    border-radius: 12px;
-    padding: 10px 0;
-    font-size: 13px;
-    font-weight: 600;
-    text-align: center;
-    cursor: default;
-  }
-
-  .small-text {
     font-size: 10px;
-    color: #aaa;
-    text-align: center;
-    margin-top: 6px;
+    color: #bbb;
+    line-height: 1.3;
+    cursor: pointer;
+    padding: 0 4px;
   }
+  .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
+  .tab-item.active { color: #F27935; font-weight: 700; }
 
-  /* ── Divider ── */
-  .section-divider {
-    max-width: 1260px;
-    margin: 0 auto 48px;
+  /* ── Buttons ── */
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    color: white;
     border: none;
-    border-top: 2px dashed #ccc;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: transform 0.1s;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    width: 100%;
+    padding: 14px;
+    background: #f5f5f5;
+    color: #999;
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
   }
 
-  /* ── Browser bar ── */
+  /* ── Share Row ── */
+  .share-row {
+    display: flex;
+    gap: 8px;
+    margin-top: 12px;
+  }
+  .share-btn {
+    flex: 1;
+    padding: 12px 0;
+    border-radius: 12px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    border: none;
+  }
+  .share-kakao { background: #FEE500; color: #3C1E1E; }
+  .share-sms { background: #34C759; color: #fff; }
+  .share-copy { background: #f0f0f0; color: #555; }
+
+  /* ── Link Preview ── */
+  .link-preview {
+    background: #f8f8f8;
+    border: 1px solid #e8e8e8;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 12px;
+    color: #888;
+    margin-top: 12px;
+    word-break: break-all;
+  }
+  .link-preview .link-label {
+    font-size: 10px;
+    color: #bbb;
+    margin-bottom: 4px;
+  }
+  .link-preview .link-url {
+    color: #F27935;
+    font-weight: 700;
+    font-size: 13px;
+  }
+
+  /* ── KakaoTalk ── */
+  .kakao-header {
+    background: #3C1E1E;
+    padding: 14px 20px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 16px;
+    font-weight: 700;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .kakao-header .back { color: #fff; font-size: 20px; cursor: pointer; }
+  .kakao-body {
+    flex: 1;
+    background: #B2C7D9;
+    padding: 16px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+  }
+  .kakao-bubble {
+    background: #FEE500;
+    border-radius: 16px;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #222;
+    max-width: 85%;
+    line-height: 1.5;
+    align-self: flex-start;
+  }
+  .kakao-bubble .kakao-title {
+    font-weight: 800;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+  .kakao-bubble .kakao-sub {
+    font-size: 12px;
+    color: #666;
+    margin-top: 4px;
+  }
+  .kakao-btn {
+    display: block;
+    background: #222;
+    color: #FEE500;
+    border-radius: 10px;
+    padding: 10px 0;
+    text-align: center;
+    font-size: 13px;
+    font-weight: 700;
+    margin-top: 10px;
+    cursor: pointer;
+  }
+  .kakao-plain {
+    background: #fff;
+    border-radius: 16px;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: #222;
+    max-width: 75%;
+    align-self: flex-start;
+  }
+
+  /* ── Browser Bar ── */
   .browser-bar {
     background: #f5f5f5;
-    padding: 6px 12px;
+    padding: 10px 16px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     flex-shrink: 0;
   }
-  .browser-bar .url-box {
+  .browser-dots {
+    display: flex;
+    gap: 4px;
+  }
+  .browser-dots span {
+    width: 8px; height: 8px; border-radius: 50%; background: #ccc;
+  }
+  .url-box {
     flex: 1;
     background: #fff;
     border: 1px solid #ddd;
     border-radius: 8px;
-    padding: 4px 8px;
-    font-size: 9.5px;
+    padding: 6px 10px;
+    font-size: 11px;
     color: #555;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .browser-dots {
-    display: flex; gap: 3px;
-  }
-  .browser-dots span {
-    width: 6px; height: 6px; border-radius: 50%; background: #ccc;
-  }
-
-  /* ── KakaoTalk ── */
-  .kakao-bg { background: #B2C7D9; }
-  .kakao-header {
-    background: #B2C7D9;
-    padding: 8px 14px 6px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #222;
+  .web-header {
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    color: #fff;
+    padding: 14px 20px;
+    font-size: 15px;
+    font-weight: 800;
     flex-shrink: 0;
   }
-  .kakao-body {
-    flex: 1;
-    background: #B2C7D9;
-    padding: 10px 14px;
+
+  /* ── Profile Card ── */
+  .profile-card {
+    background: #fff;
+    border: 1.5px solid #f0f0f0;
+    border-radius: 18px;
+    padding: 16px;
     display: flex;
-    flex-direction: column;
-    gap: 6px;
-    overflow: hidden;
+    gap: 14px;
+    align-items: center;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    margin-bottom: 16px;
   }
-  .kakao-bubble {
-    background: #FEE500;
-    border-radius: 14px;
-    padding: 10px 12px;
-    font-size: 12px;
-    color: #222;
-    max-width: 88%;
-    line-height: 1.5;
-  }
-  .kakao-bubble .kakao-title {
+  .profile-avatar {
+    width: 56px; height: 56px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 24px;
     font-weight: 800;
-    font-size: 13px;
-    margin-bottom: 4px;
+    flex-shrink: 0;
   }
-  .kakao-bubble .kakao-btn {
-    display: block;
-    background: #222;
-    color: #FEE500;
-    border-radius: 8px;
-    padding: 7px 0;
-    text-align: center;
-    font-size: 12px;
-    font-weight: 700;
-    margin-top: 8px;
+  .profile-info { font-size: 13px; color: #555; line-height: 1.6; }
+  .profile-info .name { font-weight: 800; font-size: 16px; color: #222; }
+  .profile-info .tags { color: #F27935; font-size: 12px; font-weight: 600; margin-top: 2px; }
+
+  /* ── Textarea ── */
+  .textarea-mock {
+    width: 100%;
+    border: 2px dashed #ddd;
+    border-radius: 16px;
+    padding: 16px;
+    font-size: 14px;
+    color: #222;
+    min-height: 100px;
+    background: #f8f8fa;
+    line-height: 1.6;
+    margin-bottom: 16px;
   }
 
   /* ── Chat ── */
+  .chat-header {
+    padding: 14px 20px 10px;
+    font-size: 15px;
+    font-weight: 700;
+    color: #222;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid #f0f0f0;
+    flex-shrink: 0;
+  }
+  .chat-header .matchmaker-tag {
+    font-size: 10px;
+    font-weight: 700;
+    color: #fff;
+    background: #F27935;
+    padding: 2px 6px;
+    border-radius: 6px;
+  }
   .chat-body {
     flex: 1;
     background: #fafafa;
-    padding: 10px 12px;
+    padding: 16px 20px;
     display: flex;
     flex-direction: column;
-    gap: 5px;
-    overflow: hidden;
+    gap: 8px;
+    overflow-y: auto;
   }
   .chat-row {
     display: flex;
     flex-direction: column;
-    gap: 2px;
+    gap: 3px;
   }
   .chat-row.right { align-items: flex-end; }
   .chat-row.left { align-items: flex-start; }
   .chat-row.center { align-items: center; }
   .chat-name {
-    font-size: 9px;
+    font-size: 11px;
     font-weight: 700;
-    color: #888;
-    margin-bottom: 1px;
+    color: #999;
+    margin-bottom: 2px;
     padding-left: 4px;
   }
   .chat-name .tag {
-    background: #FF6B6B;
+    background: #F27935;
     color: #fff;
-    font-size: 8px;
-    padding: 1px 4px;
+    font-size: 9px;
+    padding: 1px 5px;
     border-radius: 4px;
-    margin-left: 3px;
+    margin-left: 4px;
+    font-weight: 700;
   }
   .chat-bubble {
-    padding: 8px 11px;
-    border-radius: 14px;
-    font-size: 11.5px;
-    line-height: 1.45;
-    max-width: 82%;
+    padding: 10px 14px;
+    border-radius: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+    max-width: 80%;
   }
-  .chat-bubble.pink {
-    background: #FF6B6B;
+  .chat-bubble.orange {
+    background: linear-gradient(135deg, #FFB347, #F27935);
     color: #fff;
     border-bottom-right-radius: 4px;
   }
@@ -359,431 +392,460 @@
     border-bottom-left-radius: 4px;
   }
   .chat-bubble.blue {
-    background: #e0ecff;
+    background: #DEEAFF;
     color: #333;
     border-bottom-left-radius: 4px;
   }
   .chat-system {
-    background: rgba(0,0,0,.06);
-    padding: 5px 10px;
-    border-radius: 10px;
-    font-size: 10px;
+    background: rgba(0,0,0,0.05);
+    padding: 8px 14px;
+    border-radius: 12px;
+    font-size: 12px;
     color: #888;
     text-align: center;
+    line-height: 1.5;
   }
-
-  /* ── Popup overlay ── */
-  .popup-overlay {
-    position: absolute;
-    inset: 0;
-    background: rgba(0,0,0,.35);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 20;
-    border-radius: 24px;
-  }
-  .popup-card {
-    background: #fff;
-    border-radius: 18px;
-    padding: 20px 18px 16px;
-    width: 85%;
-    text-align: center;
-    box-shadow: 0 6px 24px rgba(0,0,0,.15);
-  }
-  .popup-card h3 {
-    font-size: 14px;
-    font-weight: 800;
-    margin-bottom: 12px;
-    color: #222;
-  }
-  .popup-btns {
+  .chat-input {
     display: flex;
     gap: 8px;
-    margin-top: 12px;
-  }
-  .popup-btns > * { flex: 1; }
-
-  /* ── Profile card (web) ── */
-  .profile-card {
-    background: #fff;
-    border: 1px solid #eee;
-    border-radius: 14px;
-    padding: 12px;
-    display: flex;
-    gap: 10px;
     align-items: center;
-    box-shadow: 0 2px 8px rgba(0,0,0,.05);
+    background: #f2f2f2;
+    border-radius: 24px;
+    padding: 10px 14px;
+    margin-top: auto;
   }
-  .profile-avatar {
-    width: 48px; height: 48px;
+  .chat-input .placeholder {
+    flex: 1;
+    font-size: 13px;
+    color: #bbb;
+  }
+  .chat-input .send-btn {
+    width: 32px; height: 32px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
     border-radius: 50%;
-    background: linear-gradient(135deg, #FF6B6B, #ffa07a);
     display: flex;
     align-items: center;
     justify-content: center;
     color: #fff;
-    font-size: 20px;
+    font-size: 16px;
     flex-shrink: 0;
   }
-  .profile-info { font-size: 12px; color: #444; line-height: 1.5; }
-  .profile-info .name { font-weight: 800; font-size: 14px; color: #222; }
 
-  /* ── Share row ── */
-  .share-row {
+  /* ── Popup ── */
+  .popup-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.4);
     display: flex;
-    gap: 6px;
-    margin-top: 8px;
+    align-items: center;
+    justify-content: center;
+    z-index: 20;
   }
-  .share-btn {
-    flex: 1;
-    padding: 7px 0;
-    border-radius: 8px;
-    font-size: 10px;
-    font-weight: 700;
+  .popup-card {
+    background: #fff;
+    border-radius: 24px;
+    padding: 28px 24px 20px;
+    width: 88%;
     text-align: center;
-    cursor: default;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
   }
-  .share-kakao { background: #FEE500; color: #3C1E1E; }
-  .share-sms { background: #34C759; color: #fff; }
-  .share-copy { background: #eee; color: #555; }
-
-  /* ── Link preview ── */
-  .link-preview {
-    background: #f8f8f8;
-    border: 1px solid #e0e0e0;
-    border-radius: 10px;
-    padding: 8px 10px;
-    font-size: 10.5px;
-    color: #888;
+  .popup-card .popup-emoji { font-size: 36px; margin-bottom: 10px; }
+  .popup-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 6px;
+    color: #222;
+  }
+  .popup-card .popup-sub {
+    font-size: 13px;
+    color: #999;
+    margin-bottom: 16px;
+  }
+  .popup-btns {
+    display: flex;
+    gap: 8px;
     margin-top: 8px;
-    word-break: break-all;
   }
-  .link-preview .link-url {
-    color: #FF6B6B;
+  .popup-btns > * { flex: 1; }
+  .popup-btn-primary {
+    padding: 14px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    color: #fff;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+  }
+  .popup-btn-ghost {
+    padding: 14px;
+    background: #f5f5f5;
+    color: #999;
+    border: none;
+    border-radius: 14px;
+    font-size: 14px;
     font-weight: 600;
+    cursor: pointer;
   }
 
-  /* ── Textarea ── */
-  .textarea-mock {
-    width: 100%;
-    border: 1.5px solid #ddd;
-    border-radius: 12px;
-    padding: 10px;
-    font-size: 11px;
-    color: #aaa;
-    min-height: 72px;
-    background: #fafafa;
-    line-height: 1.5;
-  }
-
-  /* ── Reward badge ── */
+  /* ── Reward Badge (chat inline) ── */
   .reward-badge {
-    background: linear-gradient(135deg, #FFF3CD, #FFE082);
-    border-radius: 10px;
-    padding: 8px 10px;
+    background: linear-gradient(135deg, #FFF0E6, #FFE8D0);
+    border: 1.5px solid #F27935;
+    border-radius: 14px;
+    padding: 12px 16px;
     text-align: center;
-    font-size: 11px;
-    font-weight: 700;
-    color: #7B6B00;
-    margin-top: 6px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #F27935;
+    margin-top: 4px;
   }
+
+  /* ── Hint / Notes ── */
+  .hint {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 16px;
+  }
+  .small-note {
+    font-size: 12px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 12px;
+    line-height: 1.6;
+  }
+  .small-note .accent {
+    color: #F27935;
+    font-weight: 700;
+    cursor: pointer;
+  }
+
+  /* ── Fade animation ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .screen.active { animation: fadeUp 0.3s ease-out; }
 </style>
 </head>
 <body>
 
-<h1>내친소 Mockup</h1>
-<p class="page-sub">F. 비유저 주선 참여 &nbsp;/&nbsp; G. 소개팅 브릿지 채팅</p>
+<div class="app">
 
-<!-- ═══════════════ FLOW 1 ═══════════════ -->
-<section class="flow-section">
-  <div class="flow-header">
-    <span class="flow-label">FLOW F</span>
-    <div class="flow-title">비유저 주선 참여</div>
-    <div class="flow-subtitle">연애 중인 친구가 앱 설치 없이 웹에서 주선에 참여</div>
+  <!-- Step indicator -->
+  <div class="step-indicator" id="stepBar">
+    <div class="step-dot current" data-step="0"></div>
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+    <div class="step-dot" data-step="5"></div>
+    <div class="step-dot" data-step="6"></div>
+    <div class="step-dot" data-step="7"></div>
   </div>
 
-  <div class="phone-row">
-
-    <!-- ① 초대 링크 생성 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">1</div>
-        <div class="step-label">초대 링크 생성</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">9:41</span><span class="icons">5G</span></div>
-            <div class="app-header"><span class="back">&larr;</span> 주선자 초대하기</div>
-            <div class="screen-body" style="gap:10px; justify-content:center;">
-              <div style="text-align:center;">
-                <div style="font-size:36px; margin-bottom:6px;">💌</div>
-                <div style="font-size:14px; font-weight:800; color:#222;">연애 중인 친구도<br>주선할 수 있어요!</div>
-                <div style="font-size:11px; color:#aaa; margin-top:4px;">앱 설치 없이 웹에서 바로 참여</div>
-              </div>
-              <div class="btn-pink">초대 링크 만들기</div>
-              <div class="link-preview">
-                <span style="font-size:9px; color:#aaa;">생성된 링크</span><br>
-                <span class="link-url">naechinso.app/invite/abc123</span>
-              </div>
-              <div class="share-row">
-                <div class="share-btn share-kakao">카카오톡</div>
-                <div class="share-btn share-sms">문자</div>
-                <div class="share-btn share-copy">링크 복사</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
-    </div>
-
-    <!-- ② 카카오톡 초대 메시지 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">2</div>
-        <div class="step-label">카카오톡 초대 메시지</div>
-        <div class="phone">
-          <div class="phone-inner kakao-bg">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">9:42</span><span class="icons">5G</span></div>
-            <div class="kakao-header"><span style="font-size:18px;">&larr;</span> 태양</div>
-            <div class="kakao-body" style="justify-content:center;">
-              <div class="kakao-bubble" style="align-self:flex-start;">
-                ㅋㅋ 점심 뭐 먹지
-              </div>
-              <div class="kakao-bubble" style="align-self:flex-start; max-width:92%;">
-                <div class="kakao-title">내친소</div>
-                <div>태양이가 너한테 주선자 역할을 부탁했어!</div>
-                <div style="margin-top:4px; font-size:11px; color:#666;">앱 설치 없이 바로 참여 가능</div>
-                <div class="kakao-btn">주선 시작하기 &rarr;</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
-    </div>
-
-    <!-- ③ 웹 주선 화면 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">3</div>
-        <div class="step-label">웹 주선 화면</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">9:43</span><span class="icons">5G</span></div>
-            <div class="browser-bar">
-              <div class="browser-dots"><span></span><span></span><span></span></div>
-              <div class="url-box">naechinso.app/invite/abc123</div>
-            </div>
-            <div class="app-header" style="background:#FF6B6B; color:#fff; font-size:13px; padding:10px 16px;">내친소 주선자 모드</div>
-            <div class="screen-body" style="gap:10px; padding-top:12px;">
-              <div style="font-size:12px; font-weight:700; color:#555;">이 사람, 태양이한테 어때요?</div>
-              <div class="profile-card">
-                <div class="profile-avatar">J</div>
-                <div class="profile-info">
-                  <div class="name">지수, 27</div>
-                  <div>서울 / 마케팅 / ENFP</div>
-                  <div style="color:#FF6B6B; font-size:11px;">여행 / 맛집탐방 / 독서</div>
-                </div>
-              </div>
-              <div style="display:flex; gap:8px; margin-top:4px;">
-                <div class="btn-pink" style="flex:1; border-radius:10px; padding:9px 0;">이 사람 추천!</div>
-                <div class="btn-gray" style="flex:1; border-radius:10px; padding:9px 0;">다음 &rarr;</div>
-              </div>
-              <div class="small-text">추천사도 작성할 수 있어요</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
-    </div>
-
-    <!-- ④ 추천사 작성 (웹) -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">4</div>
-        <div class="step-label">추천사 작성 (웹)</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">9:44</span><span class="icons">5G</span></div>
-            <div class="browser-bar">
-              <div class="browser-dots"><span></span><span></span><span></span></div>
-              <div class="url-box">naechinso.app/invite/abc123</div>
-            </div>
-            <div class="app-header" style="background:#FF6B6B; color:#fff; font-size:13px; padding:10px 16px;">내친소 주선자 모드</div>
-            <div class="screen-body" style="gap:10px; padding-top:12px;">
-              <div style="font-size:13px; font-weight:800; color:#222;">태양에게 이 사람을<br>추천하는 이유</div>
-              <div class="textarea-mock">걔 진짜 성격 좋아, 네 스타일일 듯!</div>
-              <div style="flex:1;"></div>
-              <div class="btn-pink">추천 완료 &rarr;</div>
-              <div class="small-text" style="line-height:1.5;">
-                내친소 앱에서 더 많은 친구를 소개해보세요<br>
-                <span style="color:#FF6B6B; font-weight:600;">앱 설치하기 &rarr;</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /phone-row -->
-</section>
-
-<hr class="section-divider">
-
-<!-- ═══════════════ FLOW 2 ═══════════════ -->
-<section class="flow-section">
-  <div class="flow-header">
-    <span class="flow-label">FLOW G</span>
-    <div class="flow-title">소개팅 브릿지 채팅</div>
-    <div class="flow-subtitle">매칭 후 주선자가 3자 채팅에서 아이스브레이킹 -- 자연스러워지면 퇴장</div>
+  <!-- Section label -->
+  <div class="section-label" id="sectionLabel">
+    <span class="label-tag" id="labelTag">FLOW F</span>
+    <span class="label-text" id="labelText">비유저 주선 참여</span>
   </div>
 
-  <div class="phone-row">
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: 초대 링크 생성 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen active" id="s0">
 
-    <!-- ① 매칭 성사 알림 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">1</div>
-        <div class="step-label">매칭 성사 알림</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">2:15</span><span class="icons">5G</span></div>
-            <div class="app-header"><span class="back">&larr;</span> 내친소</div>
-            <div class="screen-body" style="justify-content:center; align-items:center; gap:12px; text-align:center;">
-              <div style="font-size:44px;">🎊</div>
-              <div style="font-size:18px; font-weight:800; color:#222;">태양 &harr; 지수<br>연결됐어요!</div>
-              <div style="font-size:12px; color:#888; line-height:1.6;">3자 채팅방을 만들까요?<br>주선자로서 첫 소개를 도와주세요</div>
-              <div class="btn-pink" style="width:85%; margin-top:4px;">채팅방 만들기</div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
+    <div style="text-align:center; margin-top:20px; margin-bottom:24px;">
+      <div style="font-size:56px; margin-bottom:12px;">💌</div>
+      <div style="font-size:22px; font-weight:800; line-height:1.5;">연애 중인 친구도<br>주선할 수 있어요!</div>
+      <div style="font-size:13px; color:#aaa; margin-top:8px;">앱 설치 없이 웹에서 바로 참여</div>
     </div>
 
-    <!-- ② 3자 채팅방 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">2</div>
-        <div class="step-label">3자 채팅방</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">2:16</span><span class="icons">5G</span></div>
-            <div class="app-header" style="font-size:13px;">
-              <span class="back">&larr;</span>
-              태양 &middot; 지수 &middot; 민준<span style="font-size:10px; color:#FF6B6B;">(주선자)</span>
-            </div>
-            <div class="chat-body">
-              <div class="chat-row left">
-                <div class="chat-name">민준 <span class="tag">주선자</span></div>
-                <div class="chat-bubble gray">야 둘이 소개할게! 태양아, 지수 내 동기야 ㅋㅋ</div>
-              </div>
-              <div class="chat-row left">
-                <div class="chat-name">지수</div>
-                <div class="chat-bubble blue">안녕하세요~</div>
-              </div>
-              <div class="chat-row right">
-                <div class="chat-name" style="padding-right:4px;">태양</div>
-                <div class="chat-bubble pink">오 반가워요!</div>
-              </div>
-              <div class="chat-row left">
-                <div class="chat-name">민준 <span class="tag">주선자</span></div>
-                <div class="chat-bubble gray">둘 다 여행 좋아하니까 얘기 잘 통할 거야!</div>
-              </div>
-              <div style="flex:1;"></div>
-              <div style="display:flex; gap:6px; align-items:center; background:#f2f2f2; border-radius:20px; padding:8px 12px;">
-                <div style="flex:1; font-size:11px; color:#aaa;">메시지 입력...</div>
-                <div style="width:28px; height:28px; background:#FF6B6B; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px;">&uarr;</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
+    <div class="btn-primary" onclick="goTo(1)">초대 링크 만들기</div>
+
+    <div class="link-preview">
+      <div class="link-label">생성된 링크</div>
+      <div class="link-url">naechinso.app/invite/abc123</div>
     </div>
 
-    <!-- ③ 주선자 퇴장 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">3</div>
-        <div class="step-label">주선자 퇴장</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar" style="z-index:25; position:relative;"><span class="time">2:30</span><span class="icons">5G</span></div>
-            <div class="app-header" style="font-size:13px; z-index:25; position:relative;">
-              <span class="back">&larr;</span>
-              태양 &middot; 지수 &middot; 민준
-            </div>
-            <div class="chat-body" style="position:relative;">
-              <div class="chat-row center">
-                <div class="chat-system">분위기가 무르익은 것 같아요!</div>
-              </div>
-              <div style="flex:1;"></div>
-            </div>
-            <!-- Popup -->
-            <div class="popup-overlay">
-              <div class="popup-card">
-                <h3>민준님, 슬쩍 나갈까요?</h3>
-                <div style="font-size:11px; color:#888; margin-bottom:4px;">둘이 잘 대화하고 있어요</div>
-                <div class="popup-btns">
-                  <div class="btn-pink" style="font-size:12px; padding:9px 0;">나가기</div>
-                  <div class="btn-outline" style="font-size:12px; padding:9px 0;">좀 더 있어줘</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <span class="arrow">&rarr;</span>
+    <div class="share-row">
+      <div class="share-btn share-kakao">카카오톡</div>
+      <div class="share-btn share-sms">문자</div>
+      <div class="share-btn share-copy">링크 복사</div>
     </div>
 
-    <!-- ④ 퇴장 후 -->
-    <div class="step-unit">
-      <div class="step-wrapper">
-        <div class="step-num">4</div>
-        <div class="step-label">퇴장 후 보상</div>
-        <div class="phone">
-          <div class="phone-inner">
-            <div class="notch"></div>
-            <div class="status-bar"><span class="time">2:31</span><span class="icons">5G</span></div>
-            <div class="app-header" style="font-size:13px;">
-              <span class="back">&larr;</span>
-              태양 &middot; 지수
-            </div>
-            <div class="chat-body">
-              <div class="chat-row left">
-                <div class="chat-name">지수</div>
-                <div class="chat-bubble blue">저도 제주도 좋아해요!</div>
-              </div>
-              <div class="chat-row right">
-                <div class="chat-name" style="padding-right:4px;">태양</div>
-                <div class="chat-bubble pink">오 진짜요? 저 다음 달에 가요 ㅎㅎ</div>
-              </div>
-              <div class="chat-row center">
-                <div class="chat-system">민준님이 나갔습니다.<br>좋은 대화 되세요!</div>
-              </div>
-              <div style="flex:1;"></div>
-              <div class="reward-badge">썬구리 +30 (브릿지 채팅 보너스)</div>
-              <div style="margin-top:6px; display:flex; gap:6px; align-items:center; background:#f2f2f2; border-radius:20px; padding:8px 12px;">
-                <div style="flex:1; font-size:11px; color:#aaa;">메시지 입력...</div>
-                <div style="width:28px; height:28px; background:#FF6B6B; border-radius:50%; display:flex; align-items:center; justify-content:center; color:#fff; font-size:14px;">&uarr;</div>
-              </div>
-            </div>
-          </div>
-        </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: 카카오톡 초대 메시지 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s1">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
+    </div>
+
+    <div style="margin:8px 20px 12px; font-size:10px; color:#bbb; font-weight:600; letter-spacing:0.5px;">KAKAOTALK PREVIEW</div>
+
+    <div class="kakao-header">
+      <span class="back">←</span>
+      태양
+    </div>
+    <div class="kakao-body">
+      <div class="kakao-plain">ㅋㅋ 점심 뭐 먹지</div>
+
+      <div class="kakao-bubble" style="max-width:90%;">
+        <div class="kakao-title">내친소</div>
+        <div>태양이가 너한테 주선자 역할을 부탁했어!</div>
+        <div class="kakao-sub">앱 설치 없이 바로 참여 가능</div>
+        <div class="kakao-btn" onclick="goTo(2)">주선 시작하기 →</div>
       </div>
     </div>
 
-  </div><!-- /phone-row -->
-</section>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 3: 웹 주선 화면 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s2">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
+    </div>
+
+    <div class="browser-bar" style="margin-top:8px;">
+      <div class="browser-dots"><span></span><span></span><span></span></div>
+      <div class="url-box">naechinso.app/invite/abc123</div>
+    </div>
+
+    <div class="web-header">내친소 주선자 모드</div>
+
+    <div style="padding:20px; overflow-y:auto; flex:1;">
+      <div style="font-size:16px; font-weight:800; color:#222; margin-bottom:16px;">이 사람, 태양이한테 어때요?</div>
+
+      <div class="profile-card">
+        <div class="profile-avatar">J</div>
+        <div class="profile-info">
+          <div class="name">지수, 27</div>
+          <div>서울 / 마케팅 / ENFP</div>
+          <div class="tags">여행 / 맛집탐방 / 독서</div>
+        </div>
+      </div>
+
+      <div style="display:flex; gap:8px;">
+        <div class="btn-primary" style="flex:1; margin-bottom:0;" onclick="goTo(3)">이 사람 추천!</div>
+        <div class="btn-ghost" style="flex:1;">다음 →</div>
+      </div>
+
+      <div class="hint" style="margin-top:14px;">추천사도 작성할 수 있어요</div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 4: 추천사 작성 (웹) -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s3">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(2)">← 뒤로</div>
+    </div>
+
+    <div class="browser-bar" style="margin-top:8px;">
+      <div class="browser-dots"><span></span><span></span><span></span></div>
+      <div class="url-box">naechinso.app/invite/abc123</div>
+    </div>
+
+    <div class="web-header">내친소 주선자 모드</div>
+
+    <div style="padding:20px; overflow-y:auto; flex:1;">
+      <div style="font-size:18px; font-weight:800; color:#222; line-height:1.5; margin-bottom:16px;">태양에게 이 사람을<br>추천하는 이유</div>
+
+      <div class="textarea-mock">걔 진짜 성격 좋아, 네 스타일일 듯!</div>
+
+      <div class="btn-primary" onclick="goTo(4)">추천 완료 →</div>
+
+      <div class="small-note">
+        내친소 앱에서 더 많은 친구를 소개해보세요<br>
+        <span class="accent">앱 설치하기 →</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 5: 매칭 성사 알림 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s4">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">← 뒤로</div>
+
+    <div style="text-align:center; margin-top:40px;">
+      <div style="font-size:64px; margin-bottom:16px;">🎊</div>
+      <div style="font-size:24px; font-weight:800; line-height:1.5;">태양 ↔ 지수<br>연결됐어요!</div>
+      <div style="font-size:14px; color:#888; margin-top:12px; line-height:1.6;">3자 채팅방을 만들까요?<br>주선자로서 첫 소개를 도와주세요</div>
+    </div>
+
+    <div style="height:32px;"></div>
+    <div class="btn-primary" onclick="goTo(5)">채팅방 만들기</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 6: 3자 채팅방 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s5">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(4)">← 뒤로</div>
+    </div>
+
+    <div class="chat-header">
+      태양 · 지수 · 민준<span class="matchmaker-tag">주선자</span>
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-row left">
+        <div class="chat-name">민준 <span class="tag">주선자</span></div>
+        <div class="chat-bubble gray">야 둘이 소개할게! 태양아, 지수 내 동기야 ㅋㅋ</div>
+      </div>
+      <div class="chat-row left">
+        <div class="chat-name">지수</div>
+        <div class="chat-bubble blue">안녕하세요~</div>
+      </div>
+      <div class="chat-row right">
+        <div class="chat-name" style="padding-right:4px;">태양</div>
+        <div class="chat-bubble orange">오 반가워요!</div>
+      </div>
+      <div class="chat-row left">
+        <div class="chat-name">민준 <span class="tag">주선자</span></div>
+        <div class="chat-bubble gray">둘 다 여행 좋아하니까 얘기 잘 통할 거야!</div>
+      </div>
+      <div style="flex:1;"></div>
+      <div class="chat-input" onclick="goTo(6)">
+        <div class="placeholder">메시지 입력...</div>
+        <div class="send-btn">↑</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 7: 주선자 퇴장 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s6" style="position:relative;">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(5)">← 뒤로</div>
+    </div>
+
+    <div class="chat-header">
+      태양 · 지수 · 민준
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-row center">
+        <div class="chat-system">분위기가 무르익은 것 같아요!</div>
+      </div>
+      <div style="flex:1;"></div>
+    </div>
+
+    <!-- Popup overlay -->
+    <div class="popup-overlay">
+      <div class="popup-card">
+        <div class="popup-emoji">😏</div>
+        <h3>민준님, 슬쩍 나갈까요?</h3>
+        <div class="popup-sub">둘이 잘 대화하고 있어요</div>
+        <div class="popup-btns">
+          <button class="popup-btn-primary" onclick="goTo(7)">나가기</button>
+          <button class="popup-btn-ghost">좀 더 있어줘</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 8: 퇴장 후 보상 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen no-padding flex-col" id="s7">
+
+    <div style="padding:8px 20px 0;">
+      <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(6)">← 뒤로</div>
+    </div>
+
+    <div class="chat-header">
+      태양 · 지수
+    </div>
+
+    <div class="chat-body">
+      <div class="chat-row left">
+        <div class="chat-name">지수</div>
+        <div class="chat-bubble blue">저도 제주도 좋아해요!</div>
+      </div>
+      <div class="chat-row right">
+        <div class="chat-name" style="padding-right:4px;">태양</div>
+        <div class="chat-bubble orange">오 진짜요? 저 다음 달에 가요 ㅎㅎ</div>
+      </div>
+      <div class="chat-row center">
+        <div class="chat-system">민준님이 나갔습니다.<br>좋은 대화 되세요!</div>
+      </div>
+      <div style="flex:1;"></div>
+      <div class="reward-badge">🌟 썬구리 +30 (브릿지 채팅 보너스)</div>
+      <div style="height:10px;"></div>
+      <div class="chat-input">
+        <div class="placeholder">메시지 입력...</div>
+        <div class="send-btn">↑</div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- ── Bottom Tab Bar ── -->
+  <div class="tab-bar">
+    <div class="tab-item"><div class="tab-icon">🏠</div>홈</div>
+    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
+    <div class="tab-item"><div class="tab-icon">🎲</div>플레이</div>
+    <div class="tab-item active"><div class="tab-icon">💌</div>채팅</div>
+    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+  </div>
+
+</div>
+
+<script>
+function goTo(step) {
+  // Hide all screens
+  document.querySelectorAll('.screen').forEach(function(s) {
+    s.classList.remove('active');
+  });
+
+  // Show target screen
+  var screen = document.getElementById('s' + step);
+  screen.classList.add('active');
+
+  // Update step dots
+  document.querySelectorAll('.step-dot').forEach(function(d, i) {
+    d.className = 'step-dot';
+    if (i < step) d.classList.add('done');
+    if (i === step) d.classList.add('current');
+  });
+
+  // Update section label
+  var tagEl = document.getElementById('labelTag');
+  var textEl = document.getElementById('labelText');
+  if (step < 4) {
+    tagEl.textContent = 'FLOW F';
+    textEl.textContent = '비유저 주선 참여';
+  } else {
+    tagEl.textContent = 'FLOW G';
+    textEl.textContent = '소개팅 브릿지 채팅';
+  }
+
+  // Scroll to top
+  screen.scrollTop = 0;
+}
+</script>
 
 </body>
 </html>

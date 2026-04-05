@@ -2,221 +2,130 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>내친소 플로우 — B. 양방향 동시 소개</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<title>내친소</title>
+<link href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  :root {
-    --primary: #FF6B6B;
-    --primary-dark: #E55A5A;
-    --navy: #1B2838;
-    --navy-light: #2D3E50;
-    --bg: #f0f0f0;
-    --card-bg: #FFFFFF;
-    --text: #2D3436;
-    --text-light: #636E72;
-    --text-muted: #B2BEC3;
-    --gold: #F0C040;
-  }
-
-  body {
-    font-family: -apple-system, BlinkMacSystemFont, 'Apple SD Gothic Neo', 'Noto Sans KR', system-ui, sans-serif;
-    background: var(--bg);
-    color: var(--text);
-    padding: 40px 20px 60px;
-    min-height: 100vh;
-  }
-
-  /* ── Page Header ── */
-  .page-header {
-    text-align: center;
-    max-width: 800px;
-    margin: 0 auto 48px;
-  }
-
-  .page-header h1 {
-    font-size: 32px;
-    font-weight: 800;
-    color: var(--navy);
-    margin-bottom: 8px;
-  }
-
-  .page-header h1 span {
-    color: var(--primary);
-  }
-
-  .page-header p {
-    font-size: 16px;
-    color: var(--text-light);
-    line-height: 1.6;
-  }
-
-  /* ── Flow Layout ── */
-  .flow-container {
-    max-width: 1200px;
-    margin: 0 auto;
-  }
-
-  .flow-row {
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-    gap: 0;
-    margin-bottom: 48px;
-  }
-
-  .flow-row:last-child {
-    margin-bottom: 0;
-  }
-
-  .flow-step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    flex-shrink: 0;
-  }
-
-  .step-number {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: var(--navy);
-    color: white;
-    font-size: 16px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .step-title {
-    font-size: 14px;
-    font-weight: 700;
-    color: var(--navy);
-    margin-bottom: 12px;
-    text-align: center;
-  }
-
-  /* ── Arrow Between Steps ── */
-  .flow-arrow {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-width: 80px;
-    padding-top: 260px;
-    flex-shrink: 0;
-  }
-
-  .flow-arrow .arrow-line {
-    width: 48px;
-    height: 2px;
-    background: var(--text-muted);
-    position: relative;
-  }
-
-  .flow-arrow .arrow-line::after {
-    content: '';
-    position: absolute;
-    right: -1px;
-    top: -5px;
-    width: 0;
-    height: 0;
-    border-left: 8px solid var(--text-muted);
-    border-top: 6px solid transparent;
-    border-bottom: 6px solid transparent;
-  }
-
-  .flow-arrow .arrow-label {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--primary);
-    margin-top: 8px;
-    white-space: nowrap;
-  }
-
-  /* ── Phone Frame ── */
-  .phone-frame {
-    width: 280px;
-    height: 500px;
-    background: var(--navy);
-    border-radius: 36px;
-    padding: 12px;
-    position: relative;
-    box-shadow: 0 12px 40px rgba(0,0,0,0.25), 0 2px 8px rgba(0,0,0,0.1);
-  }
-
-  .phone-notch {
-    position: absolute;
-    top: 12px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 120px;
-    height: 28px;
-    background: var(--navy);
-    border-radius: 0 0 16px 16px;
-    z-index: 10;
-  }
-
-  .phone-notch::before {
-    content: '';
-    position: absolute;
-    top: 8px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-    background: #1a2535;
-    border: 2px solid #2a3a4a;
-  }
-
-  .phone-screen {
-    width: 100%;
+  * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+  html, body {
+    font-family: 'Pretendard Variable', sans-serif;
+    background: #fff;
+    color: #222;
     height: 100%;
-    background: white;
-    border-radius: 26px;
     overflow: hidden;
+  }
+
+  /* ── App Shell ── */
+  .app {
     display: flex;
     flex-direction: column;
+    height: 100%;
+    max-width: 430px;
+    margin: 0 auto;
+    position: relative;
+    background: #fff;
   }
 
-  /* ── Screen Internal Styles ── */
-  .screen-status-bar {
-    height: 36px;
-    background: white;
+  /* ── Step Indicator (top) ── */
+  .step-indicator {
     display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    padding-bottom: 4px;
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
+    align-items: center;
+    gap: 4px;
+    padding: 12px 20px 8px;
+    background: #fff;
     flex-shrink: 0;
   }
-
-  .screen-header {
-    padding: 8px 16px 12px;
-    font-size: 17px;
-    font-weight: 700;
-    color: var(--navy);
-    flex-shrink: 0;
-  }
-
-  .screen-body {
+  .step-dot {
     flex: 1;
-    padding: 0 16px;
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
+    height: 3px;
+    border-radius: 2px;
+    background: #eee;
+    transition: background 0.3s;
   }
+  .step-dot.done { background: #F27935; }
+  .step-dot.current { background: linear-gradient(90deg, #FFB347, #F27935); }
 
-  .screen-footer-note {
-    padding: 8px 16px 12px;
+  /* ── Screen (scrollable content) ── */
+  .screen {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 20px 24px;
+    display: none;
+  }
+  .screen.active { display: block; }
+
+  /* ── Bottom Tab Bar ── */
+  .tab-bar {
+    flex-shrink: 0;
+    height: 72px;
+    border-top: 1px solid #f0f0f0;
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding-top: 8px;
+    background: #fff;
+    padding-bottom: env(safe-area-inset-bottom, 12px);
+  }
+  .tab-item {
+    text-align: center;
     font-size: 10px;
-    color: var(--text-muted);
+    color: #bbb;
+    line-height: 1.3;
+    cursor: pointer;
+    padding: 0 4px;
+  }
+  .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
+  .tab-item.active { color: #F27935; font-weight: 700; }
+
+  /* ── Common UI ── */
+  .section-title { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
+  .section-sub { font-size: 13px; color: #999; margin-bottom: 20px; line-height: 1.5; }
+
+  .prompt { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+
+  .list-card {
+    background: #fff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    border: 1px solid #f0f0f0;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.03);
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .list-card:active { transform: scale(0.98); }
+  .list-card.disabled {
+    opacity: 0.4;
+    pointer-events: none;
+  }
+  .list-card.selected {
+    border-color: #F27935;
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
+  }
+  .list-emoji { font-size: 26px; flex-shrink: 0; }
+  .list-body { flex: 1; }
+  .list-title { font-size: 14px; font-weight: 600; }
+  .list-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
+  .list-action { font-size: 12px; color: #F27935; font-weight: 700; flex-shrink: 0; }
+  .list-action.disabled { color: #ccc; }
+  .list-action.done { color: #fff; background: #F27935; padding: 4px 12px; border-radius: 14px; font-size: 11px; }
+
+  .avatar {
+    width: 32px; height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
+    color: white;
+    font-weight: 700;
     flex-shrink: 0;
   }
 
@@ -225,565 +134,447 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    background: #F5F6F8;
-    border-radius: 10px;
-    padding: 8px 12px;
-    margin-bottom: 12px;
-    font-size: 13px;
-    color: var(--text-muted);
+    background: #f5f5f7;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-size: 14px;
+    color: #bbb;
   }
 
-  /* ── Friend List ── */
-  .friend-item {
+  /* ── Mini Avatar Bar ── */
+  .mini-avatar-bar {
     display: flex;
     align-items: center;
     gap: 10px;
-    padding: 10px 0;
-    border-bottom: 1px solid #F0F0F0;
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
+    border-radius: 30px;
+    padding: 10px 16px;
+    margin-bottom: 16px;
   }
-
-  .friend-item:last-child {
-    border-bottom: none;
-  }
-
-  .friend-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    background: #E8E8E8;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 16px;
-    flex-shrink: 0;
-  }
-
-  .friend-info {
-    flex: 1;
-  }
-
-  .friend-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--text);
-  }
-
-  .friend-status {
-    font-size: 11px;
-    color: var(--text-muted);
-  }
-
-  .friend-btn {
-    padding: 5px 14px;
-    border-radius: 16px;
-    font-size: 11px;
-    font-weight: 600;
-    border: 1.5px solid var(--primary);
-    color: var(--primary);
-    background: white;
-    cursor: pointer;
-  }
-
-  .friend-btn.disabled {
-    border-color: #DDD;
-    color: #CCC;
-    background: #F8F8F8;
-  }
-
-  .friend-item.disabled {
-    opacity: 0.4;
-  }
-
-  .friend-item.selected .friend-avatar {
-    border: 2px solid var(--primary);
-  }
-
-  .friend-item.selected .friend-btn {
-    background: var(--primary);
-    color: white;
-  }
+  .mini-avatar-bar .mini-name { font-size: 14px; font-weight: 700; color: #F27935; }
+  .mini-avatar-bar .mini-text { font-size: 12px; color: #888; }
 
   /* ── Avatar Pair ── */
   .avatar-pair {
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    padding: 12px 0;
+    gap: 16px;
+    padding: 20px 0;
   }
-
-  .avatar-pair .pair-avatar {
-    width: 44px;
-    height: 44px;
-    border-radius: 50%;
-    background: #F0F0F0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 18px;
-  }
-
-  .avatar-pair .pair-arrow {
-    font-size: 18px;
-    color: var(--primary);
-  }
-
-  .avatar-pair .pair-name {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--text);
-    text-align: center;
-    margin-top: 4px;
-  }
-
-  .avatar-pair .pair-unit {
+  .pair-unit {
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 6px;
   }
-
-  /* ── Top Mini Avatar ── */
-  .mini-avatar-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 4px 16px 8px;
-    flex-shrink: 0;
-  }
-
-  .mini-avatar-bar .mini-av {
-    width: 28px;
-    height: 28px;
+  .pair-avatar {
+    width: 52px; height: 52px;
     border-radius: 50%;
-    background: #FFE0E0;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 13px;
+    font-size: 18px;
+    color: white;
+    font-weight: 700;
   }
-
-  .mini-avatar-bar .mini-text {
-    font-size: 12px;
-    color: var(--text-light);
-  }
+  .pair-name { font-size: 14px; font-weight: 700; }
+  .pair-arrow { font-size: 22px; color: #F27935; font-weight: 700; }
 
   /* ── Text Input ── */
-  .text-input-area {
-    background: #F5F6F8;
-    border-radius: 12px;
-    padding: 10px 12px;
-    font-size: 13px;
-    color: var(--text-light);
-    margin-bottom: 10px;
-    line-height: 1.5;
-    min-height: 48px;
+  .text-input {
+    background: #f8f8fa;
+    border-radius: 18px;
+    padding: 16px;
+    min-height: 80px;
+    font-size: 14px;
+    color: #bbb;
+    line-height: 1.6;
+    border: 2px dashed #ddd;
+    margin-bottom: 8px;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .text-input.filled {
+    border: 2px solid #F27935;
+    background: #fff;
+    color: #222;
+    text-align: left;
+    display: block;
+    min-height: 70px;
   }
 
   /* ── Preset Chips ── */
   .preset-chips {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-bottom: 12px;
+    gap: 8px;
+    margin-bottom: 20px;
   }
-
   .chip {
-    padding: 6px 10px;
-    border-radius: 16px;
-    font-size: 11px;
-    background: #FFF0F0;
-    color: var(--primary);
-    border: 1px solid #FFD5D5;
-    white-space: nowrap;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 12px;
+    background: #FFF8F0;
+    color: #F27935;
+    border: 1.5px solid #FFE0C0;
+    cursor: pointer;
+    transition: all 0.15s;
   }
-
-  /* ── CTA Button ── */
-  .cta-btn {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: none;
-    font-size: 15px;
-    font-weight: 700;
-    color: white;
-    background: var(--primary);
-    text-align: center;
-    margin-top: auto;
-    margin-bottom: 4px;
-  }
-
-  .cta-btn.gray {
-    background: #DDD;
-    color: #888;
-  }
-
-  .cta-btn.gold {
-    background: linear-gradient(135deg, #F0C040, #E6A800);
+  .chip:active {
+    background: linear-gradient(135deg, #FFE8D0, #FFF0E6);
+    border-color: #F27935;
   }
 
   /* ── Notification Card ── */
   .notif-card {
-    background: var(--navy);
-    border-radius: 16px;
-    padding: 16px;
-    margin: 8px 0;
+    background: #1B2838;
+    border-radius: 20px;
+    padding: 20px;
+    margin: 12px 0;
     color: white;
   }
-
-  .notif-card .notif-app {
-    font-size: 11px;
-    color: #AAA;
-    margin-bottom: 6px;
-  }
-
-  .notif-card .notif-title {
-    font-size: 15px;
-    font-weight: 700;
-    margin-bottom: 8px;
-  }
-
-  .notif-card .notif-body {
-    font-size: 12px;
-    color: #CCC;
-    line-height: 1.5;
-    margin-bottom: 6px;
-  }
-
-  .notif-card .notif-from {
-    font-size: 11px;
-    color: #999;
-    margin-bottom: 12px;
-  }
-
-  .notif-btns {
-    display: flex;
-    gap: 8px;
-  }
-
+  .notif-app { font-size: 11px; color: #888; margin-bottom: 8px; }
+  .notif-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+  .notif-body { font-size: 13px; color: #ccc; line-height: 1.6; margin-bottom: 8px; }
+  .notif-from { font-size: 12px; color: #777; margin-bottom: 16px; }
+  .notif-btns { display: flex; gap: 10px; }
   .notif-btns .nbtn {
     flex: 1;
-    padding: 10px;
-    border-radius: 10px;
+    padding: 12px;
+    border-radius: 14px;
     border: none;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     text-align: center;
+    cursor: pointer;
   }
+  .nbtn.orange { background: linear-gradient(135deg, #FFB347, #F27935); color: white; }
+  .nbtn.gray { background: #2D3E50; color: #888; }
 
-  .nbtn.pink { background: var(--primary); color: white; }
-  .nbtn.gray { background: #3A4A5C; color: #AAA; }
-
-  /* ── Celebration Screen ── */
+  /* ── Celebration ── */
   .celebration {
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    flex: 1;
     text-align: center;
-    padding: 12px;
+    padding: 40px 0 20px;
   }
-
-  .celebration .big-emoji {
-    font-size: 48px;
-    margin-bottom: 12px;
-  }
-
-  .celebration .cele-title {
-    font-size: 20px;
-    font-weight: 800;
-    color: var(--navy);
-    margin-bottom: 6px;
-  }
-
-  .celebration .cele-pair {
-    font-size: 16px;
-    font-weight: 600;
-    color: var(--primary);
-    margin-bottom: 4px;
-  }
-
-  .celebration .cele-sub {
-    font-size: 13px;
-    color: var(--text-light);
-    margin-bottom: 16px;
-  }
-
+  .big-emoji { font-size: 56px; margin-bottom: 16px; }
+  .cele-title { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
+  .cele-pair { font-size: 18px; font-weight: 700; color: #F27935; margin-bottom: 6px; }
+  .cele-sub { font-size: 14px; color: #999; margin-bottom: 24px; }
   .golden-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
+    gap: 8px;
     background: linear-gradient(135deg, #FFF8E1, #FFECB3);
-    border: 2px solid var(--gold);
-    border-radius: 20px;
-    padding: 8px 16px;
-    font-size: 14px;
-    font-weight: 700;
+    border: 2px solid #F0C040;
+    border-radius: 24px;
+    padding: 10px 22px;
+    font-size: 16px;
+    font-weight: 800;
     color: #B8860B;
-    margin-bottom: 4px;
+    margin-bottom: 6px;
+  }
+  .cele-badge-label { font-size: 12px; color: #F0C040; font-weight: 700; margin-bottom: 28px; }
+
+  /* ── Buttons ── */
+  .btn-primary {
+    width: 100%;
+    padding: 16px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    color: white;
+    border: none;
+    border-radius: 16px;
+    font-size: 16px;
+    font-weight: 700;
+    text-align: center;
+    cursor: pointer;
+    margin-bottom: 8px;
+    transition: transform 0.1s;
+  }
+  .btn-primary:active { transform: scale(0.98); }
+  .btn-ghost {
+    width: 100%;
+    padding: 14px;
+    background: #f5f5f5;
+    color: #999;
+    border: none;
+    border-radius: 16px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+    cursor: pointer;
   }
 
-  .cele-badge-label {
-    font-size: 11px;
-    color: var(--gold);
-    font-weight: 600;
+  .hint {
+    font-size: 12px;
+    color: #888;
+    text-align: center;
     margin-bottom: 16px;
   }
 
-  .cele-cta {
-    width: 100%;
-    max-width: 200px;
-    padding: 11px;
-    border-radius: 12px;
-    border: none;
-    font-size: 14px;
-    font-weight: 700;
-    color: white;
-    background: var(--primary);
-    text-align: center;
-  }
-
-  /* ── Below-phone note ── */
   .below-note {
     text-align: center;
+    font-size: 12px;
+    color: #aaa;
+    margin-top: 16px;
+    padding: 10px;
+    background: #f8f8fa;
+    border-radius: 12px;
+  }
+
+  .footer-note {
     font-size: 11px;
-    color: var(--text-muted);
-    margin-top: 10px;
-    font-style: italic;
+    color: #bbb;
+    text-align: center;
+    margin-top: 8px;
   }
 
-  /* ── Responsive ── */
-  @media (max-width: 1100px) {
-    .flow-row {
-      flex-wrap: wrap;
-      gap: 24px;
-    }
-    .flow-arrow {
-      padding-top: 0;
-      min-width: 40px;
-    }
+  /* ── Fade animation ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
   }
-
-  @media (max-width: 700px) {
-    .flow-row {
-      flex-direction: column;
-      align-items: center;
-    }
-    .flow-arrow {
-      transform: rotate(90deg);
-      padding-top: 0;
-      min-width: auto;
-      margin: 8px 0;
-    }
-  }
+  .screen.active { animation: fadeUp 0.3s ease-out; }
 </style>
 </head>
 <body>
 
-<!-- ── Page Header ── -->
-<div class="page-header">
-  <h1><span>B.</span> 내 싱글 친구 둘을 연결</h1>
-  <p>내가 아는 두 사람이 잘 맞을 것 같을 때, 직접 이어주는 플로우</p>
+<div class="app">
+
+  <!-- Step indicator -->
+  <div class="step-indicator" id="stepBar">
+    <div class="step-dot current" data-step="0"></div>
+    <div class="step-dot" data-step="1"></div>
+    <div class="step-dot" data-step="2"></div>
+    <div class="step-dot" data-step="3"></div>
+    <div class="step-dot" data-step="4"></div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 0: 양방향 소개 시작 — 첫 번째 친구 선택 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen active" id="s0">
+
+    <div class="section-title">누구를 소개해줄까?</div>
+    <div class="section-sub">내 싱글 친구 둘을 이어줘 보세요</div>
+
+    <div class="search-bar">
+      🔍 친구 검색
+    </div>
+
+    <!-- 태양 -->
+    <div class="list-card" onclick="goTo(1)">
+      <div class="avatar" style="background:#F27935;">태</div>
+      <div class="list-body">
+        <div class="list-title">태양</div>
+        <div class="list-sub">싱글</div>
+      </div>
+      <span class="list-action">선택</span>
+    </div>
+
+    <!-- 현우 -->
+    <div class="list-card">
+      <div class="avatar" style="background:#00B894;">현</div>
+      <div class="list-body">
+        <div class="list-title">현우</div>
+        <div class="list-sub">싱글</div>
+      </div>
+      <span class="list-action">선택</span>
+    </div>
+
+    <!-- 민준 (disabled) -->
+    <div class="list-card disabled">
+      <div class="avatar" style="background:#aaa;">민</div>
+      <div class="list-body">
+        <div class="list-title">민준</div>
+        <div class="list-sub">연애중</div>
+      </div>
+      <span class="list-action disabled">선택</span>
+    </div>
+
+    <!-- 지수 -->
+    <div class="list-card">
+      <div class="avatar" style="background:#FFB347;">지</div>
+      <div class="list-body">
+        <div class="list-title">지수</div>
+        <div class="list-sub">싱글</div>
+      </div>
+      <span class="list-action">선택</span>
+    </div>
+
+    <div class="footer-note">※ "소개받고 싶어요" ON인 친구만 표시</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 1: 두 번째 친구 선택 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s1">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
+
+    <div class="section-title">태양에게 누구를 소개할까?</div>
+    <div style="height:8px;"></div>
+
+    <div class="mini-avatar-bar">
+      <div class="avatar" style="background:#F27935; width:28px; height:28px; font-size:12px;">태</div>
+      <div>
+        <div class="mini-name">태양</div>
+        <div class="mini-text">에게 소개할 친구를 골라주세요</div>
+      </div>
+    </div>
+
+    <!-- 지수 (selected) -->
+    <div class="list-card selected" onclick="goTo(2)">
+      <div class="avatar" style="background:#FFB347;">지</div>
+      <div class="list-body">
+        <div class="list-title">지수</div>
+        <div class="list-sub">싱글</div>
+      </div>
+      <span class="list-action done">선택됨</span>
+    </div>
+
+    <!-- 도윤 -->
+    <div class="list-card">
+      <div class="avatar" style="background:#6C5CE7;">도</div>
+      <div class="list-body">
+        <div class="list-title">도윤</div>
+        <div class="list-sub">싱글</div>
+      </div>
+      <span class="list-action">선택</span>
+    </div>
+
+    <div class="footer-note">※ 태양 본인 + 이미 소개된 조합 제외</div>
+
+    <div style="height:24px;"></div>
+    <div class="btn-primary" onclick="goTo(2)">지수 선택하기</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 2: 소개 메시지 작성 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s2">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
+
+    <div class="section-title">한마디 남기기</div>
+    <div class="section-sub">두 친구에게 전할 소개 메시지를 작성해 주세요</div>
+
+    <!-- Avatar Pair -->
+    <div class="avatar-pair">
+      <div class="pair-unit">
+        <div class="pair-avatar" style="background:#F27935;">태</div>
+        <div class="pair-name">태양</div>
+      </div>
+      <div class="pair-arrow">↔</div>
+      <div class="pair-unit">
+        <div class="pair-avatar" style="background:#FFB347;">지</div>
+        <div class="pair-name">지수</div>
+      </div>
+    </div>
+
+    <!-- Text Input (filled state) -->
+    <div class="text-input filled">
+      둘 다 여행 좋아해서 잘 맞을 것 같아!
+    </div>
+
+    <div style="height:8px;"></div>
+
+    <!-- Preset Chips -->
+    <div class="preset-chips">
+      <div class="chip">둘이 잘 어울릴 것 같아!</div>
+      <div class="chip">취향이 비슷해서 추천!</div>
+      <div class="chip">성격 진짜 잘 맞을 듯</div>
+    </div>
+
+    <div class="hint">💡 이 메시지가 두 친구에게 함께 전달돼요</div>
+
+    <div class="btn-primary" onclick="goTo(3)">소개 보내기 →</div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 3: 태양에게 알림 도착 -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s3">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(2)">← 뒤로</div>
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:4px;">태양의 화면</div>
+    <div class="section-title" style="margin-bottom:16px;">알림이 도착했어요</div>
+
+    <div class="notif-card">
+      <div class="notif-app">내친소 🔔</div>
+      <div class="notif-title">민준이가 소개해줬어요 💌</div>
+      <div class="notif-body">둘 다 여행 좋아해서 잘 맞을 것 같아!</div>
+      <div class="notif-from">— 민준 (공통 친구)</div>
+      <div class="notif-btns">
+        <div class="nbtn orange" onclick="goTo(4)">궁금해! 😊</div>
+        <div class="nbtn gray">괜찮아</div>
+      </div>
+    </div>
+
+    <div class="below-note">
+      📨 지수에게도 동시에 알림 전달
+    </div>
+
+  </div>
+
+  <!-- ═══════════════════════════════════════════ -->
+  <!-- SCREEN 4: 연결 성사! -->
+  <!-- ═══════════════════════════════════════════ -->
+  <div class="screen" id="s4">
+
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">← 뒤로</div>
+
+    <div class="celebration">
+      <div class="big-emoji">🎊</div>
+      <div class="cele-title">연결됐어요!</div>
+      <div class="cele-pair">태양 ↔ 지수</div>
+      <div class="cele-sub">소개해줘서 고마워요</div>
+      <div class="golden-badge">썬구리 +20 🌟</div>
+      <div class="cele-badge-label">주선 성공!</div>
+    </div>
+
+    <div class="btn-primary">3자 채팅 시작하기</div>
+    <div class="btn-ghost" onclick="goTo(0)">홈으로 돌아가기</div>
+
+  </div>
+
+  <!-- ── Bottom Tab Bar ── -->
+  <div class="tab-bar">
+    <div class="tab-item"><div class="tab-icon">🏠</div>홈</div>
+    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
+    <div class="tab-item"><div class="tab-icon">🎲</div>플레이</div>
+    <div class="tab-item active"><div class="tab-icon">💌</div>채팅</div>
+    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+  </div>
+
 </div>
 
-<div class="flow-container">
+<script>
+function goTo(step) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('s' + step).classList.add('active');
 
-  <!-- ══ Row 1: Steps 1 → 2 → 3 ══ -->
-  <div class="flow-row">
+  document.querySelectorAll('.step-dot').forEach((d, i) => {
+    d.className = 'step-dot';
+    if (i < step) d.classList.add('done');
+    if (i === step) d.classList.add('current');
+  });
 
-    <!-- ① 양방향 소개 시작 -->
-    <div class="flow-step">
-      <div class="step-number">1</div>
-      <div class="step-title">양방향 소개 시작</div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="screen-status-bar">9:41</div>
-          <div class="screen-header">누구를 소개해줄까?</div>
-          <div class="screen-body">
-            <div class="search-bar">&#x1F50D; 친구 검색</div>
-            <div class="friend-item">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">태양</div>
-                <div class="friend-status">싱글</div>
-              </div>
-              <div class="friend-btn">선택</div>
-            </div>
-            <div class="friend-item">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">현우</div>
-                <div class="friend-status">싱글</div>
-              </div>
-              <div class="friend-btn">선택</div>
-            </div>
-            <div class="friend-item disabled">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">민준</div>
-                <div class="friend-status">연애중</div>
-              </div>
-              <div class="friend-btn disabled">선택</div>
-            </div>
-            <div class="friend-item">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">지수</div>
-                <div class="friend-status">싱글</div>
-              </div>
-              <div class="friend-btn">선택</div>
-            </div>
-          </div>
-          <div class="screen-footer-note">※ "소개받고 싶어요" ON인 친구만 표시</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Arrow 1→2 -->
-    <div class="flow-arrow">
-      <div class="arrow-line"></div>
-      <div class="arrow-label">태양 선택 &#x2192;</div>
-    </div>
-
-    <!-- ② 두 번째 친구 선택 -->
-    <div class="flow-step">
-      <div class="step-number">2</div>
-      <div class="step-title">두 번째 친구 선택</div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="screen-status-bar">9:41</div>
-          <div class="screen-header">태양에게 누구를 소개할까?</div>
-          <div class="mini-avatar-bar">
-            <div class="mini-av">&#x1F464;</div>
-            <div class="mini-text">태양에게 소개할 친구를 골라주세요</div>
-          </div>
-          <div class="screen-body">
-            <div class="friend-item selected">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">지수</div>
-                <div class="friend-status">싱글</div>
-              </div>
-              <div class="friend-btn" style="background:var(--primary);color:white;">선택됨</div>
-            </div>
-            <div class="friend-item">
-              <div class="friend-avatar">&#x1F464;</div>
-              <div class="friend-info">
-                <div class="friend-name">도윤</div>
-                <div class="friend-status">싱글</div>
-              </div>
-              <div class="friend-btn">선택</div>
-            </div>
-          </div>
-          <div class="screen-footer-note">※ 태양 본인 + 이미 소개된 조합 제외</div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Arrow 2→3 -->
-    <div class="flow-arrow">
-      <div class="arrow-line"></div>
-      <div class="arrow-label">지수 선택 &#x2192;</div>
-    </div>
-
-    <!-- ③ 소개 메시지 작성 -->
-    <div class="flow-step">
-      <div class="step-number">3</div>
-      <div class="step-title">소개 메시지 작성</div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="screen-status-bar">9:41</div>
-          <div class="screen-header">한마디 남기기</div>
-          <div class="screen-body">
-            <div class="avatar-pair">
-              <div class="pair-unit">
-                <div class="pair-avatar">&#x1F464;</div>
-                <div class="pair-name">태양</div>
-              </div>
-              <div class="pair-arrow">&#x2194;</div>
-              <div class="pair-unit">
-                <div class="pair-avatar">&#x1F464;</div>
-                <div class="pair-name">지수</div>
-              </div>
-            </div>
-            <div class="text-input-area">둘 다 여행 좋아해서 잘 맞을 것 같아!</div>
-            <div class="preset-chips">
-              <div class="chip">둘이 잘 어울릴 것 같아!</div>
-              <div class="chip">취향이 비슷해서 추천!</div>
-              <div class="chip">성격 진짜 잘 맞을 듯</div>
-            </div>
-            <div class="cta-btn">소개 보내기 &#x2192;</div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /flow-row 1 -->
-
-  <!-- ══ Row 2: Steps 4 → 5 (centered) ══ -->
-  <div class="flow-row">
-
-    <!-- ④ 태양에게 알림 도착 -->
-    <div class="flow-step">
-      <div class="step-number">4</div>
-      <div class="step-title">태양에게 알림 도착</div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="screen-status-bar">9:41</div>
-          <div class="screen-header" style="font-size:14px; color:var(--text-light);">태양의 화면</div>
-          <div class="screen-body" style="justify-content:center;">
-            <div class="notif-card">
-              <div class="notif-app">내친소 &#x1F514;</div>
-              <div class="notif-title">민준이가 소개해줬어요 &#x1F48C;</div>
-              <div class="notif-body">둘 다 여행 좋아해서 잘 맞을 것 같아!</div>
-              <div class="notif-from">&#x2014; 민준 (공통 친구)</div>
-              <div class="notif-btns">
-                <div class="nbtn pink">궁금해! &#x1F60A;</div>
-                <div class="nbtn gray">괜찮아</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-      <div class="below-note">지수에게도 동시에 알림 전달</div>
-    </div>
-
-    <!-- Arrow 4→5 -->
-    <div class="flow-arrow">
-      <div class="arrow-line"></div>
-      <div class="arrow-label">양쪽 수락 &#x2192;</div>
-    </div>
-
-    <!-- ⑤ 연결 성사! -->
-    <div class="flow-step">
-      <div class="step-number">5</div>
-      <div class="step-title">연결 성사!</div>
-      <div class="phone-frame">
-        <div class="phone-notch"></div>
-        <div class="phone-screen">
-          <div class="screen-status-bar">9:41</div>
-          <div class="screen-body">
-            <div class="celebration">
-              <div class="big-emoji">&#x1F38A;</div>
-              <div class="cele-title">연결됐어요!</div>
-              <div class="cele-pair">태양 &#x2194; 지수</div>
-              <div class="cele-sub">소개해줘서 고마워요</div>
-              <div class="golden-badge">썬구리 +20 &#x1F31F;</div>
-              <div class="cele-badge-label">주선 성공!</div>
-              <div class="cele-cta">3자 채팅 시작하기</div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  </div><!-- /flow-row 2 -->
-
-</div><!-- /flow-container -->
+  // scroll to top on screen change
+  document.getElementById('s' + step).scrollTop = 0;
+}
+</script>
 
 </body>
 </html>
