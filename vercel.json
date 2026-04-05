@@ -1,0 +1,12 @@
+{
+  "rewrites": [
+    { "source": "/0", "destination": "/mockups/flow0_question_first.html" },
+    { "source": "/2", "destination": "/mockups/flow_2_대리탐색.html" },
+    { "source": "/3", "destination": "/mockups/flow_3_양방향소개.html" },
+    { "source": "/5", "destination": "/mockups/flow_5_카카오공유.html" },
+    { "source": "/7", "destination": "/mockups/flow_7_8_비유저_브릿지.html" },
+    { "source": "/15", "destination": "/mockups/flow_15_피드백루프.html" },
+    { "source": "/all", "destination": "/mockups/all_mockups.html" },
+    { "source": "/index", "destination": "/mockups/index.html" }
+  ]
+}
