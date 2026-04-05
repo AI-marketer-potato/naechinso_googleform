@@ -7,6 +7,7 @@
     { "source": "/7", "destination": "/mockups/flow_7_8_비유저_브릿지.html" },
     { "source": "/15", "destination": "/mockups/flow_15_피드백루프.html" },
     { "source": "/all", "destination": "/mockups/all_mockups.html" },
-    { "source": "/index", "destination": "/mockups/index.html" }
+    { "source": "/index", "destination": "/mockups/index.html" },
+    { "source": "/network", "destination": "/mockups/network_code.html" }
   ]
 }
