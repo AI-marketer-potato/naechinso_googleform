@@ -109,15 +109,6 @@
     text-align: center;
   }
 
-  .reward-banner {
-    background: linear-gradient(135deg, #FFB347, #F27935);
-    border-radius: 20px;
-    padding: 24px 20px;
-    text-align: center;
-    color: white;
-    margin-bottom: 20px;
-  }
-
   /* ── fade-in animation ── */
   @keyframes fadeUp {
     from { opacity: 0; transform: translateY(12px); }
@@ -129,39 +120,51 @@
   /* Flow 5 specific styles */
   /* ══════════════════════════════════════ */
 
-  .back-btn {
-    font-size: 13px;
-    color: #aaa;
-    margin-bottom: 14px;
-    cursor: pointer;
-  }
-
-  /* ── Screen 1: Profile Card Feed ── */
+  /* ── Screen 1: Tinder/Bumble style card ── */
   .profile-card {
-    border-radius: 24px;
+    border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
     margin-bottom: 20px;
+    position: relative;
   }
   .profile-photo-area {
-    height: 340px;
-    background: linear-gradient(135deg, #FFD4B8, #FFB088);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    height: 420px;
     position: relative;
+    overflow: hidden;
+  }
+  .profile-photo-area img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .profile-info-overlay {
     position: absolute;
     bottom: 0;
     left: 0;
     right: 0;
-    padding: 20px 24px;
-    background: linear-gradient(transparent, rgba(0,0,0,0.55));
+    padding: 60px 24px 24px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.6));
     color: white;
   }
-  .profile-name { font-size: 26px; font-weight: 800; }
-  .profile-age { font-size: 18px; font-weight: 400; opacity: 0.9; }
+  .profile-name { font-size: 28px; font-weight: 800; }
+  .profile-age { font-size: 20px; font-weight: 400; opacity: 0.9; }
+  .profile-tags {
+    display: flex;
+    gap: 6px;
+    margin-top: 8px;
+    flex-wrap: wrap;
+  }
+  .profile-tag {
+    padding: 4px 12px;
+    background: rgba(255,255,255,0.2);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 500;
+    color: white;
+  }
 
   .feed-actions {
     display: flex;
@@ -215,7 +218,7 @@
   }
   .feed-btn.intro { animation: pulse 2s ease-in-out infinite; }
 
-  /* ── Screen 2: Bottom Sheet ── */
+  /* ── Screen 2: iOS Bottom Sheet ── */
   .screen.bottom-sheet-screen {
     padding: 0;
     display: none;
@@ -226,34 +229,63 @@
   }
   .dimmed-bg {
     flex: 1;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.45);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(2px);
   }
   .bottom-sheet {
     background: white;
-    border-radius: 24px 24px 0 0;
-    padding: 20px 20px 28px;
+    border-radius: 16px 16px 0 0;
+    padding: 12px 20px 28px;
+    padding-bottom: calc(28px + env(safe-area-inset-bottom, 0px));
     flex-shrink: 0;
   }
   .bottom-sheet-handle {
-    width: 40px;
-    height: 4px;
+    width: 36px;
+    height: 5px;
     background: #ddd;
-    border-radius: 2px;
-    margin: 0 auto 20px;
+    border-radius: 3px;
+    margin: 0 auto 18px;
   }
   .bottom-sheet-title {
-    font-size: 18px;
+    font-size: 20px;
     font-weight: 800;
-    margin-bottom: 20px;
+    margin-bottom: 4px;
     text-align: center;
   }
+  .bottom-sheet-sub {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  .bottom-sheet-profile {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px;
+    background: #f9f9f9;
+    border-radius: 16px;
+    margin-bottom: 18px;
+  }
+  .bottom-sheet-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    object-fit: cover;
+    filter: blur(6px);
+    transform: scale(1.1);
+  }
+  .bottom-sheet-profile-name { font-size: 15px; font-weight: 700; }
+  .bottom-sheet-profile-detail { font-size: 12px; color: #999; margin-top: 2px; }
+
   .share-option {
     display: flex;
     align-items: center;
     gap: 14px;
     padding: 16px 14px;
-    border-radius: 16px;
-    margin-bottom: 10px;
+    border-radius: 14px;
+    margin-bottom: 8px;
     font-size: 15px;
     font-weight: 500;
     cursor: pointer;
@@ -265,7 +297,9 @@
     background: #FFF8F0;
     border-color: #F27935;
   }
-  .share-option-icon {
+  .share-option-text { font-size: 15px; font-weight: 600; }
+  .share-option-sub { font-size: 12px; color: #aaa; margin-top: 2px; }
+  .share-icon-box {
     width: 40px;
     height: 40px;
     border-radius: 12px;
@@ -274,8 +308,6 @@
     justify-content: center;
     flex-shrink: 0;
   }
-  .share-option-text { font-size: 15px; font-weight: 600; }
-  .share-option-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
 
   /* ── Screen 3: KakaoTalk Chat ── */
   .screen.kakao-screen {
@@ -287,43 +319,58 @@
     display: flex;
   }
   .kakao-header {
-    height: 48px;
+    height: 52px;
     background: #FEE500;
     display: flex;
     align-items: center;
-    padding: 0 16px;
+    padding: 0 14px;
     font-size: 16px;
     font-weight: 700;
     color: #3A1D1D;
     flex-shrink: 0;
-    gap: 12px;
+    gap: 10px;
   }
-  .kakao-back { font-size: 18px; cursor: pointer; }
+  .kakao-back { font-size: 20px; cursor: pointer; color: #3A1D1D; }
+  .kakao-header-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
   .kakao-chat-area {
     flex: 1;
     background: #B2C7D9;
-    padding: 20px 16px;
+    padding: 16px 14px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
   }
-  .chat-row { display: flex; gap: 8px; align-items: flex-start; }
+  .chat-date {
+    text-align: center;
+    font-size: 11px;
+    color: rgba(0,0,0,0.35);
+    padding: 4px 12px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 20px;
+    align-self: center;
+    margin-bottom: 4px;
+  }
+  .chat-row { display: flex; gap: 8px; align-items: flex-end; }
   .chat-row.mine { justify-content: flex-end; }
   .chat-avatar {
     width: 36px;
     height: 36px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    border-radius: 16px;
+    object-fit: cover;
     flex-shrink: 0;
+    align-self: flex-start;
   }
-  .chat-bubble-group { display: flex; flex-direction: column; max-width: 75%; }
-  .chat-sender { font-size: 11px; color: rgba(0,0,0,0.45); margin-bottom: 4px; font-weight: 600; }
+  .chat-bubble-group { display: flex; flex-direction: column; max-width: 70%; gap: 3px; }
+  .chat-sender { font-size: 11px; color: rgba(0,0,0,0.45); margin-bottom: 2px; font-weight: 600; }
   .chat-bubble {
     background: white;
-    border-radius: 16px;
+    border-radius: 4px 16px 16px 16px;
     padding: 10px 14px;
     font-size: 14px;
     line-height: 1.5;
@@ -333,6 +380,14 @@
   .chat-row.mine .chat-bubble {
     background: #FEE500;
     color: #3A1D1D;
+    border-radius: 16px 4px 16px 16px;
+  }
+  .chat-time {
+    font-size: 10px;
+    color: rgba(0,0,0,0.3);
+    align-self: flex-end;
+    flex-shrink: 0;
+    padding-bottom: 2px;
   }
 
   /* KakaoTalk share card */
@@ -340,64 +395,78 @@
     background: white;
     border-radius: 16px;
     overflow: hidden;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
-    max-width: 260px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+    max-width: 240px;
   }
-  .kakao-card-header {
+  .kakao-card-thumb {
+    width: 100%;
+    height: 130px;
+    object-fit: cover;
+    filter: blur(10px);
+    transform: scale(1.15);
+    display: block;
+  }
+  .kakao-card-thumb-wrap {
+    overflow: hidden;
+    position: relative;
+    height: 130px;
+  }
+  .kakao-card-thumb-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
     padding: 10px 14px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.4));
+    color: white;
     font-size: 12px;
     font-weight: 700;
-    color: #F27935;
+  }
+  .kakao-card-body {
+    padding: 12px 14px 14px;
+  }
+  .kakao-card-app {
+    font-size: 11px;
+    color: #999;
+    margin-bottom: 4px;
     display: flex;
     align-items: center;
     gap: 4px;
-    border-bottom: 1px solid #f0f0f0;
   }
-  .kakao-card-body {
-    padding: 16px 14px;
-    text-align: center;
-  }
-  .blur-avatar {
-    width: 64px;
-    height: 64px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #FFD4B8, #FFB088);
-    margin: 0 auto 10px;
-    display: flex;
+  .kakao-card-app-icon {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: #F27935;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
-    filter: blur(4px);
-    position: relative;
   }
   .kakao-card-msg {
     font-size: 14px;
     font-weight: 700;
     color: #333;
-    line-height: 1.5;
-    margin-bottom: 8px;
+    line-height: 1.45;
+    margin-bottom: 4px;
   }
-  .kakao-card-info {
+  .kakao-card-desc {
     font-size: 12px;
     color: #888;
-    margin-bottom: 6px;
-  }
-  .kakao-card-quote {
-    font-size: 12px;
-    color: #F27935;
-    font-style: italic;
+    line-height: 1.4;
   }
   .kakao-card-cta {
     display: block;
     text-align: center;
-    padding: 12px;
-    background: #F27935;
-    color: white;
-    font-size: 14px;
-    font-weight: 700;
+    padding: 10px;
+    background: #f5f5f5;
+    color: #555;
+    font-size: 13px;
+    font-weight: 600;
     text-decoration: none;
     cursor: pointer;
+    border-top: 1px solid #eee;
   }
+  .kakao-card-cta:active { background: #eee; }
 
   /* ── Screen 4: Web Landing (Safari) ── */
   .screen.web-screen {
@@ -409,7 +478,7 @@
     display: flex;
   }
   .safari-bar {
-    height: 40px;
+    height: 44px;
     background: #f2f2f7;
     display: flex;
     align-items: center;
@@ -421,7 +490,7 @@
     background: #e5e5ea;
     padding: 6px 16px;
     border-radius: 10px;
-    font-size: 12px;
+    font-size: 13px;
     color: #8e8e93;
     width: 100%;
     text-align: center;
@@ -444,24 +513,69 @@
   }
   .landing-body {
     flex: 1;
-    padding: 24px 20px;
+    padding: 28px 20px;
     overflow-y: auto;
     text-align: center;
   }
-  .landing-subtitle {
-    font-size: 16px;
+  .landing-from {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: #FFF8F0;
+    padding: 8px 16px;
+    border-radius: 24px;
+    font-size: 13px;
     font-weight: 600;
-    color: #555;
-    margin-bottom: 20px;
-    line-height: 1.6;
+    color: #F27935;
+    margin-bottom: 16px;
+  }
+  .landing-from-avatar {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .landing-title {
+    font-size: 22px;
+    font-weight: 800;
+    color: #222;
+    margin-bottom: 6px;
+    line-height: 1.4;
+  }
+  .landing-subtitle {
+    font-size: 15px;
+    color: #888;
+    margin-bottom: 24px;
+    line-height: 1.5;
   }
   .blur-photo-large {
-    width: 100px;
-    height: 100px;
+    width: 140px;
+    height: 140px;
     border-radius: 50%;
     margin: 0 auto 20px;
     overflow: hidden;
     position: relative;
+    box-shadow: 0 8px 32px rgba(242,121,53,0.15);
+  }
+  .blur-photo-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: blur(14px);
+    transform: scale(1.2);
+  }
+  .blur-photo-lock {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(255,255,255,0.85);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .landing-tags {
     display: flex;
@@ -500,6 +614,13 @@
     opacity: 0.4;
   }
   .landing-quote-text { padding-left: 16px; }
+  .landing-quote-author {
+    font-size: 12px;
+    color: #F27935;
+    font-weight: 600;
+    margin-top: 6px;
+    padding-left: 16px;
+  }
   .landing-link {
     font-size: 12px;
     color: #aaa;
@@ -512,6 +633,19 @@
   }
 
   /* ── Screen 5: App after install ── */
+  .screen5-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 16px 0 8px;
+    font-size: 20px;
+    font-weight: 900;
+    color: #F27935;
+  }
+  .confetti-wrap {
+    text-align: center;
+    margin-bottom: 8px;
+  }
   .intro-badge {
     display: inline-flex;
     align-items: center;
@@ -523,31 +657,38 @@
     font-size: 14px;
     font-weight: 700;
     color: #F27935;
-    margin-bottom: 16px;
+    margin-bottom: 12px;
   }
-  .intro-quote {
-    font-size: 16px;
-    color: #444;
-    font-style: italic;
-    margin-bottom: 20px;
+  .intro-reveal-title {
+    font-size: 22px;
+    font-weight: 800;
     text-align: center;
-    line-height: 1.5;
-    padding: 0 12px;
+    margin-bottom: 4px;
+    color: #222;
+  }
+  .intro-reveal-sub {
+    font-size: 14px;
+    color: #888;
+    text-align: center;
+    margin-bottom: 20px;
   }
   .intro-photo {
-    width: 130px;
-    height: 130px;
+    width: 150px;
+    height: 150px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FFD4B8, #FFB088);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin: 0 auto 14px;
+    margin: 0 auto 16px;
     border: 3px solid #F27935;
     overflow: hidden;
+    box-shadow: 0 8px 32px rgba(242,121,53,0.2);
+    position: relative;
+  }
+  .intro-photo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .intro-name {
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 800;
     text-align: center;
     margin-bottom: 4px;
@@ -556,7 +697,31 @@
     font-size: 14px;
     color: #888;
     text-align: center;
+    margin-bottom: 8px;
+  }
+  .intro-tags {
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    flex-wrap: wrap;
     margin-bottom: 20px;
+  }
+  .intro-tag {
+    padding: 5px 12px;
+    background: #FFF8F0;
+    border-radius: 12px;
+    font-size: 12px;
+    color: #F27935;
+    font-weight: 600;
+  }
+  .intro-quote {
+    font-size: 14px;
+    color: #444;
+    font-style: italic;
+    margin-bottom: 20px;
+    text-align: center;
+    line-height: 1.5;
+    padding: 0 12px;
   }
   .intro-actions {
     display: flex;
@@ -566,9 +731,9 @@
   }
   .intro-btn {
     flex: 1;
-    padding: 14px;
+    padding: 16px;
     border-radius: 16px;
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     text-align: center;
     border: none;
@@ -579,37 +744,13 @@
   .intro-btn.accept {
     background: linear-gradient(135deg, #FFB347, #F27935);
     color: white;
+    flex: 2;
   }
   .intro-btn.later {
     background: #f5f5f5;
     color: #999;
+    flex: 1;
   }
-  .bonus-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    background: linear-gradient(135deg, #FFF9DB, #FFF3BF);
-    border: 1.5px solid #FFE066;
-    padding: 8px 18px;
-    border-radius: 24px;
-    font-size: 13px;
-    font-weight: 700;
-    color: #B8860B;
-  }
-
-  /* ── Styled icon circles (replacing emojis) ── */
-  .icon-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    font-weight: 800;
-    color: white;
-    flex-shrink: 0;
-  }
-  .icon-circle.sm { width: 22px; height: 22px; font-size: 11px; }
-  .icon-circle.md { width: 36px; height: 36px; font-size: 15px; }
-  .icon-circle.lg { width: 40px; height: 40px; font-size: 16px; }
 
   /* Tab bar icons */
   .tab-icon-styled {
@@ -621,18 +762,6 @@
     justify-content: center;
   }
 
-  /* Share option styled icons */
-  .share-icon-box {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
-
-  /* Feed action button icons (SVG-based) */
   .feed-icon-svg { width: 24px; height: 24px; }
 </style>
 </head>
@@ -650,22 +779,25 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 1: 피드에서 공유 시작 -->
+  <!-- SCREEN 1: 데이팅앱 피드 - 프로필 카드 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen active" id="s0">
 
-    <div style="font-size:13px; font-weight:700; color:#888; margin-bottom:16px;">추천 피드</div>
+    <div style="font-size:13px; font-weight:700; color:#888; margin-bottom:12px;">추천 피드</div>
 
     <div class="profile-card">
       <div class="profile-photo-area">
-        <!-- SVG silhouette photo placeholder -->
-        <svg width="120" height="150" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="60" cy="45" r="28" fill="rgba(255,255,255,0.35)"/>
-          <ellipse cx="60" cy="130" rx="45" ry="38" fill="rgba(255,255,255,0.3)"/>
-        </svg>
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="지수">
         <div class="profile-info-overlay">
-          <span class="profile-name">지수</span>
-          <span class="profile-age">, 26</span>
+          <div>
+            <span class="profile-name">지수</span>
+            <span class="profile-age">, 26</span>
+          </div>
+          <div class="profile-tags">
+            <span class="profile-tag">서울 마포구</span>
+            <span class="profile-tag">디자이너</span>
+            <span class="profile-tag">강아지</span>
+          </div>
         </div>
       </div>
     </div>
@@ -679,9 +811,9 @@
       </div>
       <div class="feed-btn-wrap">
         <div class="feed-btn intro" onclick="goTo(1)">
-          <svg class="feed-icon-svg" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="8" r="3.5"/><circle cx="16" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-6 7-6 1.2 0 2.3.2 3.2.6" /><path d="M14 14.4c.9-.3 1.9-.4 2.5-.4 3.5 0 6 2.5 6 5.5" fill="white"/></svg>
+          <svg class="feed-icon-svg" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><path d="M16 21v-2a4 4 0 0 0-3-3.87M13 3.13a4 4 0 0 1 0 7.75M21 21v-2a4 4 0 0 0-3-3.87"/><circle cx="9" cy="7" r="4" fill="white"/><path d="M5 21v-2a4 4 0 0 1 4-4h0a4 4 0 0 1 4 4v2"/></svg>
         </div>
-        <div class="feed-btn-label highlight">소개</div>
+        <div class="feed-btn-label highlight">친구에게 소개</div>
       </div>
       <div class="feed-btn-wrap">
         <div class="feed-btn like">
@@ -694,7 +826,7 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 2: 공유 방법 선택 (Bottom Sheet) -->
+  <!-- SCREEN 2: "이 사람, 친구한테 소개해줄래?" -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen bottom-sheet-screen" id="s1">
 
@@ -702,15 +834,15 @@
 
     <div class="bottom-sheet">
       <div class="bottom-sheet-handle"></div>
-      <div class="bottom-sheet-title">어떻게 소개할까요?</div>
 
-      <div class="share-option">
-        <div class="share-icon-box" style="background: linear-gradient(135deg, #FFB347, #F27935);">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.5" fill="none"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg>
-        </div>
+      <div class="bottom-sheet-title">이 사람, 친구한테 소개해줄래?</div>
+      <div class="bottom-sheet-sub">지수님의 프로필을 공유할 방법을 선택하세요</div>
+
+      <div class="bottom-sheet-profile">
+        <img class="bottom-sheet-avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="지수">
         <div>
-          <div class="share-option-text">내친소 친구에게</div>
-          <div class="share-option-sub">앱 내 소개</div>
+          <div class="bottom-sheet-profile-name">지수, 26</div>
+          <div class="bottom-sheet-profile-detail">서울 마포구 / 디자이너</div>
         </div>
       </div>
 
@@ -720,7 +852,17 @@
         </div>
         <div>
           <div class="share-option-text">카카오톡으로 보내기</div>
-          <div class="share-option-sub">앱 밖 친구에게 공유</div>
+          <div class="share-option-sub">친구에게 바로 공유</div>
+        </div>
+      </div>
+
+      <div class="share-option">
+        <div class="share-icon-box" style="background: linear-gradient(135deg, #FFB347, #F27935);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.5" fill="none"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg>
+        </div>
+        <div>
+          <div class="share-option-text">내친소 친구에게</div>
+          <div class="share-option-sub">앱 안에서 소개</div>
         </div>
       </div>
 
@@ -738,54 +880,74 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 3: 카카오톡 공유 카드 -->
+  <!-- SCREEN 3: 카카오톡 자연스러운 대화 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen kakao-screen" id="s2">
 
     <div class="kakao-header">
       <span class="kakao-back" onclick="goTo(1)">&#9664;</span>
-      <span>이서연</span>
+      <img class="kakao-header-avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&q=80" alt="서연">
+      <span>서연</span>
     </div>
 
     <div class="kakao-chat-area">
 
-      <!-- 내 메시지 -->
+      <div class="chat-date">오늘</div>
+
+      <!-- 내 메시지 1 -->
+      <div class="chat-row mine">
+        <div class="chat-time">오후 2:31</div>
+        <div class="chat-bubble-group">
+          <div class="chat-bubble">야 너한테 딱인 사람 있어!</div>
+        </div>
+      </div>
+
+      <!-- 내 메시지 2 -->
       <div class="chat-row mine">
         <div class="chat-bubble-group">
-          <div class="chat-bubble">서연아 너한테 소개시켜줄 사람 있어!</div>
+          <div class="chat-bubble">내가 쓰는 소개팅 앱에서 봤는데 진짜 네 스타일이야</div>
         </div>
       </div>
 
       <!-- 공유 카드 -->
-      <div class="chat-row mine">
+      <div class="chat-row mine" style="margin-top: 2px;">
         <div class="chat-bubble-group">
           <div class="kakao-share-card">
-            <div class="kakao-card-header">
-              <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:#F27935;">
-                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
-              </span>
-              내친소
+            <div class="kakao-card-thumb-wrap">
+              <img class="kakao-card-thumb" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="">
+              <div class="kakao-card-thumb-overlay">프로필 미리보기</div>
             </div>
             <div class="kakao-card-body">
-              <!-- Blurred avatar: gradient circle with CSS blur -->
-              <div class="blur-avatar">
-                <div style="width:100%; height:100%; background: linear-gradient(135deg, #FFD4B8 0%, #FFB088 50%, #F2A070 100%); border-radius:50%;"></div>
+              <div class="kakao-card-app">
+                <span class="kakao-card-app-icon">
+                  <svg width="8" height="8" viewBox="0 0 24 24" fill="white"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
+                </span>
+                내친소
               </div>
-              <div class="kakao-card-msg">민준이가 너한테<br>소개해주고 싶은<br>사람이 있대!</div>
-              <div class="kakao-card-info">지수 · 26 · 서울</div>
-              <div class="kakao-card-quote">"걔 진짜 좋은 사람이야"</div>
+              <div class="kakao-card-msg">친구가 소개해주고 싶은 사람이 있대요</div>
+              <div class="kakao-card-desc">지수, 26세 / 서울</div>
             </div>
-            <div class="kakao-card-cta" onclick="goTo(3)">내친소에서 확인하기 &#8594;</div>
+            <div class="kakao-card-cta" onclick="goTo(3)">프로필 확인하기</div>
           </div>
         </div>
       </div>
 
       <!-- 상대방 답장 -->
       <div class="chat-row">
-        <div class="chat-avatar" style="background: linear-gradient(135deg, #00B894, #00D2A0); border-radius: 12px; color: white; font-size: 14px; font-weight: 800;">서</div>
+        <img class="chat-avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=80&q=80" alt="서연">
         <div class="chat-bubble-group">
-          <div class="chat-sender">이서연</div>
-          <div class="chat-bubble">오 뭔데뭔데??</div>
+          <div class="chat-sender">서연</div>
+          <div class="chat-bubble">오 대박 누군데??</div>
+          <div class="chat-bubble" style="margin-top:3px;">사진 왜 흐려ㅋㅋ 궁금해</div>
+        </div>
+        <div class="chat-time">오후 2:33</div>
+      </div>
+
+      <!-- 내 답장 -->
+      <div class="chat-row mine">
+        <div class="chat-time">오후 2:33</div>
+        <div class="chat-bubble-group">
+          <div class="chat-bubble">앱 깔면 바로 볼 수 있어! 진짜 추천이야</div>
         </div>
       </div>
 
@@ -794,14 +956,14 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 4: 비유저 랜딩 (웹) -->
+  <!-- SCREEN 4: 비유저 웹 랜딩 페이지 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen web-screen" id="s3">
 
     <div class="safari-bar">
       <div class="safari-url-box">
         <svg width="10" height="12" viewBox="0 0 12 14" fill="#8e8e93"><rect x="2" y="6" width="8" height="7" rx="1.5" /><path d="M3.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="#8e8e93" stroke-width="1.2"/></svg>
-        naechinso.com/invite/...
+        naechinso.com/invite/jisu26
       </div>
     </div>
 
@@ -809,15 +971,21 @@
 
     <div class="landing-body">
 
-      <div class="landing-subtitle">민준님이 소개해주고 싶은<br>사람이 있어요</div>
+      <div class="landing-from">
+        <img class="landing-from-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=80&q=80" alt="민준">
+        민준님이 보낸 소개
+      </div>
 
-      <!-- Blurred photo: layered gradients with heavy blur -->
+      <div class="landing-title">친구가 소개해주고 싶은<br>사람이 있어요</div>
+      <div class="landing-subtitle">앱을 설치하면 프로필을 확인할 수 있어요</div>
+
+      <!-- Blurred photo -->
       <div class="blur-photo-large">
-        <div style="width:100%; height:100%; border-radius:50%; background: linear-gradient(135deg, #FFD4B8 0%, #FFB088 40%, #F2A070 70%, #E89060 100%); filter: blur(8px); transform: scale(1.15);"></div>
-        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
-          <svg width="40" height="50" viewBox="0 0 120 150" fill="none" style="filter:blur(3px); opacity:0.3;">
-            <circle cx="60" cy="45" r="24" fill="white"/>
-            <ellipse cx="60" cy="125" rx="38" ry="32" fill="white"/>
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="">
+        <div class="blur-photo-lock">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F27935" stroke-width="2.5" stroke-linecap="round">
+            <rect x="3" y="11" width="18" height="11" rx="2"/>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
           </svg>
         </div>
       </div>
@@ -825,64 +993,62 @@
       <div class="landing-tags">
         <span class="landing-tag">26세</span>
         <span class="landing-tag">서울</span>
-        <span class="landing-tag">직장인</span>
+        <span class="landing-tag">디자이너</span>
       </div>
 
       <div class="landing-quote">
-        <div class="landing-quote-text">걔 진짜 좋은 사람이야, 네 스타일일 것 같아</div>
+        <div class="landing-quote-text">걔 진짜 좋은 사람이야, 네 스타일일 것 같아서 소개해줄게</div>
+        <div class="landing-quote-author">- 민준님의 추천사</div>
       </div>
 
-      <button class="btn-primary" onclick="goTo(4)">앱 설치하고 확인하기</button>
+      <button class="btn-primary" onclick="goTo(4)">앱 설치하고 프로필 확인하기</button>
 
-      <div class="landing-link">이미 내친소 회원이라면 &#8594; <a href="#">앱에서 열기</a></div>
+      <div class="landing-link">이미 내친소 회원이라면 <a href="#">앱에서 열기</a></div>
 
     </div>
 
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 5: 앱 설치 후 소개 확인 -->
+  <!-- SCREEN 5: 앱 설치 후 소개 프로필 도착 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s4">
 
-    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">&#8592; 뒤로</div>
+    <div style="font-size:13px; color:#aaa; margin-bottom:8px; cursor:pointer;" onclick="goTo(3)">&#8592; 뒤로</div>
 
-    <div style="text-align:center; font-size:20px; font-weight:900; color:#F27935; margin-bottom:24px;">내친소</div>
+    <div class="screen5-header">내친소</div>
 
-    <div style="text-align:center;">
+    <div class="confetti-wrap">
       <div class="intro-badge">
         <span style="display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg, #FFB347, #F27935);">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
         </span>
-        민준이가 소개해줬어요
+        민준님이 소개해줬어요
       </div>
     </div>
 
-    <div class="intro-quote">"걔 진짜 좋은 사람이야"</div>
+    <div class="intro-reveal-title">소개받은 프로필이 도착했어요!</div>
+    <div class="intro-reveal-sub">민준님이 당신에게 꼭 맞을 거라고 추천했어요</div>
 
-    <!-- Revealed clear photo with border -->
+    <!-- Revealed clear photo -->
     <div class="intro-photo">
-      <svg width="60" height="75" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="60" cy="45" r="26" fill="rgba(255,255,255,0.45)"/>
-        <ellipse cx="60" cy="128" rx="42" ry="36" fill="rgba(255,255,255,0.38)"/>
-      </svg>
+      <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=400&q=80" alt="지수">
     </div>
 
     <div class="intro-name">지수, 26</div>
-    <div class="intro-detail">서울</div>
+    <div class="intro-detail">서울 마포구</div>
 
-    <div class="intro-actions">
-      <button class="intro-btn accept">볼게!</button>
-      <button class="intro-btn later">나중에</button>
+    <div class="intro-tags">
+      <span class="intro-tag">디자이너</span>
+      <span class="intro-tag">강아지 집사</span>
+      <span class="intro-tag">카페 탐방</span>
     </div>
 
-    <div style="text-align:center;">
-      <div class="bonus-badge">
-        <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg, #FFE066, #FFD700);">
-          <svg width="10" height="10" viewBox="0 0 24 24" fill="#B8860B"><polygon points="12,2 15,9 22,9 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9 9,9"/></svg>
-        </span>
-        썬구리 +10 (신규 가입 보너스)
-      </div>
+    <div class="intro-quote">"걔 진짜 좋은 사람이야, 성격도 좋고 취미도 비슷할걸?"</div>
+
+    <div class="intro-actions">
+      <button class="intro-btn accept">소개 받을게요!</button>
+      <button class="intro-btn later">나중에</button>
     </div>
 
   </div>
@@ -934,7 +1100,6 @@ function goTo(step) {
     if (i === step) d.classList.add('current');
   });
 
-  // scroll to top on screen change
   var el = document.getElementById('s' + step);
   if (el) el.scrollTop = 0;
 }

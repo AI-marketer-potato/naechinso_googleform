@@ -11,7 +11,7 @@
   * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
     font-family: 'Pretendard Variable', sans-serif;
-    background: #fff;
+    background: #f5f5f7;
     color: #222;
     height: 100%;
     overflow: hidden;
@@ -26,6 +26,7 @@
     margin: 0 auto;
     position: relative;
     background: #fff;
+    box-shadow: 0 0 40px rgba(0,0,0,0.08);
   }
 
   /* ── Step Indicator (top) ── */
@@ -53,7 +54,7 @@
     overflow-y: auto;
     overflow-x: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 8px 20px 24px;
+    padding: 0 20px 24px;
     display: none;
   }
   .screen.active { display: block; }
@@ -83,15 +84,6 @@
   .tab-item.active { color: #F27935; font-weight: 700; }
 
   /* ── Common UI ── */
-  .section-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 18px;
-  }
-  .section-title { font-size: 18px; font-weight: 900; }
-  .section-link { font-size: 12px; color: #F27935; font-weight: 700; }
-
   .btn-primary {
     width: 100%;
     padding: 16px;
@@ -105,6 +97,7 @@
     cursor: pointer;
     margin-bottom: 8px;
     transition: transform 0.1s;
+    box-shadow: 0 4px 16px rgba(242,121,53,0.25);
   }
   .btn-primary:active { transform: scale(0.98); }
   .btn-ghost {
@@ -120,28 +113,10 @@
     cursor: pointer;
   }
   .btn-ghost.accent { color: #F27935; }
-  .btn-outline {
-    display: inline-block;
-    padding: 12px 24px;
-    border: 2px solid #F27935;
-    color: #F27935;
-    border-radius: 14px;
-    font-size: 14px;
-    font-weight: 700;
-    cursor: pointer;
-    background: transparent;
-  }
-  .btn-skip {
-    text-align: center;
-    font-size: 13px;
-    color: #bbb;
-    margin-top: 12px;
-    cursor: pointer;
-  }
   .btn-secondary {
     width: 100%;
     padding: 14px;
-    background: #f0f0f0;
+    background: #f5f5f5;
     color: #666;
     border: none;
     border-radius: 16px;
@@ -149,23 +124,35 @@
     font-weight: 600;
     text-align: center;
     cursor: pointer;
+    transition: transform 0.1s;
   }
+  .btn-secondary:active { transform: scale(0.98); }
+  .btn-skip {
+    text-align: center;
+    font-size: 13px;
+    color: #bbb;
+    margin-top: 14px;
+    cursor: pointer;
+    padding: 8px;
+  }
+  .btn-skip:active { color: #999; }
 
   .hint {
     font-size: 12px;
     color: #888;
     text-align: center;
     margin-bottom: 16px;
+    line-height: 1.5;
   }
 
   .divider { border: none; border-top: 1px solid #f0f0f0; margin: 20px 0; }
 
-  .prompt { font-size: 16px; font-weight: 800; margin-bottom: 14px; }
+  .prompt { font-size: 22px; font-weight: 900; margin-bottom: 8px; letter-spacing: -0.3px; }
 
   .screen-sub {
-    font-size: 13px;
+    font-size: 14px;
     color: #999;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
     line-height: 1.5;
   }
 
@@ -173,92 +160,111 @@
   .feed-tabs {
     display: flex;
     border-bottom: 2px solid #f0f0f0;
-    margin: 0 -20px 16px;
+    margin: 0 -20px;
     padding: 0 20px;
   }
   .feed-tab {
     flex: 1;
     text-align: center;
-    padding: 12px 0;
-    font-size: 14px;
+    padding: 14px 0;
+    font-size: 15px;
     font-weight: 600;
-    color: #bbb;
+    color: #ccc;
     cursor: pointer;
     position: relative;
+    transition: color 0.2s;
   }
   .feed-tab.active {
     color: #F27935;
-    font-weight: 700;
+    font-weight: 800;
   }
   .feed-tab.active::after {
     content: '';
     position: absolute;
     bottom: -2px;
-    left: 0;
-    right: 0;
-    height: 2px;
+    left: 20%;
+    right: 20%;
+    height: 2.5px;
+    border-radius: 2px;
     background: #F27935;
   }
+  .feed-tab .tab-count {
+    display: inline-block;
+    background: #F27935;
+    color: #fff;
+    font-size: 10px;
+    font-weight: 800;
+    min-width: 16px;
+    height: 16px;
+    line-height: 16px;
+    border-radius: 8px;
+    padding: 0 5px;
+    margin-left: 4px;
+    vertical-align: 2px;
+  }
 
-  /* ── Profile Card ── */
+  /* ── Profile Card (Feed) ── */
   .profile-card {
     background: #fff;
     border-radius: 20px;
     overflow: hidden;
-    margin-bottom: 14px;
+    margin-bottom: 16px;
     border: 1px solid #f0f0f0;
-    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+    box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+    cursor: pointer;
+    transition: transform 0.15s;
   }
-  .profile-img {
-    height: 180px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 60px;
+  .profile-card:active { transform: scale(0.985); }
+  .profile-card-photo {
+    width: 100%;
+    aspect-ratio: 4/3;
+    object-fit: cover;
+    display: block;
+    position: relative;
+  }
+  .profile-card-photo-wrap {
     position: relative;
     overflow: hidden;
   }
-  .profile-img .silhouette {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-  }
-  .profile-img .silhouette-circle {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
+  .profile-card-photo-wrap .photo-badge {
     position: absolute;
-    top: 36px;
-  }
-  .profile-img .silhouette-body {
-    width: 100px;
-    height: 70px;
-    border-radius: 50px 50px 0 0;
-    background: rgba(255,255,255,0.5);
-    margin-bottom: 0;
-  }
-  .profile-img .photo-badge {
-    position: absolute;
-    bottom: 10px;
+    bottom: 12px;
     right: 14px;
-    background: rgba(0,0,0,0.25);
+    background: rgba(0,0,0,0.4);
     color: #fff;
     font-size: 11px;
     font-weight: 600;
     padding: 4px 10px;
     border-radius: 10px;
-    backdrop-filter: blur(4px);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .profile-card-photo-wrap .photo-gradient {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: linear-gradient(transparent, rgba(0,0,0,0.15));
+    pointer-events: none;
   }
   .profile-info {
-    padding: 14px 18px 16px;
+    padding: 16px 18px 18px;
+  }
+  .profile-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 6px;
   }
   .profile-name {
-    font-size: 18px;
+    font-size: 19px;
     font-weight: 800;
     color: #222;
+  }
+  .profile-age {
+    font-size: 17px;
+    font-weight: 700;
+    color: #555;
   }
   .profile-detail {
     font-size: 13px;
@@ -266,10 +272,42 @@
     margin-top: 4px;
   }
   .profile-rec {
-    font-size: 12px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
     color: #F27935;
     font-weight: 600;
-    margin-top: 6px;
+    margin-top: 10px;
+    background: #FFF6F0;
+    padding: 8px 12px;
+    border-radius: 10px;
+  }
+  .profile-rec-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .profile-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+  .profile-tag {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #f5f5f7;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+  }
+  .profile-tag.match {
+    background: #FFF0E6;
+    color: #F27935;
   }
 
   /* ── Friend List ── */
@@ -277,68 +315,113 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    padding: 14px 16px;
-    margin: 0 -20px;
-    border-bottom: 1px solid #f5f5f5;
+    padding: 16px;
+    margin-bottom: 10px;
+    border-radius: 16px;
+    background: #fff;
+    border: 1.5px solid #f0f0f0;
     cursor: pointer;
-    transition: background 0.15s;
+    transition: all 0.15s;
   }
-  .friend-item:active { background: #FFF8F0; }
+  .friend-item:active { transform: scale(0.985); }
   .friend-item.selected {
-    background: linear-gradient(135deg, #FFF8F0, #FFF0E6);
-    border-left: 3px solid #F27935;
-    margin-left: -20px;
+    background: #FFF8F0;
+    border-color: #F27935;
+    box-shadow: 0 2px 12px rgba(242,121,53,0.1);
   }
   .friend-avatar {
-    width: 48px;
-    height: 48px;
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .friend-avatar-text {
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 22px;
+    font-size: 20px;
     flex-shrink: 0;
     color: white;
     font-weight: 700;
   }
-  .friend-body { flex: 1; }
+  .friend-body { flex: 1; min-width: 0; }
   .friend-name {
-    font-size: 15px;
+    font-size: 16px;
     font-weight: 700;
     color: #222;
   }
+  .friend-name-sub {
+    font-weight: 400;
+    color: #aaa;
+    font-size: 13px;
+  }
   .friend-meta {
     font-size: 12px;
-    color: #aaa;
-    margin-top: 2px;
+    color: #bbb;
+    margin-top: 3px;
   }
   .friend-badge {
     background: linear-gradient(135deg, #FFB347, #F27935);
     color: #fff;
     font-size: 11px;
     font-weight: 700;
-    padding: 4px 10px;
+    padding: 5px 12px;
     border-radius: 12px;
     white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .friend-badge-off {
+    background: #f0f0f0;
+    color: #bbb;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 12px;
+    white-space: nowrap;
+    flex-shrink: 0;
   }
 
   /* ── Condition Card ── */
+  .condition-section {
+    background: #fff;
+    border-radius: 20px;
+    border: 1px solid #f0f0f0;
+    overflow: hidden;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 12px rgba(0,0,0,0.04);
+  }
   .condition-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 14px 16px;
-    margin: 0 -4px 8px;
-    background: #f8f8fa;
-    border-radius: 14px;
+    padding: 16px 20px;
+    border-bottom: 1px solid #f5f5f5;
   }
+  .condition-row:last-child { border-bottom: none; }
   .cond-label {
-    font-size: 13px;
+    font-size: 14px;
     color: #999;
     font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .cond-label-icon {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: #FFF0E6;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 14px;
   }
   .cond-value {
-    font-size: 14px;
+    font-size: 15px;
     font-weight: 700;
     color: #222;
   }
@@ -347,60 +430,86 @@
   .proxy-banner {
     background: linear-gradient(135deg, #FFB347, #F27935);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     margin: 0 -20px 16px;
-    font-size: 13px;
+    font-size: 14px;
     font-weight: 700;
     display: flex;
     align-items: center;
-    gap: 8px;
+    gap: 10px;
+  }
+  .proxy-banner-avatar {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255,255,255,0.5);
   }
 
   /* ── Action Buttons Row ── */
   .action-row {
     display: flex;
     gap: 10px;
-    margin-top: 4px;
+    margin-top: 8px;
   }
-  .action-row .btn-primary { flex: 1; margin-bottom: 0; font-size: 15px; padding: 14px; }
-  .action-row .btn-secondary { flex: 0.6; }
+  .action-row .btn-primary { flex: 1; margin-bottom: 0; font-size: 15px; padding: 16px; }
+  .action-row .btn-secondary { flex: 0.5; padding: 16px; }
 
   /* ── Reward Banner ── */
   .reward-banner {
-    background: linear-gradient(135deg, #FFB347, #F27935);
-    border-radius: 20px;
-    padding: 28px 20px;
+    background: linear-gradient(135deg, #FFB347 0%, #F27935 50%, #E8651A 100%);
+    border-radius: 24px;
+    padding: 36px 24px;
     text-align: center;
     color: white;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    box-shadow: 0 8px 32px rgba(242,121,53,0.3);
   }
-  .reward-icon { font-size: 48px; margin-bottom: 10px; }
-  .reward-title { font-size: 20px; font-weight: 800; line-height: 1.4; }
+  .reward-check {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 16px;
+  }
+  .reward-title { font-size: 22px; font-weight: 900; line-height: 1.5; letter-spacing: -0.3px; }
+  .reward-sub { font-size: 14px; opacity: 0.85; margin-top: 8px; font-weight: 500; }
   .reward-badge {
-    display: inline-block;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
     background: rgba(255,255,255,0.25);
-    padding: 8px 22px;
+    padding: 10px 24px;
     border-radius: 24px;
     font-size: 18px;
     font-weight: 900;
-    margin-top: 12px;
+    margin-top: 16px;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
 
   /* ── Push Preview ── */
   .push-preview {
     background: #f8f8fa;
     border-radius: 16px;
-    padding: 14px 18px;
-    margin-bottom: 16px;
+    padding: 16px 20px;
+    margin-bottom: 20px;
+    border: 1px solid #f0f0f0;
   }
   .push-label {
     font-size: 11px;
     color: #aaa;
     font-weight: 600;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
   }
   .push-text {
-    font-size: 14px;
+    font-size: 15px;
     color: #222;
     font-weight: 600;
     line-height: 1.5;
@@ -408,25 +517,23 @@
 
   /* ── Stats ── */
   .stats {
-    font-size: 13px;
-    color: #999;
-    text-align: center;
-    line-height: 1.6;
-    margin-bottom: 20px;
-  }
-
-  /* ── Avatar for profile header ── */
-  .avatar-large {
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
     display: flex;
-    align-items: center;
     justify-content: center;
+    gap: 24px;
+    margin-bottom: 24px;
+  }
+  .stat-item {
+    text-align: center;
+  }
+  .stat-num {
     font-size: 24px;
-    color: white;
-    font-weight: 700;
-    flex-shrink: 0;
+    font-weight: 900;
+    color: #F27935;
+  }
+  .stat-label {
+    font-size: 12px;
+    color: #999;
+    margin-top: 2px;
   }
 
   /* ── Profile Header ── */
@@ -434,17 +541,29 @@
     display: flex;
     align-items: center;
     gap: 14px;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
+    padding: 16px;
+    background: #FFF8F0;
+    border-radius: 16px;
+  }
+  .profile-header-avatar {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 3px solid #F27935;
   }
   .profile-header-name {
-    font-size: 17px;
+    font-size: 18px;
     font-weight: 800;
     color: #222;
   }
   .profile-header-sub {
-    font-size: 12px;
-    color: #aaa;
+    font-size: 13px;
+    color: #F27935;
     margin-top: 2px;
+    font-weight: 600;
   }
 
   /* ── FAB ── */
@@ -457,16 +576,91 @@
     color: white;
     border: none;
     border-radius: 28px;
-    padding: 14px 24px;
+    padding: 14px 28px;
     font-size: 15px;
     font-weight: 700;
-    box-shadow: 0 4px 18px rgba(242,121,53,0.35);
+    box-shadow: 0 4px 24px rgba(242,121,53,0.4);
     cursor: pointer;
     z-index: 10;
     white-space: nowrap;
     transition: transform 0.1s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
   }
   .fab:active { transform: translateX(-50%) scale(0.96); }
+
+  /* ── Browsing large card ── */
+  .browse-card {
+    background: #fff;
+    border-radius: 24px;
+    overflow: hidden;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.08);
+  }
+  .browse-card-photo {
+    width: 100%;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+  }
+  .browse-card-overlay {
+    position: relative;
+  }
+  .browse-card-overlay .rec-badge {
+    position: absolute;
+    top: 14px;
+    left: 14px;
+    background: rgba(255,255,255,0.95);
+    color: #F27935;
+    font-size: 12px;
+    font-weight: 700;
+    padding: 6px 14px;
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .browse-card-overlay .rec-badge img {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+  .browse-card-overlay .photo-count {
+    position: absolute;
+    bottom: 14px;
+    right: 14px;
+    background: rgba(0,0,0,0.4);
+    color: #fff;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 12px;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+  }
+  .browse-card-info {
+    padding: 18px 20px 20px;
+  }
+  .browse-card-info .profile-detail {
+    margin-top: 6px;
+  }
+
+  /* ── Back button ── */
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 14px;
+    color: #999;
+    font-weight: 600;
+    cursor: pointer;
+    padding: 12px 0 8px;
+    transition: color 0.15s;
+  }
+  .back-btn:active { color: #666; }
 
   /* fade-in for screens */
   @keyframes fadeUp {
@@ -474,6 +668,39 @@
     to { opacity: 1; transform: translateY(0); }
   }
   .screen.active { animation: fadeUp 0.3s ease-out; }
+
+  /* ── Matched profile card ── */
+  .match-card {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 16px;
+    background: #FFF8F0;
+    border-radius: 16px;
+    margin-bottom: 16px;
+    border: 1px solid #FFE0C4;
+  }
+  .match-card-photo {
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+  }
+  .match-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+  .match-card-name {
+    font-size: 16px;
+    font-weight: 800;
+    color: #222;
+  }
+  .match-card-detail {
+    font-size: 13px;
+    color: #999;
+    margin-top: 2px;
+  }
 </style>
 </head>
 <body>
@@ -490,47 +717,64 @@
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 1: 대신 찾아주기 시작 (메인 피드) -->
+  <!-- SCREEN 1: 메인 피드 (추천/새로운/인기) -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen active" id="s0">
 
     <div class="feed-tabs">
-      <div class="feed-tab active">추천</div>
-      <div class="feed-tab">탐색</div>
-      <div class="feed-tab">내 소개</div>
+      <div class="feed-tab active">추천 <span class="tab-count">3</span></div>
+      <div class="feed-tab">새로운</div>
+      <div class="feed-tab">인기</div>
     </div>
 
+    <div style="height:16px;"></div>
+
+    <!-- Card 1: 서연 -->
     <div class="profile-card">
-      <div class="profile-img" style="background: linear-gradient(135deg, #FFD4B8, #FFB088);">
-        <div class="silhouette">
-          <div class="silhouette-circle"></div>
-          <div class="silhouette-body"></div>
+      <div class="profile-card-photo-wrap">
+        <img class="profile-card-photo" src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&q=80" alt="서연">
+        <div class="photo-gradient"></div>
+        <div class="photo-badge">사진 3장</div>
+      </div>
+      <div class="profile-info">
+        <div class="profile-name-row">
+          <span class="profile-name">서연</span>
+          <span class="profile-age">26</span>
         </div>
+        <div class="profile-detail">서울 강남 / 마케터</div>
+        <div class="profile-rec">
+          <img class="profile-rec-avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=100&q=80" alt="">
+          "같이 있으면 시간 가는 줄 몰라요" - 지은
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 2: 도윤 -->
+    <div class="profile-card">
+      <div class="profile-card-photo-wrap">
+        <img class="profile-card-photo" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=80" alt="도윤">
+        <div class="photo-gradient"></div>
         <div class="photo-badge">사진 2장</div>
       </div>
       <div class="profile-info">
-        <div class="profile-name">서연, 26</div>
-        <div class="profile-detail">서울 / 대학생</div>
-        <div class="profile-rec">"밝고 에너지 넘쳐요" — 지은 소개</div>
-      </div>
-    </div>
-
-    <div class="profile-card" style="opacity: 0.5;">
-      <div class="profile-img" style="background: linear-gradient(135deg, #B8D4FF, #88B0FF); height: 100px;">
-        <div class="silhouette">
-          <div class="silhouette-circle" style="width:44px; height:44px; top:10px;"></div>
-          <div class="silhouette-body" style="width:74px; height:50px;"></div>
+        <div class="profile-name-row">
+          <span class="profile-name">도윤</span>
+          <span class="profile-age">27</span>
         </div>
-      </div>
-      <div class="profile-info" style="padding: 10px 18px 12px;">
-        <div class="profile-name">도윤, 27</div>
-        <div class="profile-detail">서울 / 직장인</div>
+        <div class="profile-detail">서울 성수 / 개발자</div>
+        <div class="profile-rec">
+          <img class="profile-rec-avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=100&q=80" alt="">
+          "진짜 든든한 사람이에요" - 현우
+        </div>
       </div>
     </div>
 
     <div style="height: 80px;"></div>
 
-    <button class="fab" onclick="goTo(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>대신 찾아주기</button>
+    <button class="fab" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+      친구 대신 찾아주기
+    </button>
 
   </div>
 
@@ -539,40 +783,56 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s1">
 
-    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
+    <div class="back-btn" onclick="goTo(0)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polyline points="15 18 9 12 15 6"/></svg>
+      뒤로
+    </div>
 
     <div class="prompt">누구를 위해 찾아줄까?</div>
-    <div class="screen-sub">소개받고 싶어요 ON인 친구만 표시돼요</div>
+    <div class="screen-sub">소개받기를 켠 친구만 보여요</div>
 
+    <!-- 태양 (selected) -->
     <div class="friend-item selected" onclick="goTo(2)">
-      <div class="friend-avatar" style="background: #F27935;">태</div>
+      <img class="friend-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&q=80" alt="태양">
       <div class="friend-body">
-        <div class="friend-name">태양 <span style="font-weight:400; color:#aaa; font-size:13px;">(25, 남)</span></div>
-        <div class="friend-meta">최근 활동 2시간 전</div>
+        <div class="friend-name">태양 <span class="friend-name-sub">25세, 남</span></div>
+        <div class="friend-meta">방금 접속</div>
       </div>
       <span class="friend-badge">소개 ON</span>
     </div>
 
-    <div class="friend-item">
-      <div class="friend-avatar" style="background: #FF8A65;">지</div>
+    <!-- 지수 -->
+    <div class="friend-item" onclick="goTo(2)">
+      <img class="friend-avatar" src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
       <div class="friend-body">
-        <div class="friend-name">지수 <span style="font-weight:400; color:#aaa; font-size:13px;">(27, 여)</span></div>
-        <div class="friend-meta">최근 활동 5시간 전</div>
+        <div class="friend-name">지수 <span class="friend-name-sub">27세, 여</span></div>
+        <div class="friend-meta">5시간 전 접속</div>
       </div>
       <span class="friend-badge">소개 ON</span>
     </div>
 
-    <div class="friend-item">
-      <div class="friend-avatar" style="background: #FFB347;">현</div>
+    <!-- 현우 -->
+    <div class="friend-item" onclick="goTo(2)">
+      <img class="friend-avatar" src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80" alt="현우">
       <div class="friend-body">
-        <div class="friend-name">현우 <span style="font-weight:400; color:#aaa; font-size:13px;">(24, 남)</span></div>
-        <div class="friend-meta">최근 활동 1일 전</div>
+        <div class="friend-name">현우 <span class="friend-name-sub">24세, 남</span></div>
+        <div class="friend-meta">어제 접속</div>
       </div>
       <span class="friend-badge">소개 ON</span>
     </div>
 
-    <div style="height: 30px;"></div>
-    <div class="hint"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#FFB347;border-radius:50%;color:#fff;font-size:11px;font-weight:800;vertical-align:-3px;margin-right:4px;">!</span> 친구가 "소개받고 싶어요"를 켜야 여기에 표시돼요</div>
+    <!-- 수빈 (OFF) -->
+    <div class="friend-item" style="opacity:0.5;">
+      <img class="friend-avatar" src="https://images.unsplash.com/photo-1517841905240-472988babdf9?w=200&q=80" alt="수빈" style="filter: grayscale(50%);">
+      <div class="friend-body">
+        <div class="friend-name">수빈 <span class="friend-name-sub">26세, 여</span></div>
+        <div class="friend-meta">소개받기 꺼둔 상태</div>
+      </div>
+      <span class="friend-badge-off">OFF</span>
+    </div>
+
+    <div style="height: 24px;"></div>
+    <div class="hint">친구가 '소개받고 싶어요'를 켜야 여기에 나타나요</div>
 
   </div>
 
@@ -581,39 +841,43 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s2">
 
-    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
+    <div class="back-btn" onclick="goTo(1)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:18px;height:18px;"><polyline points="15 18 9 12 15 6"/></svg>
+      뒤로
+    </div>
 
-    <div class="prompt">태양의 선호 조건</div>
+    <div class="prompt">태양이가 원하는 사람</div>
+    <div class="screen-sub">이 조건에 맞는 사람을 찾아보세요</div>
 
     <div class="profile-header">
-      <div class="avatar-large" style="background: #F27935;">태</div>
+      <img class="profile-header-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=200&q=80" alt="태양">
       <div>
-        <div class="profile-header-name">태양이 원하는 사람</div>
-        <div class="profile-header-sub">선호 조건을 확인해보세요</div>
+        <div class="profile-header-name">태양의 이상형</div>
+        <div class="profile-header-sub">조건 4개 설정됨</div>
       </div>
     </div>
 
-    <div class="condition-row">
-      <span class="cond-label">나이</span>
-      <span class="cond-value">23~28세</span>
-    </div>
-    <div class="condition-row">
-      <span class="cond-label">지역</span>
-      <span class="cond-value">서울</span>
-    </div>
-    <div class="condition-row">
-      <span class="cond-label">키</span>
-      <span class="cond-value">160cm 이상</span>
-    </div>
-    <div class="condition-row">
-      <span class="cond-label">관심사</span>
-      <span class="cond-value">운동, 음악</span>
+    <div class="condition-section">
+      <div class="condition-row">
+        <span class="cond-label"><span class="cond-label-icon">🎂</span> 나이</span>
+        <span class="cond-value">23 ~ 28세</span>
+      </div>
+      <div class="condition-row">
+        <span class="cond-label"><span class="cond-label-icon">📍</span> 지역</span>
+        <span class="cond-value">서울</span>
+      </div>
+      <div class="condition-row">
+        <span class="cond-label"><span class="cond-label-icon">📏</span> 키</span>
+        <span class="cond-value">160cm 이상</span>
+      </div>
+      <div class="condition-row">
+        <span class="cond-label"><span class="cond-label-icon">💛</span> 관심사</span>
+        <span class="cond-value">운동, 음악</span>
+      </div>
     </div>
 
-    <div style="height: 24px;"></div>
-
-    <div class="btn-primary" onclick="goTo(3)">이 조건으로 탐색 →</div>
-    <div class="btn-skip" onclick="goTo(1)">조건 수정하기</div>
+    <div class="btn-primary" onclick="goTo(3)">이 조건으로 탐색 시작</div>
+    <div class="btn-skip" onclick="goTo(1)">다른 친구 선택하기</div>
 
   </div>
 
@@ -622,55 +886,98 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s3">
 
-    <div class="proxy-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 태양을 위해 탐색 중</div>
+    <div class="proxy-banner">
+      <img class="proxy-banner-avatar" src="https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=100&q=80" alt="">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      태양을 위해 탐색 중
+    </div>
 
-    <div class="profile-card">
-      <div style="padding: 12px 18px 6px;">
-        <div class="profile-rec">"성격 진짜 좋아" — 도윤이 소개</div>
-      </div>
-      <div class="profile-img" style="background: linear-gradient(135deg, #FFD4B8, #FFB088);">
-        <div class="silhouette">
-          <div class="silhouette-circle"></div>
-          <div class="silhouette-body"></div>
+    <div class="browse-card">
+      <div class="browse-card-overlay">
+        <img class="browse-card-photo" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=400&q=80" alt="하은">
+        <div class="rec-badge">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="">
+          도윤이 소개
         </div>
-        <div class="photo-badge">사진 3장</div>
+        <div class="photo-count">1 / 3</div>
       </div>
-      <div class="profile-info">
-        <div class="profile-name">하은, 25</div>
-        <div class="profile-detail">서울 / 163cm / 운동, 요리</div>
+      <div class="browse-card-info">
+        <div class="profile-name-row">
+          <span class="profile-name">하은</span>
+          <span class="profile-age">25</span>
+        </div>
+        <div class="profile-detail">서울 합정 / 163cm</div>
+        <div class="profile-tags">
+          <span class="profile-tag match">운동</span>
+          <span class="profile-tag">요리</span>
+          <span class="profile-tag match">음악</span>
+          <span class="profile-tag">여행</span>
+        </div>
+        <div class="profile-rec" style="margin-top:12px;">
+          <img class="profile-rec-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="">
+          "성격 진짜 좋고 밝은 에너지가 매력이에요"
+        </div>
       </div>
     </div>
 
     <div class="action-row">
-      <button class="btn-primary" onclick="goTo(4)">태양에게 소개</button>
-      <button class="btn-secondary">패스</button>
+      <button class="btn-primary" onclick="goTo(4)">태양에게 소개하기</button>
+      <button class="btn-secondary">넘기기</button>
     </div>
 
-    <div style="height: 20px;"></div>
-    <div class="btn-skip" onclick="goTo(0)">← 내 피드로 돌아가기</div>
+    <div class="btn-skip" onclick="goTo(0)">내 피드로 돌아가기</div>
 
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 5: 전송 완료 + 알림 -->
+  <!-- SCREEN 5: 전송 완료 + 리워드 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s4">
 
-    <div style="height: 20px;"></div>
+    <div style="height: 24px;"></div>
 
     <div class="reward-banner">
-      <div class="reward-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.25)" stroke="white"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></div>
+      <div class="reward-check">
+        <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:32px;height:32px;"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
       <div class="reward-title">태양에게<br>하은을 소개했어요!</div>
-      <div class="reward-badge"><svg viewBox="0 0 24 24" fill="white" stroke="none" style="width:14px;height:14px;vertical-align:-2px;margin-right:2px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg> 썬구리 +5</div>
+      <div class="reward-sub">태양이에게 알림이 전송됐어요</div>
+      <div class="reward-badge">
+        <svg viewBox="0 0 24 24" fill="white" stroke="none" style="width:16px;height:16px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg>
+        썬구리 +5
+      </div>
+    </div>
+
+    <div class="match-card">
+      <img class="match-card-photo" src="https://images.unsplash.com/photo-1529626455594-4ff0802cfb7e?w=200&q=80" alt="하은">
+      <div class="match-card-info">
+        <div class="match-card-name">하은, 25</div>
+        <div class="match-card-detail">서울 합정 / 163cm</div>
+      </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#F27935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:20px;height:20px;flex-shrink:0;"><polyline points="9 18 15 12 9 6"/></svg>
     </div>
 
     <div class="push-preview">
-      <div class="push-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:-1px;margin-right:2px;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> 태양에게 알림</div>
-      <div class="push-text">민준이가 너한테 어울릴 사람을 찾았어!</div>
+      <div class="push-label">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg>
+        태양에게 보낸 알림
+      </div>
+      <div class="push-text">"민준이가 너한테 어울릴 사람을 찾았어! 확인해봐 👀"</div>
     </div>
 
     <div class="stats">
-      오늘 태양을 위해 <strong style="color:#F27935;">3명</strong> 탐색, <strong style="color:#F27935;">1명</strong> 소개
+      <div class="stat-item">
+        <div class="stat-num">3</div>
+        <div class="stat-label">오늘 탐색</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">1</div>
+        <div class="stat-label">소개 완료</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">15</div>
+        <div class="stat-label">보유 썬구리</div>
+      </div>
     </div>
 
     <div class="btn-primary" onclick="goTo(3)">계속 탐색하기</div>
@@ -702,7 +1009,7 @@ function goTo(step) {
 
   // hide FAB on non-first screens
   const fab = document.querySelector('.fab');
-  if (fab) fab.style.display = step === 0 ? 'block' : 'none';
+  if (fab) fab.style.display = step === 0 ? 'flex' : 'none';
 
   // scroll to top on screen change
   document.getElementById('s' + step).scrollTop = 0;

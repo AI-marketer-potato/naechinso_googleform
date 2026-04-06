@@ -47,7 +47,7 @@
   .step-dot.done { background: #F27935; }
   .step-dot.current { background: linear-gradient(90deg, #FFB347, #F27935); }
 
-  /* ── Section Label (between Flow F/G) ── */
+  /* ── Section Label ── */
   .section-label {
     display: flex;
     align-items: center;
@@ -106,8 +106,6 @@
   }
   .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
   .tab-item.active { color: #F27935; font-weight: 700; }
-
-  /* ── Tab icon styled circles ── */
   .tab-icon-circle {
     width: 24px;
     height: 24px;
@@ -189,114 +187,258 @@
     font-size: 13px;
   }
 
-  /* ── KakaoTalk ── */
+  /* ── KakaoTalk (realistic) ── */
+  .kakao-statusbar {
+    background: #A8B9CA;
+    padding: 4px 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: #333;
+    font-weight: 600;
+    flex-shrink: 0;
+  }
   .kakao-header {
-    background: #3C1E1E;
-    padding: 14px 20px 12px;
+    background: #A8B9CA;
+    padding: 8px 12px 10px;
     display: flex;
     align-items: center;
     gap: 10px;
     font-size: 16px;
     font-weight: 700;
-    color: #fff;
+    color: #222;
     flex-shrink: 0;
+    border-bottom: 1px solid #9AACBE;
   }
-  .kakao-header .back { color: #fff; font-size: 20px; cursor: pointer; }
+  .kakao-header .back { color: #222; font-size: 20px; cursor: pointer; }
   .kakao-body {
     flex: 1;
     background: #B2C7D9;
-    padding: 16px 20px;
+    padding: 16px 14px;
     display: flex;
     flex-direction: column;
     gap: 10px;
     overflow-y: auto;
+  }
+  .kakao-date {
+    text-align: center;
+    font-size: 11px;
+    color: #7A8D9E;
+    padding: 4px 10px;
+    background: rgba(0,0,0,0.06);
+    border-radius: 12px;
+    align-self: center;
+    margin-bottom: 4px;
   }
   .kakao-msg-row {
     display: flex;
     align-items: flex-start;
     gap: 8px;
   }
+  .kakao-msg-row .kakao-sender {
+    font-size: 11px;
+    font-weight: 700;
+    color: #444;
+    margin-bottom: 2px;
+  }
   .kakao-avatar {
     width: 36px;
     height: 36px;
+    border-radius: 10px;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: #ccc;
+  }
+  .kakao-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .kakao-bubble {
+    background: #fff;
     border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #222;
+    max-width: 75%;
+    line-height: 1.5;
+    align-self: flex-start;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .kakao-bubble-my {
+    background: #FEE500;
+    border-radius: 12px;
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #222;
+    max-width: 75%;
+    line-height: 1.5;
+    align-self: flex-end;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.06);
+  }
+  .kakao-time {
+    font-size: 10px;
+    color: #7A8D9E;
+    align-self: flex-end;
+    margin-bottom: 2px;
+    flex-shrink: 0;
+  }
+  /* Kakao link card */
+  .kakao-link-card {
+    background: #fff;
+    border-radius: 12px;
+    overflow: hidden;
+    max-width: 240px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+  }
+  .kakao-link-card .card-banner {
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    padding: 14px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .kakao-link-card .card-banner .card-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.25);
     display: flex;
     align-items: center;
     justify-content: center;
+  }
+  .kakao-link-card .card-banner .card-title {
     font-size: 14px;
     font-weight: 800;
     color: #fff;
-    flex-shrink: 0;
   }
-  .kakao-bubble {
-    background: #FEE500;
-    border-radius: 16px;
+  .kakao-link-card .card-banner .card-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.8);
+  }
+  .kakao-link-card .card-body {
     padding: 12px 14px;
-    font-size: 14px;
-    color: #222;
-    max-width: 85%;
+    font-size: 13px;
+    color: #555;
     line-height: 1.5;
-    align-self: flex-start;
   }
-  .kakao-bubble .kakao-title {
-    font-weight: 800;
-    font-size: 15px;
-    margin-bottom: 4px;
-  }
-  .kakao-bubble .kakao-sub {
-    font-size: 12px;
-    color: #666;
-    margin-top: 4px;
-  }
-  .kakao-btn {
+  .kakao-link-card .card-btn {
     display: block;
-    background: #222;
-    color: #FEE500;
-    border-radius: 10px;
     padding: 10px 0;
     text-align: center;
     font-size: 13px;
     font-weight: 700;
-    margin-top: 10px;
+    color: #222;
+    border-top: 1px solid #eee;
     cursor: pointer;
   }
-  .kakao-plain {
+  .kakao-input-bar {
     background: #fff;
-    border-radius: 16px;
-    padding: 10px 14px;
-    font-size: 14px;
-    color: #222;
-    max-width: 75%;
-    align-self: flex-start;
-  }
-
-  /* ── Browser Bar ── */
-  .browser-bar {
-    background: #f5f5f5;
-    padding: 10px 16px;
     display: flex;
     align-items: center;
     gap: 8px;
+    padding: 8px 12px;
+    border-top: 1px solid #ddd;
     flex-shrink: 0;
   }
-  .browser-dots {
+  .kakao-input-bar .plus-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #e0e0e0;
     display: flex;
-    gap: 4px;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: #999;
+    flex-shrink: 0;
   }
-  .browser-dots span {
-    width: 8px; height: 8px; border-radius: 50%; background: #ccc;
+  .kakao-input-bar .input-field {
+    flex: 1;
+    padding: 8px 12px;
+    background: #f5f5f5;
+    border-radius: 18px;
+    font-size: 13px;
+    color: #bbb;
+  }
+  .kakao-input-bar .send-icon {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: #bbb;
+  }
+
+  /* ── Browser Chrome ── */
+  .browser-chrome {
+    background: #f2f2f2;
+    flex-shrink: 0;
+  }
+  .browser-tab-bar {
+    display: flex;
+    align-items: center;
+    padding: 6px 12px 0;
+    gap: 0;
+  }
+  .browser-tab {
+    background: #fff;
+    border-radius: 8px 8px 0 0;
+    padding: 6px 14px;
+    font-size: 11px;
+    font-weight: 600;
+    color: #333;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    max-width: 160px;
+  }
+  .browser-tab .tab-favicon {
+    width: 14px;
+    height: 14px;
+    border-radius: 3px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    flex-shrink: 0;
+  }
+  .browser-tab .tab-close {
+    font-size: 12px;
+    color: #aaa;
+    margin-left: auto;
+  }
+  .browser-address-bar {
+    background: #fff;
+    display: flex;
+    align-items: center;
+    padding: 4px 12px 8px;
+    gap: 8px;
+  }
+  .browser-nav-btns {
+    display: flex;
+    gap: 6px;
+    color: #ccc;
+    font-size: 14px;
   }
   .url-box {
     flex: 1;
-    background: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 6px 10px;
-    font-size: 11px;
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    border-radius: 20px;
+    padding: 6px 12px;
+    font-size: 12px;
     color: #555;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .url-box .lock-icon {
+    color: #34C759;
+    font-size: 11px;
+    flex-shrink: 0;
   }
   .web-header {
     background: linear-gradient(135deg, #FFB347, #F27935);
@@ -305,6 +447,19 @@
     font-size: 15px;
     font-weight: 800;
     flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .web-header .web-logo {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
   }
 
   /* ── Profile Card ── */
@@ -312,57 +467,48 @@
     background: #fff;
     border: 1.5px solid #f0f0f0;
     border-radius: 18px;
-    padding: 16px;
+    padding: 20px;
     display: flex;
-    gap: 14px;
+    gap: 16px;
     align-items: center;
     box-shadow: 0 2px 12px rgba(0,0,0,0.04);
     margin-bottom: 16px;
   }
-  .profile-avatar {
-    width: 56px; height: 56px;
-    border-radius: 50%;
-    background: linear-gradient(135deg, #FFB347, #F27935);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 24px;
-    font-weight: 800;
-    flex-shrink: 0;
-  }
   .profile-avatar-large {
-    width: 72px; height: 72px;
+    width: 80px;
+    height: 80px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FFD4B0, #F27935);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    overflow: hidden;
     flex-shrink: 0;
     position: relative;
-    overflow: hidden;
+    border: 3px solid #FFF0E6;
+  }
+  .profile-avatar-large img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .profile-info { font-size: 13px; color: #555; line-height: 1.6; }
-  .profile-info .name { font-weight: 800; font-size: 16px; color: #222; }
+  .profile-info .name { font-weight: 800; font-size: 17px; color: #222; }
   .profile-info .tags { color: #F27935; font-size: 12px; font-weight: 600; margin-top: 2px; }
 
   /* ── Textarea ── */
   .textarea-mock {
     width: 100%;
-    border: 2px dashed #ddd;
+    border: 2px solid #f0f0f0;
     border-radius: 16px;
     padding: 16px;
     font-size: 14px;
     color: #222;
     min-height: 100px;
-    background: #f8f8fa;
+    background: #fafafa;
     line-height: 1.6;
     margin-bottom: 16px;
   }
 
   /* ── Chat ── */
   .chat-header {
-    padding: 14px 20px 10px;
+    padding: 12px 20px 10px;
     font-size: 15px;
     font-weight: 700;
     color: #222;
@@ -371,7 +517,21 @@
     gap: 8px;
     border-bottom: 1px solid #f0f0f0;
     flex-shrink: 0;
+    background: #fff;
   }
+  .chat-header .member-avatars {
+    display: flex;
+    margin-left: auto;
+  }
+  .chat-header .member-avatars img {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    object-fit: cover;
+    margin-left: -6px;
+  }
+  .chat-header .member-avatars img:first-child { margin-left: 0; }
   .chat-header .matchmaker-tag {
     font-size: 10px;
     font-weight: 700;
@@ -382,11 +542,11 @@
   }
   .chat-body {
     flex: 1;
-    background: #fafafa;
-    padding: 16px 20px;
+    background: #f7f7f8;
+    padding: 16px 16px;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
     overflow-y: auto;
   }
   .chat-row {
@@ -398,7 +558,6 @@
   .chat-row.left { align-items: flex-start; }
   .chat-row.center { align-items: center; }
 
-  /* Chat row with avatar */
   .chat-row-with-avatar {
     display: flex;
     gap: 8px;
@@ -417,17 +576,17 @@
   }
 
   .chat-avatar-sm {
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    font-weight: 800;
-    color: #fff;
     flex-shrink: 0;
     margin-top: 2px;
+    overflow: hidden;
+  }
+  .chat-avatar-sm img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 
   .chat-name {
@@ -448,7 +607,7 @@
   }
   .chat-bubble {
     padding: 10px 14px;
-    border-radius: 16px;
+    border-radius: 18px;
     font-size: 14px;
     line-height: 1.5;
     max-width: 80%;
@@ -459,14 +618,16 @@
     border-bottom-right-radius: 4px;
   }
   .chat-bubble.gray {
-    background: #eee;
+    background: #fff;
     color: #333;
     border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
   .chat-bubble.blue {
-    background: #DEEAFF;
+    background: #E8F0FE;
     color: #333;
     border-bottom-left-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
   }
   .chat-system {
     background: rgba(0,0,0,0.05);
@@ -481,10 +642,11 @@
     display: flex;
     gap: 8px;
     align-items: center;
-    background: #f2f2f2;
+    background: #fff;
     border-radius: 24px;
-    padding: 10px 14px;
+    padding: 8px 10px 8px 16px;
     margin-top: auto;
+    border: 1px solid #e8e8e8;
   }
   .chat-input .placeholder {
     flex: 1;
@@ -507,29 +669,32 @@
   .popup-overlay {
     position: absolute;
     inset: 0;
-    background: rgba(0,0,0,0.4);
+    background: rgba(0,0,0,0.5);
     display: flex;
     align-items: center;
     justify-content: center;
     z-index: 20;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
   }
   .popup-card {
     background: #fff;
-    border-radius: 24px;
+    border-radius: 20px;
     padding: 28px 24px 20px;
-    width: 88%;
+    width: 85%;
     text-align: center;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.12);
+    box-shadow: 0 12px 40px rgba(0,0,0,0.15);
   }
   .popup-card .popup-icon {
-    width: 56px;
-    height: 56px;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
     background: linear-gradient(135deg, #FFB347, #F27935);
     display: flex;
     align-items: center;
     justify-content: center;
-    margin: 0 auto 12px;
+    margin: 0 auto 14px;
+    box-shadow: 0 4px 16px rgba(242,121,53,0.3);
   }
   .popup-card h3 {
     font-size: 18px;
@@ -541,6 +706,7 @@
     font-size: 13px;
     color: #999;
     margin-bottom: 16px;
+    line-height: 1.5;
   }
   .popup-btns {
     display: flex;
@@ -569,48 +735,55 @@
     cursor: pointer;
   }
 
-  /* ── Reward Badge (chat inline) ── */
+  /* ── Reward Badge ── */
   .reward-badge {
-    background: linear-gradient(135deg, #FFF0E6, #FFE8D0);
-    border: 1.5px solid #F27935;
-    border-radius: 14px;
-    padding: 12px 16px;
+    background: linear-gradient(135deg, #FFF8F0, #FFF0E0);
+    border: 2px solid #F27935;
+    border-radius: 16px;
+    padding: 14px 18px;
     text-align: center;
     font-size: 14px;
     font-weight: 800;
     color: #F27935;
-    margin-top: 4px;
+    margin-top: 6px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: 10px;
+    box-shadow: 0 2px 12px rgba(242,121,53,0.15);
+    position: relative;
+    overflow: hidden;
+  }
+  .reward-badge::before {
+    content: '';
+    position: absolute;
+    top: -10px;
+    right: -10px;
+    width: 40px;
+    height: 40px;
+    background: rgba(242,121,53,0.08);
+    border-radius: 50%;
+  }
+  .reward-badge::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: -8px;
+    width: 30px;
+    height: 30px;
+    background: rgba(242,121,53,0.06);
+    border-radius: 50%;
   }
   .reward-star {
-    width: 24px;
-    height: 24px;
+    width: 28px;
+    height: 28px;
     background: linear-gradient(135deg, #FFB347, #F27935);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-  }
-
-  /* ── Styled Icon Circle (replaces emojis) ── */
-  .icon-circle {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    flex-shrink: 0;
-  }
-  .icon-circle-lg {
-    width: 56px;
-    height: 56px;
-  }
-  .icon-circle-xl {
-    width: 64px;
-    height: 64px;
+    box-shadow: 0 2px 8px rgba(242,121,53,0.3);
   }
 
   /* ── Match celebration ── */
@@ -618,19 +791,21 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 12px;
-    margin-bottom: 16px;
+    gap: 14px;
+    margin-bottom: 20px;
   }
   .match-avatar {
-    width: 56px;
-    height: 56px;
+    width: 64px;
+    height: 64px;
     border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-    font-weight: 800;
-    color: #fff;
+    overflow: hidden;
+    border: 3px solid #FFF0E6;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  }
+  .match-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
   .match-connector {
     display: flex;
@@ -640,9 +815,10 @@
     height: 40px;
     border-radius: 50%;
     background: linear-gradient(135deg, #FFB347, #F27935);
+    box-shadow: 0 2px 10px rgba(242,121,53,0.3);
   }
 
-  /* ── Hint / Notes ── */
+  /* ── Misc ── */
   .hint {
     font-size: 12px;
     color: #888;
@@ -697,16 +873,16 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen active" id="s0">
 
-    <div style="text-align:center; margin-top:20px; margin-bottom:24px;">
-      <div style="margin: 0 auto 12px;">
-        <div style="width:64px; height:64px; border-radius:50%; background:linear-gradient(135deg, #FFB347, #F27935); display:flex; align-items:center; justify-content:center; margin:0 auto;">
+    <div style="text-align:center; margin-top:24px; margin-bottom:28px;">
+      <div style="margin: 0 auto 14px;">
+        <div style="width:68px; height:68px; border-radius:50%; background:linear-gradient(135deg, #FFB347, #F27935); display:flex; align-items:center; justify-content:center; margin:0 auto; box-shadow: 0 4px 16px rgba(242,121,53,0.25);">
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-            <path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" fill="white"/>
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" fill="white"/>
           </svg>
         </div>
       </div>
-      <div style="font-size:22px; font-weight:800; line-height:1.5;">연애 중인 친구도<br>주선할 수 있어요!</div>
-      <div style="font-size:13px; color:#aaa; margin-top:8px;">앱 설치 없이 웹에서 바로 참여</div>
+      <div style="font-size:22px; font-weight:800; line-height:1.5;">연애 중인 친구도<br>주선할 수 있어</div>
+      <div style="font-size:14px; color:#888; margin-top:10px; line-height:1.6;">앱 없어도 돼, 링크만 보내면 끝!</div>
     </div>
 
     <div class="btn-primary" onclick="goTo(1)">초대 링크 만들기</div>
@@ -733,33 +909,86 @@
       <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
     </div>
 
-    <div style="margin:8px 20px 12px; font-size:10px; color:#bbb; font-weight:600; letter-spacing:0.5px;">KAKAOTALK PREVIEW</div>
+    <div style="margin:4px 20px 8px; font-size:10px; color:#bbb; font-weight:600; letter-spacing:0.5px;">KAKAOTALK PREVIEW</div>
 
-    <div class="kakao-header">
-      <span class="back">←</span>
-      <div class="kakao-avatar" style="background:#5B86E5; width:28px; height:28px; border-radius:8px; font-size:12px;">태</div>
-      태양
+    <!-- Kakao status bar -->
+    <div class="kakao-statusbar">
+      <span>9:41</span>
+      <span style="display:flex; gap:4px; align-items:center;">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#333"><path d="M1 9l2 2c4.97-4.97 13.03-4.97 18 0l2-2C16.93 2.93 7.08 2.93 1 9zm8 8l3 3 3-3c-1.65-1.66-4.34-1.66-6 0zm-4-4l2 2c2.76-2.76 7.24-2.76 10 0l2-2C15.14 9.14 8.87 9.14 5 13z"/></svg>
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="#333"><path d="M15.67 4H14V2h-4v2H8.33C7.6 4 7 4.6 7 5.33v15.33C7 21.4 7.6 22 8.33 22h7.33c.74 0 1.34-.6 1.34-1.33V5.33C17 4.6 16.4 4 15.67 4z"/></svg>
+      </span>
     </div>
-    <div class="kakao-body">
-      <div class="kakao-msg-row">
-        <div class="kakao-avatar" style="background:#5B86E5;">태</div>
-        <div class="kakao-plain">ㅋㅋ 점심 뭐 먹지</div>
-      </div>
 
+    <!-- Kakao header -->
+    <div class="kakao-header">
+      <span class="back" onclick="goTo(0)">&#8249;</span>
+      <div class="kakao-avatar" style="width:32px; height:32px; border-radius:10px;">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+      </div>
+      <span>태양</span>
+      <span style="margin-left:auto; display:flex; gap:12px; color:#555;">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#555"><path d="M20 15.5c-1.25 0-2.45-.2-3.57-.57a1.02 1.02 0 00-1.02.24l-2.2 2.2a15.045 15.045 0 01-6.59-6.59l2.2-2.21a.96.96 0 00.25-1A11.36 11.36 0 018.5 4c0-.55-.45-1-1-1H4c-.55 0-1 .45-1 1 0 9.39 7.61 17 17 17 .55 0 1-.45 1-1v-3.5c0-.55-.45-1-1-1z"/></svg>
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="#555"><path d="M3 18h18v-2H3v2zm0-5h18v-2H3v2zm0-7v2h18V6H3z"/></svg>
+      </span>
+    </div>
+
+    <!-- Kakao chat body -->
+    <div class="kakao-body">
+      <div class="kakao-date">2026년 4월 5일 토요일</div>
+
+      <!-- Other person's message -->
       <div class="kakao-msg-row">
-        <div class="kakao-avatar" style="background:#5B86E5;">태</div>
-        <div class="kakao-bubble" style="max-width:85%;">
-          <div style="display:flex; align-items:center; gap:8px; margin-bottom:6px;">
-            <div style="width:24px; height:24px; border-radius:6px; background:linear-gradient(135deg, #FFB347, #F27935); display:flex; align-items:center; justify-content:center;">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            </div>
-            <div class="kakao-title" style="margin-bottom:0;">내친소</div>
+        <div class="kakao-avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
+        <div>
+          <div class="kakao-sender">태양</div>
+          <div style="display:flex; gap:4px; align-items:flex-end;">
+            <div class="kakao-bubble">야 민준아 점심 뭐 먹지 ㅋㅋ</div>
+            <div class="kakao-time">오후 12:31</div>
           </div>
-          <div>태양이가 너한테 주선자 역할을 부탁했어!</div>
-          <div class="kakao-sub">앱 설치 없이 바로 참여 가능</div>
-          <div class="kakao-btn" onclick="goTo(2)">주선 시작하기 →</div>
         </div>
       </div>
+
+      <!-- My reply -->
+      <div style="display:flex; justify-content:flex-end; gap:4px; align-items:flex-end;">
+        <div class="kakao-time">오후 12:32</div>
+        <div class="kakao-bubble-my">치킨 ㄱ?</div>
+      </div>
+
+      <!-- Link card message -->
+      <div class="kakao-msg-row">
+        <div class="kakao-avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
+        <div>
+          <div class="kakao-sender">태양</div>
+          <div style="display:flex; gap:4px; align-items:flex-end;">
+            <div class="kakao-link-card">
+              <div class="card-banner">
+                <div class="card-icon">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+                </div>
+                <div>
+                  <div class="card-title">내친소</div>
+                  <div class="card-sub">친구 소개팅 앱</div>
+                </div>
+              </div>
+              <div class="card-body">야 나 소개팅 시켜줘 ㅋㅋ<br>너 주변에 괜찮은 사람 있으면 추천 좀!</div>
+              <div class="card-btn" onclick="goTo(2)">주선 시작하기 &#8250;</div>
+            </div>
+            <div class="kakao-time">오후 12:33</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Kakao input bar -->
+    <div class="kakao-input-bar">
+      <div class="plus-btn">+</div>
+      <div class="input-field">메시지를 입력하세요</div>
+      <div class="send-icon">#</div>
     </div>
 
   </div>
@@ -773,36 +1002,56 @@
       <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(1)">← 뒤로</div>
     </div>
 
-    <div class="browser-bar" style="margin-top:8px;">
-      <div class="browser-dots"><span></span><span></span><span></span></div>
-      <div class="url-box">naechinso.app/invite/abc123</div>
+    <!-- Browser chrome -->
+    <div class="browser-chrome" style="margin-top:6px;">
+      <div class="browser-tab-bar">
+        <div class="browser-tab">
+          <div class="tab-favicon"></div>
+          <span>내친소 주선</span>
+          <span class="tab-close">x</span>
+        </div>
+      </div>
+      <div class="browser-address-bar">
+        <div class="browser-nav-btns">
+          <span>&#8249;</span>
+          <span>&#8250;</span>
+        </div>
+        <div class="url-box">
+          <span class="lock-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#34C759"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          </span>
+          naechinso.app/invite/abc123
+        </div>
+      </div>
     </div>
 
-    <div class="web-header">내친소 주선자 모드</div>
+    <div class="web-header">
+      <div class="web-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      내친소 주선자 모드
+    </div>
 
     <div style="padding:20px; overflow-y:auto; flex:1;">
-      <div style="font-size:16px; font-weight:800; color:#222; margin-bottom:16px;">이 사람, 태양이한테 어때요?</div>
+      <div style="font-size:17px; font-weight:800; color:#222; margin-bottom:16px; line-height:1.5;">태양이한테 이 사람 어때? 🤔</div>
 
       <div class="profile-card">
         <div class="profile-avatar-large">
-          <svg width="42" height="42" viewBox="0 0 64 64" fill="none">
-            <circle cx="32" cy="24" r="12" fill="rgba(255,255,255,0.7)"/>
-            <ellipse cx="32" cy="52" rx="18" ry="14" fill="rgba(255,255,255,0.5)"/>
-          </svg>
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
         </div>
         <div class="profile-info">
           <div class="name">지수, 27</div>
           <div>서울 / 마케팅 / ENFP</div>
-          <div class="tags">여행 / 맛집탐방 / 독서</div>
+          <div class="tags"># 여행 # 맛집탐방 # 독서</div>
         </div>
       </div>
 
       <div style="display:flex; gap:8px;">
         <div class="btn-primary" style="flex:1; margin-bottom:0;" onclick="goTo(3)">이 사람 추천!</div>
-        <div class="btn-ghost" style="flex:1;">다음 →</div>
+        <div class="btn-ghost" style="flex:1;">다음 프로필 &#8250;</div>
       </div>
 
-      <div class="hint" style="margin-top:14px;">추천사도 작성할 수 있어요</div>
+      <div class="hint" style="margin-top:14px;">한 줄 추천사도 남길 수 있어</div>
     </div>
 
   </div>
@@ -816,23 +1065,46 @@
       <div style="font-size:13px; color:#aaa; cursor:pointer;" onclick="goTo(2)">← 뒤로</div>
     </div>
 
-    <div class="browser-bar" style="margin-top:8px;">
-      <div class="browser-dots"><span></span><span></span><span></span></div>
-      <div class="url-box">naechinso.app/invite/abc123</div>
+    <!-- Browser chrome -->
+    <div class="browser-chrome" style="margin-top:6px;">
+      <div class="browser-tab-bar">
+        <div class="browser-tab">
+          <div class="tab-favicon"></div>
+          <span>내친소 주선</span>
+          <span class="tab-close">x</span>
+        </div>
+      </div>
+      <div class="browser-address-bar">
+        <div class="browser-nav-btns">
+          <span>&#8249;</span>
+          <span>&#8250;</span>
+        </div>
+        <div class="url-box">
+          <span class="lock-icon">
+            <svg width="10" height="10" viewBox="0 0 24 24" fill="#34C759"><path d="M18 8h-1V6c0-2.76-2.24-5-5-5S7 3.24 7 6v2H6c-1.1 0-2 .9-2 2v10c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V10c0-1.1-.9-2-2-2zM12 17c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zm3.1-9H8.9V6c0-1.71 1.39-3.1 3.1-3.1 1.71 0 3.1 1.39 3.1 3.1v2z"/></svg>
+          </span>
+          naechinso.app/invite/abc123
+        </div>
+      </div>
     </div>
 
-    <div class="web-header">내친소 주선자 모드</div>
+    <div class="web-header">
+      <div class="web-logo">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+      </div>
+      내친소 주선자 모드
+    </div>
 
     <div style="padding:20px; overflow-y:auto; flex:1;">
-      <div style="font-size:18px; font-weight:800; color:#222; line-height:1.5; margin-bottom:16px;">태양에게 이 사람을<br>추천하는 이유</div>
+      <div style="font-size:18px; font-weight:800; color:#222; line-height:1.5; margin-bottom:16px;">태양이한테<br>이 사람 왜 추천해?</div>
 
-      <div class="textarea-mock">걔 진짜 성격 좋아, 네 스타일일 듯!</div>
+      <div class="textarea-mock">걔 진짜 성격 좋아 ㅎㅎ 네 스타일일 듯! 여행도 좋아하고 활발한 편이야</div>
 
-      <div class="btn-primary" onclick="goTo(4)">추천 완료 →</div>
+      <div class="btn-primary" onclick="goTo(4)">추천 완료!</div>
 
       <div class="small-note">
-        내친소 앱에서 더 많은 친구를 소개해보세요<br>
-        <span class="accent">앱 설치하기 →</span>
+        내친소 앱에서 더 많은 친구를 소개해봐<br>
+        <span class="accent">앱 설치하기 &#8250;</span>
       </div>
     </div>
 
@@ -845,23 +1117,30 @@
 
     <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">← 뒤로</div>
 
-    <div style="text-align:center; margin-top:40px;">
+    <div style="text-align:center; margin-top:32px;">
       <!-- Match celebration visual -->
       <div class="match-visual">
-        <div class="match-avatar" style="background:linear-gradient(135deg, #5B86E5, #3A66C5);">태</div>
+        <div class="match-avatar">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
         <div class="match-connector">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="white">
             <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </div>
-        <div class="match-avatar" style="background:linear-gradient(135deg, #FF8A9B, #E8652B);">지</div>
+        <div class="match-avatar">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        </div>
       </div>
-      <div style="font-size:24px; font-weight:800; line-height:1.5;">태양 ↔ 지수<br>연결됐어요!</div>
-      <div style="font-size:14px; color:#888; margin-top:12px; line-height:1.6;">3자 채팅방을 만들까요?<br>주선자로서 첫 소개를 도와주세요</div>
+      <div style="font-size:24px; font-weight:800; line-height:1.5;">태양이랑 지수가<br>연결됐어!</div>
+      <div style="font-size:14px; color:#888; margin-top:12px; line-height:1.6;">3자 채팅방 만들어서<br>둘이 자연스럽게 이어줘</div>
     </div>
 
     <div style="height:32px;"></div>
     <div class="btn-primary" onclick="goTo(5)">채팅방 만들기</div>
+    <div style="text-align:center; margin-top:4px;">
+      <span style="font-size:12px; color:#bbb;">주선자로 첫 소개를 도와줘</span>
+    </div>
 
   </div>
 
@@ -875,49 +1154,73 @@
     </div>
 
     <div class="chat-header">
-      태양 · 지수 · 민준<span class="matchmaker-tag">주선자</span>
+      <span>태양 · 지수 · 민준</span>
+      <span class="matchmaker-tag">주선자</span>
+      <div class="member-avatars">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80" alt="민준">
+      </div>
     </div>
 
     <div class="chat-body">
+      <div class="chat-row center">
+        <div class="chat-system">민준님이 채팅방을 만들었습니다</div>
+      </div>
+
       <div class="chat-row-with-avatar">
-        <div class="chat-avatar-sm" style="background:#F27935;">민</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80" alt="민준">
+        </div>
         <div class="chat-content">
           <div class="chat-name">민준 <span class="tag">주선자</span></div>
-          <div class="chat-bubble gray">야 둘이 소개할게! 태양아, 지수 내 동기야 ㅋㅋ</div>
+          <div class="chat-bubble gray">야 둘이 소개할게 ㅋㅋ 태양아, 지수 내 동기야~</div>
         </div>
       </div>
+
       <div class="chat-row-with-avatar">
-        <div class="chat-avatar-sm" style="background:linear-gradient(135deg, #FF8A9B, #E8652B);">지</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        </div>
         <div class="chat-content">
           <div class="chat-name">지수</div>
-          <div class="chat-bubble blue">안녕하세요~</div>
+          <div class="chat-bubble blue">안녕하세요~ 반가워요 ㅎㅎ</div>
         </div>
       </div>
+
       <div class="chat-row-with-avatar right">
-        <div class="chat-avatar-sm" style="background:#5B86E5;">태</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
         <div class="chat-content">
           <div class="chat-name" style="padding-right:4px;">태양</div>
-          <div class="chat-bubble orange">오 반가워요!</div>
+          <div class="chat-bubble orange">오 반가워요! 민준이가 얘기 많이 했어요 ㅋㅋ</div>
         </div>
       </div>
+
       <div class="chat-row-with-avatar">
-        <div class="chat-avatar-sm" style="background:#F27935;">민</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80" alt="민준">
+        </div>
         <div class="chat-content">
           <div class="chat-name">민준 <span class="tag">주선자</span></div>
-          <div class="chat-bubble gray">둘 다 여행 좋아하니까 얘기 잘 통할 거야!</div>
+          <div class="chat-bubble gray">둘 다 여행 좋아하잖아~ 얘기 잘 통할 거야!</div>
         </div>
       </div>
+
       <div style="flex:1;"></div>
       <div class="chat-input" onclick="goTo(6)">
         <div class="placeholder">메시지 입력...</div>
-        <div class="send-btn">↑</div>
+        <div class="send-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </div>
       </div>
     </div>
 
   </div>
 
   <!-- ═══════════════════════════════════════════ -->
-  <!-- SCREEN 7: 주선자 퇴장 -->
+  <!-- SCREEN 7: 주선자 퇴장 팝업 -->
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen no-padding flex-col" id="s6" style="position:relative;">
 
@@ -926,12 +1229,35 @@
     </div>
 
     <div class="chat-header">
-      태양 · 지수 · 민준
+      <span>태양 · 지수 · 민준</span>
+      <div class="member-avatars">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        <img src="https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=200&q=80" alt="민준">
+      </div>
     </div>
 
     <div class="chat-body">
+      <div class="chat-row-with-avatar">
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        </div>
+        <div class="chat-content">
+          <div class="chat-name">지수</div>
+          <div class="chat-bubble blue">저도 제주도 좋아해요! 작년에 다녀왔는데 넘 좋았어요</div>
+        </div>
+      </div>
+      <div class="chat-row-with-avatar right">
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
+        <div class="chat-content">
+          <div class="chat-name" style="padding-right:4px;">태양</div>
+          <div class="chat-bubble orange">오 진짜요? ㅎㅎ 어디가 제일 좋았어요?</div>
+        </div>
+      </div>
       <div class="chat-row center">
-        <div class="chat-system">분위기가 무르익은 것 같아요!</div>
+        <div class="chat-system">분위기가 무르익고 있어요 ✨</div>
       </div>
       <div style="flex:1;"></div>
     </div>
@@ -941,14 +1267,14 @@
       <div class="popup-card">
         <div class="popup-icon">
           <svg width="28" height="28" viewBox="0 0 24 24" fill="white">
-            <path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            <path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/>
           </svg>
         </div>
-        <h3>민준님, 슬쩍 나갈까요?</h3>
-        <div class="popup-sub">둘이 잘 대화하고 있어요</div>
+        <h3>민준아, 슬쩍 나갈까?</h3>
+        <div class="popup-sub">둘이 대화 잘 하고 있어 ㅎㅎ<br>이제 둘만의 시간!</div>
         <div class="popup-btns">
           <button class="popup-btn-primary" onclick="goTo(7)">나가기</button>
-          <button class="popup-btn-ghost">좀 더 있어줘</button>
+          <button class="popup-btn-ghost">좀 더 있을게</button>
         </div>
       </div>
     </div>
@@ -965,40 +1291,50 @@
     </div>
 
     <div class="chat-header">
-      태양 · 지수
+      <span>태양 · 지수</span>
+      <div class="member-avatars">
+        <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+      </div>
     </div>
 
     <div class="chat-body">
       <div class="chat-row-with-avatar">
-        <div class="chat-avatar-sm" style="background:linear-gradient(135deg, #FF8A9B, #E8652B);">지</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=200&q=80" alt="지수">
+        </div>
         <div class="chat-content">
           <div class="chat-name">지수</div>
-          <div class="chat-bubble blue">저도 제주도 좋아해요!</div>
+          <div class="chat-bubble blue">저도 제주도 좋아해요! 올레길 진짜 좋았어요 ㅎㅎ</div>
         </div>
       </div>
       <div class="chat-row-with-avatar right">
-        <div class="chat-avatar-sm" style="background:#5B86E5;">태</div>
+        <div class="chat-avatar-sm">
+          <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80" alt="태양">
+        </div>
         <div class="chat-content">
           <div class="chat-name" style="padding-right:4px;">태양</div>
           <div class="chat-bubble orange">오 진짜요? 저 다음 달에 가요 ㅎㅎ</div>
         </div>
       </div>
       <div class="chat-row center">
-        <div class="chat-system">민준님이 나갔습니다.<br>좋은 대화 되세요!</div>
+        <div class="chat-system">민준님이 조용히 나갔습니다 👋<br>좋은 대화 되세요!</div>
       </div>
-      <div style="flex:1;"></div>
+      <div style="height:8px;"></div>
       <div class="reward-badge">
         <div class="reward-star">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="white">
             <path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/>
           </svg>
         </div>
-        썬구리 +30 (브릿지 채팅 보너스)
+        썬구리 +30 획득! (브릿지 보너스)
       </div>
-      <div style="height:10px;"></div>
+      <div style="flex:1;"></div>
       <div class="chat-input">
         <div class="placeholder">메시지 입력...</div>
-        <div class="send-btn">↑</div>
+        <div class="send-btn">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="white"><path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2z"/></svg>
+        </div>
       </div>
     </div>
 
@@ -1042,23 +1378,19 @@
 
 <script>
 function goTo(step) {
-  // Hide all screens
   document.querySelectorAll('.screen').forEach(function(s) {
     s.classList.remove('active');
   });
 
-  // Show target screen
   var screen = document.getElementById('s' + step);
   screen.classList.add('active');
 
-  // Update step dots
   document.querySelectorAll('.step-dot').forEach(function(d, i) {
     d.className = 'step-dot';
     if (i < step) d.classList.add('done');
     if (i === step) d.classList.add('current');
   });
 
-  // Update section label
   var tagEl = document.getElementById('labelTag');
   var textEl = document.getElementById('labelText');
   if (step < 4) {
@@ -1069,7 +1401,6 @@ function goTo(step) {
     textEl.textContent = '소개팅 브릿지 채팅';
   }
 
-  // Scroll to top
   screen.scrollTop = 0;
 }
 </script>
