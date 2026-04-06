@@ -145,11 +145,10 @@
   }
   .profile-photo-area {
     height: 340px;
-    background: linear-gradient(135deg, #FFE0C0, #FFD0A8);
+    background: linear-gradient(135deg, #FFD4B8, #FFB088);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 100px;
     position: relative;
   }
   .profile-info-overlay {
@@ -266,7 +265,15 @@
     background: #FFF8F0;
     border-color: #F27935;
   }
-  .share-option-icon { font-size: 26px; width: 40px; text-align: center; flex-shrink: 0; }
+  .share-option-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
   .share-option-text { font-size: 15px; font-weight: 600; }
   .share-option-sub { font-size: 11px; color: #aaa; margin-top: 2px; }
 
@@ -307,11 +314,9 @@
     width: 36px;
     height: 36px;
     border-radius: 12px;
-    background: #ddd;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 18px;
     flex-shrink: 0;
   }
   .chat-bubble-group { display: flex; flex-direction: column; max-width: 75%; }
@@ -356,16 +361,14 @@
     width: 64px;
     height: 64px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e0e0e0, #c0c0c0);
+    background: linear-gradient(135deg, #FFD4B8, #FFB088);
     margin: 0 auto 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-  }
-  .blur-avatar-inner {
-    font-size: 32px;
     filter: blur(4px);
+    position: relative;
   }
   .kakao-card-msg {
     font-size: 14px;
@@ -393,6 +396,7 @@
     font-size: 14px;
     font-weight: 700;
     text-decoration: none;
+    cursor: pointer;
   }
 
   /* ── Screen 4: Web Landing (Safari) ── */
@@ -422,6 +426,10 @@
     width: 100%;
     text-align: center;
     max-width: 320px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
   }
   .web-header {
     height: 52px;
@@ -451,16 +459,9 @@
     width: 100px;
     height: 100px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #e8e8e8, #c8c8c8);
     margin: 0 auto 20px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     overflow: hidden;
-  }
-  .blur-photo-inner {
-    font-size: 48px;
-    filter: blur(5px);
+    position: relative;
   }
   .landing-tags {
     display: flex;
@@ -537,13 +538,13 @@
     width: 130px;
     height: 130px;
     border-radius: 50%;
-    background: linear-gradient(135deg, #FFE0C0, #FFD0A8);
+    background: linear-gradient(135deg, #FFD4B8, #FFB088);
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 64px;
     margin: 0 auto 14px;
     border: 3px solid #F27935;
+    overflow: hidden;
   }
   .intro-name {
     font-size: 22px;
@@ -595,6 +596,44 @@
     font-weight: 700;
     color: #B8860B;
   }
+
+  /* ── Styled icon circles (replacing emojis) ── */
+  .icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    font-weight: 800;
+    color: white;
+    flex-shrink: 0;
+  }
+  .icon-circle.sm { width: 22px; height: 22px; font-size: 11px; }
+  .icon-circle.md { width: 36px; height: 36px; font-size: 15px; }
+  .icon-circle.lg { width: 40px; height: 40px; font-size: 16px; }
+
+  /* Tab bar icons */
+  .tab-icon-styled {
+    width: 22px;
+    height: 22px;
+    margin: 0 auto 2px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Share option styled icons */
+  .share-icon-box {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* Feed action button icons (SVG-based) */
+  .feed-icon-svg { width: 24px; height: 24px; }
 </style>
 </head>
 <body>
@@ -619,7 +658,11 @@
 
     <div class="profile-card">
       <div class="profile-photo-area">
-        👩
+        <!-- SVG silhouette photo placeholder -->
+        <svg width="120" height="150" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="60" cy="45" r="28" fill="rgba(255,255,255,0.35)"/>
+          <ellipse cx="60" cy="130" rx="45" ry="38" fill="rgba(255,255,255,0.3)"/>
+        </svg>
         <div class="profile-info-overlay">
           <span class="profile-name">지수</span>
           <span class="profile-age">, 26</span>
@@ -629,15 +672,21 @@
 
     <div class="feed-actions">
       <div class="feed-btn-wrap">
-        <div class="feed-btn pass">❌</div>
+        <div class="feed-btn pass">
+          <svg class="feed-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2.5" stroke-linecap="round"><line x1="6" y1="6" x2="18" y2="18"/><line x1="18" y1="6" x2="6" y2="18"/></svg>
+        </div>
         <div class="feed-btn-label">패스</div>
       </div>
       <div class="feed-btn-wrap">
-        <div class="feed-btn intro" onclick="goTo(1)">👥</div>
+        <div class="feed-btn intro" onclick="goTo(1)">
+          <svg class="feed-icon-svg" viewBox="0 0 24 24" fill="white" xmlns="http://www.w3.org/2000/svg"><circle cx="9" cy="8" r="3.5"/><circle cx="16" cy="8" r="3.5"/><path d="M2 20c0-3.5 3-6 7-6 1.2 0 2.3.2 3.2.6" /><path d="M14 14.4c.9-.3 1.9-.4 2.5-.4 3.5 0 6 2.5 6 5.5" fill="white"/></svg>
+        </div>
         <div class="feed-btn-label highlight">소개</div>
       </div>
       <div class="feed-btn-wrap">
-        <div class="feed-btn like">❤️</div>
+        <div class="feed-btn like">
+          <svg class="feed-icon-svg" viewBox="0 0 24 24" fill="none" stroke="#F27935" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg>
+        </div>
         <div class="feed-btn-label">좋아요</div>
       </div>
     </div>
@@ -656,7 +705,9 @@
       <div class="bottom-sheet-title">어떻게 소개할까요?</div>
 
       <div class="share-option">
-        <div class="share-option-icon">📱</div>
+        <div class="share-icon-box" style="background: linear-gradient(135deg, #FFB347, #F27935);">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="white"><rect x="5" y="2" width="14" height="20" rx="3" stroke="white" stroke-width="1.5" fill="none"/><circle cx="12" cy="18" r="1.2" fill="white"/></svg>
+        </div>
         <div>
           <div class="share-option-text">내친소 친구에게</div>
           <div class="share-option-sub">앱 내 소개</div>
@@ -664,7 +715,9 @@
       </div>
 
       <div class="share-option selected" onclick="goTo(2)">
-        <div class="share-option-icon">💬</div>
+        <div class="share-icon-box" style="background: #FEE500;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#3A1D1D"><path d="M12 3C6.48 3 2 6.58 2 10.94c0 2.8 1.86 5.27 4.66 6.67l-.9 3.33c-.06.22.2.4.38.27l3.8-2.54c.66.1 1.35.15 2.06.15 5.52 0 10-3.58 10-7.88S17.52 3 12 3z"/></svg>
+        </div>
         <div>
           <div class="share-option-text">카카오톡으로 보내기</div>
           <div class="share-option-sub">앱 밖 친구에게 공유</div>
@@ -672,7 +725,9 @@
       </div>
 
       <div class="share-option">
-        <div class="share-option-icon">🔗</div>
+        <div class="share-icon-box" style="background: #f0f0f0;">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="2" stroke-linecap="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+        </div>
         <div>
           <div class="share-option-text">링크 복사</div>
           <div class="share-option-sub">어디서든 공유</div>
@@ -688,7 +743,7 @@
   <div class="screen kakao-screen" id="s2">
 
     <div class="kakao-header">
-      <span class="kakao-back" onclick="goTo(1)">◀</span>
+      <span class="kakao-back" onclick="goTo(1)">&#9664;</span>
       <span>이서연</span>
     </div>
 
@@ -705,26 +760,32 @@
       <div class="chat-row mine">
         <div class="chat-bubble-group">
           <div class="kakao-share-card">
-            <div class="kakao-card-header">내친소 💌</div>
+            <div class="kakao-card-header">
+              <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:#F27935;">
+                <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
+              </span>
+              내친소
+            </div>
             <div class="kakao-card-body">
+              <!-- Blurred avatar: gradient circle with CSS blur -->
               <div class="blur-avatar">
-                <span class="blur-avatar-inner">👩</span>
+                <div style="width:100%; height:100%; background: linear-gradient(135deg, #FFD4B8 0%, #FFB088 50%, #F2A070 100%); border-radius:50%;"></div>
               </div>
               <div class="kakao-card-msg">민준이가 너한테<br>소개해주고 싶은<br>사람이 있대!</div>
               <div class="kakao-card-info">지수 · 26 · 서울</div>
               <div class="kakao-card-quote">"걔 진짜 좋은 사람이야"</div>
             </div>
-            <div class="kakao-card-cta" onclick="goTo(3)">내친소에서 확인하기 →</div>
+            <div class="kakao-card-cta" onclick="goTo(3)">내친소에서 확인하기 &#8594;</div>
           </div>
         </div>
       </div>
 
       <!-- 상대방 답장 -->
       <div class="chat-row">
-        <div class="chat-avatar">👧</div>
+        <div class="chat-avatar" style="background: linear-gradient(135deg, #00B894, #00D2A0); border-radius: 12px; color: white; font-size: 14px; font-weight: 800;">서</div>
         <div class="chat-bubble-group">
           <div class="chat-sender">이서연</div>
-          <div class="chat-bubble">오 뭔데뭔데?? 👀</div>
+          <div class="chat-bubble">오 뭔데뭔데??</div>
         </div>
       </div>
 
@@ -738,7 +799,10 @@
   <div class="screen web-screen" id="s3">
 
     <div class="safari-bar">
-      <div class="safari-url-box">🔒 naechinso.com/invite/...</div>
+      <div class="safari-url-box">
+        <svg width="10" height="12" viewBox="0 0 12 14" fill="#8e8e93"><rect x="2" y="6" width="8" height="7" rx="1.5" /><path d="M3.5 6V4.5a2.5 2.5 0 0 1 5 0V6" fill="none" stroke="#8e8e93" stroke-width="1.2"/></svg>
+        naechinso.com/invite/...
+      </div>
     </div>
 
     <div class="web-header">내친소</div>
@@ -747,8 +811,15 @@
 
       <div class="landing-subtitle">민준님이 소개해주고 싶은<br>사람이 있어요</div>
 
+      <!-- Blurred photo: layered gradients with heavy blur -->
       <div class="blur-photo-large">
-        <span class="blur-photo-inner">👩</span>
+        <div style="width:100%; height:100%; border-radius:50%; background: linear-gradient(135deg, #FFD4B8 0%, #FFB088 40%, #F2A070 70%, #E89060 100%); filter: blur(8px); transform: scale(1.15);"></div>
+        <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%);">
+          <svg width="40" height="50" viewBox="0 0 120 150" fill="none" style="filter:blur(3px); opacity:0.3;">
+            <circle cx="60" cy="45" r="24" fill="white"/>
+            <ellipse cx="60" cy="125" rx="38" ry="32" fill="white"/>
+          </svg>
+        </div>
       </div>
 
       <div class="landing-tags">
@@ -763,7 +834,7 @@
 
       <button class="btn-primary" onclick="goTo(4)">앱 설치하고 확인하기</button>
 
-      <div class="landing-link">이미 내친소 회원이라면 → <a href="#">앱에서 열기</a></div>
+      <div class="landing-link">이미 내친소 회원이라면 &#8594; <a href="#">앱에서 열기</a></div>
 
     </div>
 
@@ -774,39 +845,80 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s4">
 
-    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">← 뒤로</div>
+    <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">&#8592; 뒤로</div>
 
     <div style="text-align:center; font-size:20px; font-weight:900; color:#F27935; margin-bottom:24px;">내친소</div>
 
     <div style="text-align:center;">
-      <div class="intro-badge">💌 민준이가 소개해줬어요</div>
+      <div class="intro-badge">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:18px; height:18px; border-radius:50%; background:linear-gradient(135deg, #FFB347, #F27935);">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="white"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
+        </span>
+        민준이가 소개해줬어요
+      </div>
     </div>
 
     <div class="intro-quote">"걔 진짜 좋은 사람이야"</div>
 
-    <div class="intro-photo">👩</div>
+    <!-- Revealed clear photo with border -->
+    <div class="intro-photo">
+      <svg width="60" height="75" viewBox="0 0 120 150" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="60" cy="45" r="26" fill="rgba(255,255,255,0.45)"/>
+        <ellipse cx="60" cy="128" rx="42" ry="36" fill="rgba(255,255,255,0.38)"/>
+      </svg>
+    </div>
 
     <div class="intro-name">지수, 26</div>
     <div class="intro-detail">서울</div>
 
     <div class="intro-actions">
-      <button class="intro-btn accept">볼게! 😊</button>
+      <button class="intro-btn accept">볼게!</button>
       <button class="intro-btn later">나중에</button>
     </div>
 
     <div style="text-align:center;">
-      <div class="bonus-badge">🌟 썬구리 +10 (신규 가입 보너스)</div>
+      <div class="bonus-badge">
+        <span style="display:inline-flex; align-items:center; justify-content:center; width:16px; height:16px; border-radius:50%; background:linear-gradient(135deg, #FFE066, #FFD700);">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="#B8860B"><polygon points="12,2 15,9 22,9 16.5,14 18.5,21 12,17 5.5,21 7.5,14 2,9 9,9"/></svg>
+        </span>
+        썬구리 +10 (신규 가입 보너스)
+      </div>
     </div>
 
   </div>
 
   <!-- ── Bottom Tab Bar ── -->
   <div class="tab-bar">
-    <div class="tab-item active"><div class="tab-icon">🏠</div>홈</div>
-    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
-    <div class="tab-item"><div class="tab-icon">🎲</div>플레이</div>
-    <div class="tab-item"><div class="tab-icon">💌</div>채팅</div>
-    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+    <div class="tab-item active">
+      <div class="tab-icon-styled">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#F27935"><path d="M3 12l9-8 9 8v9a1 1 0 0 1-1 1h-5v-6h-4v6H5a1 1 0 0 1-1-1v-9z"/></svg>
+      </div>
+      홈
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon-styled">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+      </div>
+      라운지
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon-styled">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="3"/><circle cx="8" cy="8" r="1.5" fill="#bbb"/><circle cx="16" cy="8" r="1.5" fill="#bbb"/><circle cx="8" cy="16" r="1.5" fill="#bbb"/><circle cx="16" cy="16" r="1.5" fill="#bbb"/></svg>
+      </div>
+      플레이
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon-styled">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><path d="M3 8l9-5 9 5v10l-9 5-9-5z"/></svg>
+      </div>
+      채팅
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon-styled">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.5-7 8-7s8 3 8 7"/></svg>
+      </div>
+      프로필
+    </div>
   </div>
 
 </div>

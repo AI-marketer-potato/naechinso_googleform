@@ -56,9 +56,9 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
 /* Profile pair */
 .profile-pair { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 16px 0; }
 .profile-unit { display: flex; flex-direction: column; align-items: center; gap: 4px; }
-.profile-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 26px; }
-.profile-circle.orange-bg { background: #FFE8D6; }
-.profile-circle.blue-bg { background: #dde8ff; }
+.profile-circle { width: 52px; height: 52px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; color: #fff; }
+.profile-circle.orange-bg { background: linear-gradient(135deg, #FF9A5C, #F27935); }
+.profile-circle.blue-bg { background: linear-gradient(135deg, #7BA4F7, #5B86E5); }
 .profile-name { font-size: 13px; font-weight: 700; color: #444; }
 .heart-arrow { font-size: 20px; color: #F27935; }
 
@@ -93,7 +93,7 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
 .gold-badge { display: inline-flex; align-items: center; gap: 4px; background: linear-gradient(135deg, #FFD93D, #FFB800); color: #5D4037; font-size: 14px; font-weight: 800; padding: 8px 18px; border-radius: 24px; box-shadow: 0 2px 8px rgba(255,183,0,0.3); }
 
 /* Confetti */
-.confetti { font-size: 36px; text-align: center; margin-bottom: 6px; }
+.confetti-wrap { position: relative; width: 100%; height: 60px; margin-bottom: 6px; overflow: visible; }
 
 /* Section title */
 .section-title { font-size: 20px; font-weight: 800; margin-bottom: 12px; color: #222; }
@@ -103,6 +103,68 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
 
 /* Encouragement card */
 .encourage-card { background: linear-gradient(135deg, #f0fffe, #e8faf8); border: 1.5px solid #d4edda; border-radius: 16px; padding: 20px; margin-bottom: 14px; text-align: center; }
+
+/* Tab bar icons (SVG-based) */
+.tab-svg-icon { width: 24px; height: 24px; margin-bottom: 2px; }
+
+/* --- CSS Confetti --- */
+@keyframes confettiFall {
+  0% { transform: translateY(-20px) rotate(0deg) scale(1); opacity: 1; }
+  100% { transform: translateY(50px) rotate(360deg) scale(0.5); opacity: 0; }
+}
+@keyframes confettiPop {
+  0% { transform: scale(0) rotate(0); opacity: 0; }
+  40% { transform: scale(1.2) rotate(180deg); opacity: 1; }
+  100% { transform: scale(1) rotate(360deg); opacity: 1; }
+}
+.confetti-piece {
+  position: absolute;
+  width: 10px;
+  height: 10px;
+  border-radius: 2px;
+  animation: confettiFall 2.5s ease-in-out infinite;
+}
+.confetti-piece:nth-child(1) { left: 10%; background: #F27935; animation-delay: 0s; border-radius: 50%; width: 8px; height: 8px; }
+.confetti-piece:nth-child(2) { left: 25%; background: #FFB347; animation-delay: 0.3s; border-radius: 0; transform: rotate(45deg); }
+.confetti-piece:nth-child(3) { left: 40%; background: #5B86E5; animation-delay: 0.6s; border-radius: 50%; width: 6px; height: 6px; }
+.confetti-piece:nth-child(4) { left: 55%; background: #FFD93D; animation-delay: 0.15s; width: 12px; height: 6px; border-radius: 3px; }
+.confetti-piece:nth-child(5) { left: 70%; background: #4ECDC4; animation-delay: 0.45s; border-radius: 50%; }
+.confetti-piece:nth-child(6) { left: 85%; background: #F27935; animation-delay: 0.75s; width: 6px; height: 12px; border-radius: 3px; }
+.confetti-piece:nth-child(7) { left: 15%; background: #FFB347; animation-delay: 1s; border-radius: 50%; width: 7px; height: 7px; }
+.confetti-piece:nth-child(8) { left: 50%; background: #5B86E5; animation-delay: 0.5s; width: 8px; height: 4px; }
+.confetti-piece:nth-child(9) { left: 78%; background: #FFD93D; animation-delay: 0.2s; border-radius: 50%; width: 9px; height: 9px; }
+.confetti-piece:nth-child(10) { left: 35%; background: #4ECDC4; animation-delay: 0.85s; width: 5px; height: 10px; border-radius: 2px; }
+
+/* Large celebration circles */
+.celebration-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid;
+  animation: confettiPop 1s ease-out forwards;
+}
+.celebration-ring:nth-child(11) { width: 40px; height: 40px; border-color: rgba(242,121,53,0.25); left: 5%; top: 10px; animation-delay: 0.2s; }
+.celebration-ring:nth-child(12) { width: 28px; height: 28px; border-color: rgba(91,134,229,0.2); right: 8%; top: 5px; animation-delay: 0.5s; }
+.celebration-ring:nth-child(13) { width: 20px; height: 20px; border-color: rgba(255,217,61,0.3); left: 48%; top: 30px; animation-delay: 0.8s; }
+
+/* Star sparkle */
+@keyframes sparkle {
+  0%, 100% { opacity: 0; transform: scale(0.5) rotate(0deg); }
+  50% { opacity: 1; transform: scale(1) rotate(180deg); }
+}
+.sparkle {
+  position: absolute;
+  width: 14px; height: 14px;
+  animation: sparkle 1.5s ease-in-out infinite;
+}
+.sparkle svg { width: 100%; height: 100%; }
+
+/* Trophy icon CSS */
+.trophy-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; height: 28px;
+}
 </style>
 </head>
 <body>
@@ -122,17 +184,19 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
     <div class="section-title">소개 전송 완료</div>
 
     <div class="card highlight" style="text-align: center;">
-      <div style="font-size: 32px; margin-bottom: 10px; color: #F27935;">&#10003;</div>
+      <div style="width: 40px; height: 40px; border-radius: 50%; background: linear-gradient(135deg, #FFB347, #F27935); display: inline-flex; align-items: center; justify-content: center; margin-bottom: 10px;">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M4 10l4.5 4.5L16 6" stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
       <div style="font-size: 17px; font-weight: 700; color: #F27935; margin-bottom: 16px;">태양에게 지수를 소개했어요!</div>
 
       <div class="profile-pair">
         <div class="profile-unit">
-          <div class="profile-circle orange-bg">&#128100;</div>
+          <div class="profile-circle blue-bg">태</div>
           <div class="profile-name">태양</div>
         </div>
         <div class="heart-arrow">&#8596;</div>
         <div class="profile-unit">
-          <div class="profile-circle blue-bg">&#128100;</div>
+          <div class="profile-circle orange-bg">지</div>
           <div class="profile-name">지수</div>
         </div>
       </div>
@@ -213,7 +277,14 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
     <div class="card success-card" style="text-align: center;">
       <div style="font-size: 32px; margin-bottom: 6px;">&#127881;</div>
       <div style="font-size: 20px; font-weight: 800; color: #4ECDC4; margin-bottom: 8px;">대화 시작!</div>
-      <div style="font-size: 15px; color: #666; line-height: 1.6;">너의 소개로<br><strong>태양 &#8596; 지수</strong>가 대화를 시작했어!</div>
+      <div style="font-size: 15px; color: #666; line-height: 1.6;">너의 소개로<br>
+        <span style="display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #5B86E5; color: #fff; font-size: 11px; font-weight: 800;">태</span>
+          <strong>태양</strong> &#8596;
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 22px; height: 22px; border-radius: 50%; background: #F27935; color: #fff; font-size: 11px; font-weight: 800;">지</span>
+          <strong>지수</strong>
+        </span>가 대화를 시작했어!
+      </div>
 
       <div style="display: flex; justify-content: center; margin: 16px 0;">
         <span class="sunguri">썬구리 +20 &#127775;</span>
@@ -255,14 +326,56 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
     <button class="back-btn" onclick="goTo(2)">&larr;</button>
 
     <div style="text-align: center; padding-top: 8px;">
-      <div class="confetti">&#127882;&#127881;</div>
+      <!-- CSS confetti -->
+      <div class="confetti-wrap">
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="confetti-piece"></div>
+        <div class="celebration-ring"></div>
+        <div class="celebration-ring"></div>
+        <div class="celebration-ring"></div>
+        <div class="sparkle" style="left: 20%; top: 8px; animation-delay: 0s;">
+          <svg viewBox="0 0 24 24" fill="#FFD93D"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"/></svg>
+        </div>
+        <div class="sparkle" style="right: 15%; top: 20px; animation-delay: 0.7s;">
+          <svg viewBox="0 0 24 24" fill="#F27935"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"/></svg>
+        </div>
+        <div class="sparkle" style="left: 45%; top: 2px; animation-delay: 1.2s;">
+          <svg viewBox="0 0 24 24" fill="#5B86E5"><path d="M12 0l2.5 9.5L24 12l-9.5 2.5L12 24l-2.5-9.5L0 12l9.5-2.5z"/></svg>
+        </div>
+      </div>
+
       <div style="font-size: 26px; font-weight: 900; color: #F27935; margin-bottom: 6px;">주선 성공!</div>
       <div style="font-size: 16px; color: #666; margin-bottom: 16px;">
-        <strong>태양 &#8596; 지수</strong>가 매칭됐어요!
+        <span style="display: inline-flex; align-items: center; gap: 4px; vertical-align: middle;">
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #5B86E5; color: #fff; font-size: 12px; font-weight: 800;">태</span>
+          <strong>태양</strong> &#8596;
+          <span style="display: inline-flex; align-items: center; justify-content: center; width: 24px; height: 24px; border-radius: 50%; background: #F27935; color: #fff; font-size: 12px; font-weight: 800;">지</span>
+          <strong>지수</strong>
+        </span>가 매칭됐어요!
       </div>
 
       <div style="display: flex; justify-content: center; margin-bottom: 16px;">
-        <div class="gold-badge">&#127941; 매칭메이커 뱃지 획득!</div>
+        <div class="gold-badge">
+          <span class="trophy-icon">
+            <svg viewBox="0 0 24 24" width="20" height="20" fill="none">
+              <path d="M7 4h10v6a5 5 0 01-10 0V4z" fill="#5D4037"/>
+              <path d="M7 4h10v6a5 5 0 01-10 0V4z" fill="#FFB800" opacity="0.7"/>
+              <path d="M5 4H7v3a3 3 0 01-3-3h1z" fill="#5D4037" opacity="0.5"/>
+              <path d="M17 4h2a3 3 0 01-3 3V4h1z" fill="#5D4037" opacity="0.5"/>
+              <rect x="10" y="14" width="4" height="3" rx="1" fill="#5D4037" opacity="0.6"/>
+              <rect x="8" y="17" width="8" height="2" rx="1" fill="#5D4037" opacity="0.4"/>
+            </svg>
+          </span>
+          매칭메이커 뱃지 획득!
+        </div>
       </div>
 
       <div style="display: flex; justify-content: center; margin-bottom: 20px;">
@@ -270,7 +383,18 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
       </div>
 
       <div class="card gold-card" style="text-align: center;">
-        <div style="font-size: 15px; font-weight: 600; color: #666; margin-bottom: 4px;">&#127942; 나의 주선 성공: <strong style="color: #F27935;">3회</strong></div>
+        <div style="font-size: 15px; font-weight: 600; color: #666; margin-bottom: 4px;">
+          <span class="trophy-icon" style="vertical-align: middle;">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none">
+              <path d="M7 4h10v6a5 5 0 01-10 0V4z" fill="#FFB800"/>
+              <path d="M5 4H7v3a3 3 0 01-3-3h1z" fill="#FFB800" opacity="0.5"/>
+              <path d="M17 4h2a3 3 0 01-3 3V4h1z" fill="#FFB800" opacity="0.5"/>
+              <rect x="10" y="14" width="4" height="3" rx="1" fill="#FFB800" opacity="0.6"/>
+              <rect x="8" y="17" width="8" height="2" rx="1" fill="#FFB800" opacity="0.4"/>
+            </svg>
+          </span>
+          나의 주선 성공: <strong style="color: #F27935;">3회</strong>
+        </div>
         <div class="success-bar-track">
           <div class="success-bar-fill" style="width: 60%;"></div>
         </div>
@@ -287,7 +411,14 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
     <div class="section-title" style="color: #999;">실패 시</div>
 
     <div class="card muted-card" style="text-align: center;">
-      <div style="font-size: 32px; margin-bottom: 6px;">&#128524;</div>
+      <div style="width: 48px; height: 48px; border-radius: 50%; background: #eee; display: inline-flex; align-items: center; justify-content: center; margin-bottom: 6px;">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#ddd"/>
+          <circle cx="9" cy="10" r="1" fill="#999"/>
+          <circle cx="15" cy="10" r="1" fill="#999"/>
+          <path d="M9 16c1-1 2-1.5 3-1.5s2 .5 3 1.5" stroke="#999" stroke-width="1.5" stroke-linecap="round" fill="none"/>
+        </svg>
+      </div>
       <div style="font-size: 18px; font-weight: 700; color: #888; margin-bottom: 8px;">이번에는 안 됐어요</div>
       <div style="font-size: 14px; color: #aaa; margin-bottom: 8px;">아쉽지만 다음 소개를 응원해!</div>
       <div style="font-size: 12px; color: #ccc; font-style: italic;">(누가 거절했는지 알려주지 않아요)</div>
@@ -308,19 +439,27 @@ html, body { font-family: 'Pretendard Variable', sans-serif; background: #fff; c
   <!-- Tab Bar -->
   <div class="tab-bar">
     <div class="tab-item active">
-      <div class="tab-icon">&#127968;</div>
+      <div class="tab-icon">
+        <svg class="tab-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 12l9-8 9 8"/><path d="M5 10v9a1 1 0 001 1h4v-5h4v5h4a1 1 0 001-1v-9"/></svg>
+      </div>
       홈
     </div>
     <div class="tab-item">
-      <div class="tab-icon">&#128269;</div>
+      <div class="tab-icon">
+        <svg class="tab-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.35-4.35"/></svg>
+      </div>
       탐색
     </div>
     <div class="tab-item">
-      <div class="tab-icon">&#128172;</div>
+      <div class="tab-icon">
+        <svg class="tab-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+      </div>
       채팅
     </div>
     <div class="tab-item">
-      <div class="tab-icon">&#128100;</div>
+      <div class="tab-icon">
+        <svg class="tab-svg-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="4"/><path d="M6 20c0-3.3 2.7-6 6-6s6 2.7 6 6"/></svg>
+      </div>
       마이
     </div>
   </div>

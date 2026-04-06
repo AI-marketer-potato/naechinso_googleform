@@ -79,6 +79,7 @@
     padding: 0 4px;
   }
   .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
+  .tab-item .tab-icon svg { width: 22px; height: 22px; }
   .tab-item.active { color: #F27935; font-weight: 700; }
 
   /* ── Common UI ── */
@@ -214,6 +215,42 @@
     align-items: center;
     justify-content: center;
     font-size: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-img .silhouette {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+  }
+  .profile-img .silhouette-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.5);
+    position: absolute;
+    top: 36px;
+  }
+  .profile-img .silhouette-body {
+    width: 100px;
+    height: 70px;
+    border-radius: 50px 50px 0 0;
+    background: rgba(255,255,255,0.5);
+    margin-bottom: 0;
+  }
+  .profile-img .photo-badge {
+    position: absolute;
+    bottom: 10px;
+    right: 14px;
+    background: rgba(0,0,0,0.25);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 4px 10px;
+    border-radius: 10px;
+    backdrop-filter: blur(4px);
   }
   .profile-info {
     padding: 14px 18px 16px;
@@ -464,7 +501,13 @@
     </div>
 
     <div class="profile-card">
-      <div class="profile-img" style="background: linear-gradient(135deg, #FFE8D0, #FFF0E6);">👩</div>
+      <div class="profile-img" style="background: linear-gradient(135deg, #FFD4B8, #FFB088);">
+        <div class="silhouette">
+          <div class="silhouette-circle"></div>
+          <div class="silhouette-body"></div>
+        </div>
+        <div class="photo-badge">사진 2장</div>
+      </div>
       <div class="profile-info">
         <div class="profile-name">서연, 26</div>
         <div class="profile-detail">서울 / 대학생</div>
@@ -473,7 +516,12 @@
     </div>
 
     <div class="profile-card" style="opacity: 0.5;">
-      <div class="profile-img" style="background: linear-gradient(135deg, #E3F2FD, #BBDEFB); height: 100px; font-size: 40px;">👨</div>
+      <div class="profile-img" style="background: linear-gradient(135deg, #B8D4FF, #88B0FF); height: 100px;">
+        <div class="silhouette">
+          <div class="silhouette-circle" style="width:44px; height:44px; top:10px;"></div>
+          <div class="silhouette-body" style="width:74px; height:50px;"></div>
+        </div>
+      </div>
       <div class="profile-info" style="padding: 10px 18px 12px;">
         <div class="profile-name">도윤, 27</div>
         <div class="profile-detail">서울 / 직장인</div>
@@ -482,7 +530,7 @@
 
     <div style="height: 80px;"></div>
 
-    <button class="fab" onclick="goTo(1)">🔍 대신 찾아주기</button>
+    <button class="fab" onclick="goTo(1)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;margin-right:4px;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>대신 찾아주기</button>
 
   </div>
 
@@ -493,7 +541,7 @@
 
     <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(0)">← 뒤로</div>
 
-    <div class="prompt">누구를 위해 찾아줄까? 👀</div>
+    <div class="prompt">누구를 위해 찾아줄까?</div>
     <div class="screen-sub">소개받고 싶어요 ON인 친구만 표시돼요</div>
 
     <div class="friend-item selected" onclick="goTo(2)">
@@ -524,7 +572,7 @@
     </div>
 
     <div style="height: 30px;"></div>
-    <div class="hint">💡 친구가 "소개받고 싶어요"를 켜야 여기에 표시돼요</div>
+    <div class="hint"><span style="display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;background:#FFB347;border-radius:50%;color:#fff;font-size:11px;font-weight:800;vertical-align:-3px;margin-right:4px;">!</span> 친구가 "소개받고 싶어요"를 켜야 여기에 표시돼요</div>
 
   </div>
 
@@ -574,13 +622,19 @@
   <!-- ═══════════════════════════════════════════ -->
   <div class="screen" id="s3">
 
-    <div class="proxy-banner">🔍 태양을 위해 탐색 중</div>
+    <div class="proxy-banner"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" style="width:16px;height:16px;vertical-align:-2px;flex-shrink:0;"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg> 태양을 위해 탐색 중</div>
 
     <div class="profile-card">
       <div style="padding: 12px 18px 6px;">
         <div class="profile-rec">"성격 진짜 좋아" — 도윤이 소개</div>
       </div>
-      <div class="profile-img" style="background: linear-gradient(135deg, #E8F5E9, #C8E6C9);">👩</div>
+      <div class="profile-img" style="background: linear-gradient(135deg, #FFD4B8, #FFB088);">
+        <div class="silhouette">
+          <div class="silhouette-circle"></div>
+          <div class="silhouette-body"></div>
+        </div>
+        <div class="photo-badge">사진 3장</div>
+      </div>
       <div class="profile-info">
         <div class="profile-name">하은, 25</div>
         <div class="profile-detail">서울 / 163cm / 운동, 요리</div>
@@ -605,13 +659,13 @@
     <div style="height: 20px;"></div>
 
     <div class="reward-banner">
-      <div class="reward-icon">✅</div>
+      <div class="reward-icon"><svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:48px;height:48px;"><circle cx="12" cy="12" r="10" fill="rgba(255,255,255,0.25)" stroke="white"/><polyline points="9 12 11.5 14.5 16 9.5"/></svg></div>
       <div class="reward-title">태양에게<br>하은을 소개했어요!</div>
-      <div class="reward-badge">🌟 썬구리 +5</div>
+      <div class="reward-badge"><svg viewBox="0 0 24 24" fill="white" stroke="none" style="width:14px;height:14px;vertical-align:-2px;margin-right:2px;"><polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26"/></svg> 썬구리 +5</div>
     </div>
 
     <div class="push-preview">
-      <div class="push-label">🔔 태양에게 알림</div>
+      <div class="push-label"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:12px;height:12px;vertical-align:-1px;margin-right:2px;"><path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 01-3.46 0"/></svg> 태양에게 알림</div>
       <div class="push-text">민준이가 너한테 어울릴 사람을 찾았어!</div>
     </div>
 
@@ -626,11 +680,11 @@
 
   <!-- ── Bottom Tab Bar ── -->
   <div class="tab-bar">
-    <div class="tab-item"><div class="tab-icon">🏠</div>홈</div>
-    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
-    <div class="tab-item active"><div class="tab-icon">🔍</div>탐색</div>
-    <div class="tab-item"><div class="tab-icon">💌</div>채팅</div>
-    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+    <div class="tab-item"><div class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg></div>홈</div>
+    <div class="tab-item"><div class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg></div>라운지</div>
+    <div class="tab-item active"><div class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></div>탐색</div>
+    <div class="tab-item"><div class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>채팅</div>
+    <div class="tab-item"><div class="tab-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>프로필</div>
   </div>
 
 </div>

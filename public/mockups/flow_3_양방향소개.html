@@ -78,8 +78,16 @@
     cursor: pointer;
     padding: 0 4px;
   }
-  .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; }
+  .tab-item .tab-icon { font-size: 22px; margin-bottom: 2px; display: flex; align-items: center; justify-content: center; }
   .tab-item.active { color: #F27935; font-weight: 700; }
+
+  /* ── Tab SVG Icons ── */
+  .tab-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+  .tab-item svg { fill: #bbb; }
+  .tab-item.active svg { fill: #F27935; }
 
   /* ── Common UI ── */
   .section-title { font-size: 18px; font-weight: 900; margin-bottom: 6px; }
@@ -129,6 +137,26 @@
     flex-shrink: 0;
   }
 
+  /* ── Profile Photo Avatar (large, with silhouette) ── */
+  .profile-avatar {
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .profile-avatar.female {
+    background: linear-gradient(135deg, #FFD4B8, #FFB088);
+  }
+  .profile-avatar.male {
+    background: linear-gradient(135deg, #B8D4FF, #88B0FF);
+  }
+  .profile-avatar svg {
+    opacity: 0.5;
+  }
+
   /* ── Search Bar ── */
   .search-bar {
     display: flex;
@@ -140,6 +168,12 @@
     margin-bottom: 16px;
     font-size: 14px;
     color: #bbb;
+  }
+  .search-bar svg {
+    width: 16px;
+    height: 16px;
+    fill: #bbb;
+    flex-shrink: 0;
   }
 
   /* ── Mini Avatar Bar ── */
@@ -180,7 +214,7 @@
     font-weight: 700;
   }
   .pair-name { font-size: 14px; font-weight: 700; }
-  .pair-arrow { font-size: 22px; color: #F27935; font-weight: 700; }
+  .pair-arrow { font-size: 22px; color: #F27935; font-weight: 700; display: flex; align-items: center; }
 
   /* ── Text Input ── */
   .text-input {
@@ -237,8 +271,24 @@
     margin: 12px 0;
     color: white;
   }
-  .notif-app { font-size: 11px; color: #888; margin-bottom: 8px; }
-  .notif-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; }
+  .notif-app { font-size: 11px; color: #888; margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+  .notif-app-icon {
+    width: 14px; height: 14px;
+    background: #F27935;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .notif-app-icon svg { width: 8px; height: 8px; fill: white; }
+  .notif-title { font-size: 17px; font-weight: 800; margin-bottom: 10px; display: flex; align-items: center; gap: 6px; }
+  .notif-title .letter-icon {
+    width: 20px; height: 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .notif-title .letter-icon svg { width: 18px; height: 18px; }
   .notif-body { font-size: 13px; color: #ccc; line-height: 1.6; margin-bottom: 8px; }
   .notif-from { font-size: 12px; color: #777; margin-bottom: 16px; }
   .notif-btns { display: flex; gap: 10px; }
@@ -264,9 +314,30 @@
     text-align: center;
     padding: 40px 0 20px;
   }
-  .big-emoji { font-size: 56px; margin-bottom: 16px; }
+  .cele-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 16px;
+    box-shadow: 0 4px 20px rgba(242, 121, 53, 0.3);
+  }
+  .cele-icon svg { width: 36px; height: 36px; fill: white; }
   .cele-title { font-size: 24px; font-weight: 900; margin-bottom: 8px; }
-  .cele-pair { font-size: 18px; font-weight: 700; color: #F27935; margin-bottom: 6px; }
+  .cele-pair { font-size: 18px; font-weight: 700; color: #F27935; margin-bottom: 6px; display: flex; align-items: center; gap: 8px; justify-content: center; }
+  .cele-pair .mini-circle {
+    width: 24px; height: 24px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    color: white;
+    font-weight: 700;
+  }
   .cele-sub { font-size: 14px; color: #999; margin-bottom: 24px; }
   .golden-badge {
     display: inline-flex;
@@ -281,6 +352,11 @@
     color: #B8860B;
     margin-bottom: 6px;
   }
+  .golden-badge .star-icon {
+    width: 18px; height: 18px;
+    display: inline-flex;
+  }
+  .golden-badge .star-icon svg { width: 18px; height: 18px; fill: #F0C040; }
   .cele-badge-label { font-size: 12px; color: #F0C040; font-weight: 700; margin-bottom: 28px; }
 
   /* ── Buttons ── */
@@ -317,7 +393,21 @@
     color: #888;
     text-align: center;
     margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
   }
+  .hint-bulb {
+    width: 14px; height: 14px;
+    background: #FFB347;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .hint-bulb svg { width: 8px; height: 8px; fill: white; }
 
   .below-note {
     text-align: center;
@@ -327,7 +417,18 @@
     padding: 10px;
     background: #f8f8fa;
     border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
   }
+  .below-note .note-icon {
+    width: 16px; height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .below-note .note-icon svg { width: 14px; height: 14px; fill: #aaa; }
 
   .footer-note {
     font-size: 11px;
@@ -335,6 +436,17 @@
     text-align: center;
     margin-top: 8px;
   }
+
+  /* ── Arrow icon between pair ── */
+  .pair-arrow-icon {
+    width: 28px; height: 28px;
+    background: linear-gradient(135deg, #FFB347, #F27935);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .pair-arrow-icon svg { width: 16px; height: 16px; fill: white; }
 
   /* ── Fade animation ── */
   @keyframes fadeUp {
@@ -366,10 +478,11 @@
     <div class="section-sub">내 싱글 친구 둘을 이어줘 보세요</div>
 
     <div class="search-bar">
-      🔍 친구 검색
+      <svg viewBox="0 0 24 24"><path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/></svg>
+      친구 검색
     </div>
 
-    <!-- 태양 -->
+    <!-- 태양 (male) -->
     <div class="list-card" onclick="goTo(1)">
       <div class="avatar" style="background:#F27935;">태</div>
       <div class="list-body">
@@ -379,7 +492,7 @@
       <span class="list-action">선택</span>
     </div>
 
-    <!-- 현우 -->
+    <!-- 현우 (male) -->
     <div class="list-card">
       <div class="avatar" style="background:#00B894;">현</div>
       <div class="list-body">
@@ -399,7 +512,7 @@
       <span class="list-action disabled">선택</span>
     </div>
 
-    <!-- 지수 -->
+    <!-- 지수 (female) -->
     <div class="list-card">
       <div class="avatar" style="background:#FFB347;">지</div>
       <div class="list-body">
@@ -443,7 +556,7 @@
 
     <!-- 도윤 -->
     <div class="list-card">
-      <div class="avatar" style="background:#6C5CE7;">도</div>
+      <div class="avatar" style="background:#5B86E5;">도</div>
       <div class="list-body">
         <div class="list-title">도윤</div>
         <div class="list-sub">싱글</div>
@@ -471,12 +584,20 @@
     <!-- Avatar Pair -->
     <div class="avatar-pair">
       <div class="pair-unit">
-        <div class="pair-avatar" style="background:#F27935;">태</div>
+        <div class="pair-avatar" style="background: linear-gradient(135deg, #B8D4FF, #88B0FF); position: relative;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
         <div class="pair-name">태양</div>
       </div>
-      <div class="pair-arrow">↔</div>
+      <div class="pair-arrow">
+        <div class="pair-arrow-icon">
+          <svg viewBox="0 0 24 24"><path d="M6.99 11L3 15l3.99 4v-3H14v-2H6.99v-3zM21 9l-3.99-4v3H10v2h7.01v3L21 9z"/></svg>
+        </div>
+      </div>
       <div class="pair-unit">
-        <div class="pair-avatar" style="background:#FFB347;">지</div>
+        <div class="pair-avatar" style="background: linear-gradient(135deg, #FFD4B8, #FFB088); position: relative;">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="rgba(255,255,255,0.7)"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+        </div>
         <div class="pair-name">지수</div>
       </div>
     </div>
@@ -495,7 +616,10 @@
       <div class="chip">성격 진짜 잘 맞을 듯</div>
     </div>
 
-    <div class="hint">💡 이 메시지가 두 친구에게 함께 전달돼요</div>
+    <div class="hint">
+      <span class="hint-bulb"><svg viewBox="0 0 24 24"><path d="M9 21c0 .55.45 1 1 1h4c.55 0 1-.45 1-1v-1H9v1zm3-19C8.14 2 5 5.14 5 9c0 2.38 1.19 4.47 3 5.74V17c0 .55.45 1 1 1h6c.55 0 1-.45 1-1v-2.26c1.81-1.27 3-3.36 3-5.74 0-3.86-3.14-7-7-7z"/></svg></span>
+      이 메시지가 두 친구에게 함께 전달돼요
+    </div>
 
     <div class="btn-primary" onclick="goTo(3)">소개 보내기 →</div>
 
@@ -512,18 +636,25 @@
     <div class="section-title" style="margin-bottom:16px;">알림이 도착했어요</div>
 
     <div class="notif-card">
-      <div class="notif-app">내친소 🔔</div>
-      <div class="notif-title">민준이가 소개해줬어요 💌</div>
+      <div class="notif-app">
+        <span class="notif-app-icon"><svg viewBox="0 0 24 24"><path d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.89 2 2 2zm6-6v-5c0-3.07-1.64-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.63 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2z"/></svg></span>
+        내친소
+      </div>
+      <div class="notif-title">
+        민준이가 소개해줬어요
+        <span class="letter-icon"><svg viewBox="0 0 24 24" fill="#FFB347"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+      </div>
       <div class="notif-body">둘 다 여행 좋아해서 잘 맞을 것 같아!</div>
       <div class="notif-from">— 민준 (공통 친구)</div>
       <div class="notif-btns">
-        <div class="nbtn orange" onclick="goTo(4)">궁금해! 😊</div>
+        <div class="nbtn orange" onclick="goTo(4)">궁금해!</div>
         <div class="nbtn gray">괜찮아</div>
       </div>
     </div>
 
     <div class="below-note">
-      📨 지수에게도 동시에 알림 전달
+      <span class="note-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></span>
+      지수에게도 동시에 알림 전달
     </div>
 
   </div>
@@ -536,11 +667,20 @@
     <div style="font-size:13px; color:#aaa; margin-bottom:14px; cursor:pointer;" onclick="goTo(3)">← 뒤로</div>
 
     <div class="celebration">
-      <div class="big-emoji">🎊</div>
+      <div class="cele-icon">
+        <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+      </div>
       <div class="cele-title">연결됐어요!</div>
-      <div class="cele-pair">태양 ↔ 지수</div>
+      <div class="cele-pair">
+        <span class="mini-circle" style="background:#F27935;">태</span>
+        태양 ↔ 지수
+        <span class="mini-circle" style="background:#FFB347;">지</span>
+      </div>
       <div class="cele-sub">소개해줘서 고마워요</div>
-      <div class="golden-badge">썬구리 +20 🌟</div>
+      <div class="golden-badge">
+        썬구리 +20
+        <span class="star-icon"><svg viewBox="0 0 24 24"><path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z"/></svg></span>
+      </div>
       <div class="cele-badge-label">주선 성공!</div>
     </div>
 
@@ -551,11 +691,26 @@
 
   <!-- ── Bottom Tab Bar ── -->
   <div class="tab-bar">
-    <div class="tab-item"><div class="tab-icon">🏠</div>홈</div>
-    <div class="tab-item"><div class="tab-icon">💬</div>라운지</div>
-    <div class="tab-item"><div class="tab-icon">🎲</div>플레이</div>
-    <div class="tab-item active"><div class="tab-icon">💌</div>채팅</div>
-    <div class="tab-item"><div class="tab-icon">👤</div>프로필</div>
+    <div class="tab-item">
+      <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></div>
+      홈
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M20 2H4c-1.1 0-2 .9-2 2v18l4-4h14c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-2 12H6v-2h12v2zm0-3H6V9h12v2zm0-3H6V6h12v2z"/></svg></div>
+      라운지
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zM9 17H7v-7h2v7zm4 0h-2V7h2v10zm4 0h-2v-4h2v4z"/></svg></div>
+      플레이
+    </div>
+    <div class="tab-item active">
+      <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg></div>
+      채팅
+    </div>
+    <div class="tab-item">
+      <div class="tab-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg></div>
+      프로필
+    </div>
   </div>
 
 </div>
